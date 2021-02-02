@@ -99,7 +99,23 @@ namespace AncientScepter
             artiFlamePerformanceMode = config.Bind<bool>("Item: " + ItemName, "ArtiFlamePerformance", false, "If true, Dragon's Breath will use significantly lighter particle effects and no dynamic lighting.").Value;
             stridesInteractionMode = config.Bind<StridesInteractionMode>("Item: " + ItemName, "Scepter Rerolls", StridesInteractionMode.ScepterRerolls, "Changes what happens when a character whose Utility skill is affected by Ancient Scepter has both Ancient Scepter and Strides of Heresy at the same time.").Value; //defer until next stage
 
-
+            ConfigEntryChanged += (sender, args) => {
+                switch (args.target.boundProperty.Name)
+                {
+                    case nameof(engiTurretAdjustCooldown):
+                        var engiSkill = skills.First(x => x is EngiTurret2);
+                        engiSkill.myDef.baseRechargeInterval = EngiTurret2.oldDef.baseRechargeInterval * (((bool)args.newValue) ? 2f / 3f : 1f);
+                        GlobalUpdateSkillDef(engiSkill.myDef);
+                        break;
+                    case nameof(engiWalkerAdjustCooldown):
+                        var engiSkill2 = skills.First(x => x is EngiWalker2);
+                        engiSkill2.myDef.baseRechargeInterval = EngiWalker2.oldDef.baseRechargeInterval / (((bool)args.newValue) ? 2f : 1f);
+                        GlobalUpdateSkillDef(engiSkill2.myDef);
+                        break;
+                    default:
+                        break;
+                }
+            };
         }
 
         internal List<ScepterSkill> skills = new List<ScepterSkill>();
@@ -122,26 +138,6 @@ namespace AncientScepter
             skills.Add(new MercEvisProjectile2());
             skills.Add(new ToolbotDash2());
             skills.Add(new TreebotFlower2_2());
-        }
-
-        public void SetupConfig()
-        {
-            switch (args.target.boundProperty.Name)
-            {
-                case nameof(engiTurretAdjustCooldown):
-                    var engiSkill = skills.First(x => x is EngiTurret2);
-                    engiSkill.myDef.baseRechargeInterval = EngiTurret2.oldDef.baseRechargeInterval * (((bool)args.newValue) ? 2f / 3f : 1f);
-                    GlobalUpdateSkillDef(engiSkill.myDef);
-                    break;
-                case nameof(engiWalkerAdjustCooldown):
-                    var engiSkill2 = skills.First(x => x is EngiWalker2);
-                    engiSkill2.myDef.baseRechargeInterval = EngiWalker2.oldDef.baseRechargeInterval / (((bool)args.newValue) ? 2f : 1f);
-                    GlobalUpdateSkillDef(engiSkill2.myDef);
-                    break;
-                default:
-                    break;
-            }
-            
         }
 
         public void RegisterSkills()
