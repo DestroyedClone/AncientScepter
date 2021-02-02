@@ -23,7 +23,20 @@ using System.Runtime.Serialization;
 #pragma warning restore CS0618 // Type or member is obsolete
 namespace AncientScepter
 {
+
+    [BepInPlugin(ModGuid, ModName, ModVer)]
+    [BepInDependency(R2API.R2API.PluginGUID, R2API.R2API.PluginVersion)]
     public class AncientScepterMain
     {
+        public const string ModVer = "1.0.0";
+        public const string ModName = "Pose Helper";
+        public const string ModGuid = "com.DestroyedClone.PoseHelper";
+
+        internal static BepInEx.Logging.ManualLogSource _logger;
+
+        private void Awake()
+        {
+
+        }
     }
 }
