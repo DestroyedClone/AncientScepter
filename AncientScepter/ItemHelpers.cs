@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 
-namespace Aetherium.Utils
+namespace AncientScepter
 {
     internal class ItemHelpers
     {
