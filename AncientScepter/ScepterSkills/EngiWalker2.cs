@@ -6,6 +6,8 @@ using RoR2;
 
 namespace AncientScepter
 {
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
     public class EngiWalker2 : ScepterSkill
     {
         public override SkillDef myDef { get; protected set; }

@@ -111,7 +111,7 @@ namespace AncientScepter
             {
                 c.Emit(OpCodes.Ldarg_0);
                 c.EmitDelegate<Func<BulletAttack, EntityStates.Mage.Weapon.Flamethrower, BulletAttack>>((origAttack, state) => {
-                    if (AncientScepterItem.GetCount(state.outer.commonComponents.characterBody) < 1) return origAttack;
+                    if (AncientScepterItem.instance.GetCount(state.outer.commonComponents.characterBody) < 1) return origAttack;
                     origAttack.hitCallback = (ref BulletAttack.BulletHit h) => {
                         ProjectileManager.instance.FireProjectile(new FireProjectileInfo
                         {

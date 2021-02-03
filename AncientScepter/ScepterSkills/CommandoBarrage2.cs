@@ -54,7 +54,7 @@ namespace AncientScepter
         private void On_FireBarrage_Enter(On.EntityStates.Commando.CommandoWeapon.FireBarrage.orig_OnEnter orig, FireBarrage self)
         {
             orig(self);
-            if (AncientScepterItem.GetCount(self.outer.commonComponents.characterBody) > 0)
+            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
             {
                 self.durationBetweenShots /= 2f;
                 self.bulletCount *= 2;
@@ -63,7 +63,7 @@ namespace AncientScepter
 
         private void On_FireBarrage_FireBullet(On.EntityStates.Commando.CommandoWeapon.FireBarrage.orig_FireBullet orig, FireBarrage self)
         {
-            bool hasScep = AncientScepterItem.GetCount(self.outer.commonComponents.characterBody) > 0;
+            bool hasScep = AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0;
             var origAmp = FireBarrage.recoilAmplitude;
             if (hasScep) FireBarrage.recoilAmplitude /= 2;
             orig(self);

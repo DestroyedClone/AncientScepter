@@ -11,6 +11,7 @@ namespace AncientScepter
     // https://github.com/ThinkInvis/RoR2-TILER2
     // https://thunderstore.io/package/ThinkInvis/TILER2/
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
     public abstract class ItemBase<T> : ItemBase where T : ItemBase<T>
     {
         public static T instance { get; private set; }
@@ -22,6 +23,8 @@ namespace AncientScepter
         }
     }
 
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
     public abstract class ItemBase
     {
         public abstract string ItemName { get; }
@@ -85,14 +88,14 @@ namespace AncientScepter
         // https://github.com/ThinkInvis/RoR2-TILER2
         // https://thunderstore.io/package/ThinkInvis/TILER2/
 
-        public static int GetCount(CharacterBody body)
+        public int GetCount(CharacterBody body)
         {
             if (!body || !body.inventory) { return 0; }
 
             return body.inventory.GetItemCount(Index);
         }
 
-        public static int GetCount(CharacterMaster master)
+        public int GetCount(CharacterMaster master)
         {
             if (!master || !master.inventory) { return 0; }
 
@@ -107,6 +110,12 @@ namespace AncientScepter
         }
 
         ///<summary>A server-only rng instance based on the current run's seed.</summary>
-        public static Xoroshiro128Plus rng { get; internal set; }
+        public Xoroshiro128Plus rng { get; internal set; }
+
+
+        protected readonly List<LanguageAPI.LanguageOverlay> languageOverlays = new List<LanguageAPI.LanguageOverlay>();
+        protected readonly Dictionary<string, string> genericLanguageTokens = new Dictionary<string, string>();
+        protected readonly Dictionary<string, Dictionary<string, string>> specificLanguageTokens = new Dictionary<string, Dictionary<string, string>>();
+        public bool languageInstalled { get; private set; } = false;
     }
 }

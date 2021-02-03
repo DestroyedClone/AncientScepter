@@ -69,7 +69,7 @@ namespace AncientScepter
 		private void On_LightningOrbArrival(On.RoR2.Orbs.LightningOrb.orig_OnArrival orig, LightningOrb self)
 		{
 			orig(self);
-			if (self.lightningType != LightningOrb.LightningType.CrocoDisease || AncientScepterItem.GetCount(self.attacker?.GetComponent<CharacterBody>()) < 1) return;
+			if (self.lightningType != LightningOrb.LightningType.CrocoDisease || AncientScepterItem.instance.GetCount(self.attacker?.GetComponent<CharacterBody>()) < 1) return;
 			if (!self.target || !self.target.healthComponent) return;
 
 			var cpt = self.target.healthComponent.gameObject.GetComponentInChildren<DiseaseWard>()?.gameObject;
@@ -85,10 +85,12 @@ namespace AncientScepter
 		}
 	}
 
+
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
 	[RequireComponent(typeof(TeamFilter))]
 	public class DiseaseWard : NetworkBehaviour
 	{
-		float radius = 10f;
+		readonly float radius = 10f;
 
 		[SyncVar]
 		float damage;

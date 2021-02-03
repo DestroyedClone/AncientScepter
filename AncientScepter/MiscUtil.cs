@@ -18,29 +18,6 @@ namespace AncientScepter
     /// </summary>
     public static class MiscUtil
     {
-        internal static void Setup()
-        {
-            On.RoR2.OccupyNearbyNodes.OnSceneDirectorPrePopulateSceneServer += OccupyNearbyNodes_OnSceneDirectorPrePopulateSceneServer;
-        }
-
-        private static void OccupyNearbyNodes_OnSceneDirectorPrePopulateSceneServer(On.RoR2.OccupyNearbyNodes.orig_OnSceneDirectorPrePopulateSceneServer orig, SceneDirector sceneDirector)
-        {
-            //orig(self); //nope
-            NodeGraph graph = SceneInfo.instance.GetNodeGraph(MapNodeGroup.GraphType.Ground);
-            foreach (var onn in OccupyNearbyNodes.instancesList)
-            {
-                var noi = onn.GetComponent<NodeOccupationInfo>();
-                if (!noi) noi = onn.gameObject.AddComponent<NodeOccupationInfo>();
-                var nodes = graph.FindNodesInRange(onn.transform.position, 0f, onn.radius, HullMask.None);
-                foreach (var node in nodes)
-                {
-                    //TODO: make absolutely sure leaving this out doesn't screw with anything (it's a direct difference from vanilla behavior)
-                    //if(Array.Exists(DirectorCore.instance.occupiedNodes, x => {return x.nodeGraph == graph && x.nodeIndex == node;})) continue;
-                    noi._indices.Add(new KeyValuePair<NodeGraph, NodeGraph.NodeIndex>(graph, node));
-                    DirectorCore.instance.AddOccupiedNode(graph, node);
-                }
-            }
-        }
 
         /// <summary>
         /// Wraps a float within the bounds of two other floats.
@@ -281,36 +258,6 @@ namespace AncientScepter
                     throw new ArgumentOutOfRangeException("tier", tier, "spawnItemFromBody: Item tier must be between 0 and 5 inclusive");
             }
             PickupDropletController.CreatePickupDroplet(spawnList[rng.RangeInt(0, spawnList.Count)], src.transform.position, new Vector3(UnityEngine.Random.Range(-5.0f, 5.0f), 20f, UnityEngine.Random.Range(-5.0f, 5.0f)));
-        }
-
-        /// <summary>
-        /// Transfers NodeOccupationInfo from one object to another. For use while destroying a GameObject and creating another one in its place (e.g. runtime replacement of a placeholder with an unknown prefab).
-        /// </summary>
-        /// <param name="self">The DirectorCore to perform NodeGraph operations with.</param>
-        /// <param name="oldObj">The to-dispose object to retrieve NodeGraph info from.</param>
-        /// <param name="newObj">The new object to add NodeGraph info to.</param>
-        public static void UpdateOccupiedNodesReference(this DirectorCore self, GameObject oldObj, GameObject newObj)
-        {
-            var oldcpt = oldObj.GetComponent<NodeOccupationInfo>();
-            var newcpt = newObj.GetComponent<NodeOccupationInfo>();
-            if (!oldcpt || newcpt) return;
-            newcpt = newObj.AddComponent<NodeOccupationInfo>();
-            newcpt._indices.AddRange(oldcpt._indices);
-        }
-    }
-
-    /// <summary>
-    /// Contains information about which nodes in various NodeGraphs the attached GameObject occupies. Cannot track the OccupyNearbyNodes component.
-    /// </summary>
-    public class NodeOccupationInfo : MonoBehaviour
-    {
-        internal readonly List<KeyValuePair<NodeGraph, NodeGraph.NodeIndex>> _indices;
-        /// <summary>A list of all node indices which this GameObject occupies.</summary>
-        public readonly ReadOnlyCollection<KeyValuePair<NodeGraph, NodeGraph.NodeIndex>> indices;
-        public NodeOccupationInfo()
-        {
-            _indices = new List<KeyValuePair<NodeGraph, NodeGraph.NodeIndex>>();
-            indices = _indices.AsReadOnly();
         }
     }
 }

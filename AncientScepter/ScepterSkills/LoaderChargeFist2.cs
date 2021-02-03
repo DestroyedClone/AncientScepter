@@ -7,6 +7,8 @@ using EntityStates.Loader;
 
 namespace AncientScepter
 {
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
     public class LoaderChargeFist2 : ScepterSkill
     {
         public override SkillDef myDef { get; protected set; }
@@ -53,7 +55,7 @@ namespace AncientScepter
         {
             orig(self);
             if (!(self is SwingChargedFist)) return;
-            if (AncientScepterItem.GetCount(self.outer.commonComponents.characterBody) > 0)
+            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
             {
                 self.minPunchForce *= 7f;
                 self.maxPunchForce *= 7f;
@@ -65,7 +67,7 @@ namespace AncientScepter
 
         private void BaseSwingChargedFist_OnMeleeHitAuthority(On.EntityStates.Loader.BaseSwingChargedFist.orig_OnMeleeHitAuthority orig, BaseSwingChargedFist self)
         {
-            if (AncientScepterItem.GetCount(self.outer.commonComponents.characterBody) < 1) return;
+            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) < 1) return;
             var mTsf = self.outer.commonComponents.modelLocator?.modelTransform?.GetComponent<ChildLocator>()?.FindChild(self.swingEffectMuzzleString);
             EffectManager.SpawnEffect(Resources.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFXCommandoGrenade"),
                 new EffectData

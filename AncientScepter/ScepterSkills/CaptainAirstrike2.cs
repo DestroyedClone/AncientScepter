@@ -9,6 +9,8 @@ using System;
 
 namespace AncientScepter
 {
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
     public class CaptainAirstrike2 : ScepterSkill
     {
         public override SkillDef myDef { get; protected set; }
@@ -75,7 +77,7 @@ namespace AncientScepter
 
         private bool On_CallAirstrikeBaseKeyIsDown(On.EntityStates.Captain.Weapon.CallAirstrikeBase.orig_KeyIsDown orig, CallAirstrikeBase self)
         {
-            if (AncientScepterItem.GetCount(self.outer.commonComponents.characterBody) > 0) return false;
+            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0) return false;
             return orig(self);
         }
 
@@ -98,7 +100,7 @@ namespace AncientScepter
         private void On_CallAirstrikeBaseEnter(On.EntityStates.Captain.Weapon.CallAirstrikeBase.orig_OnEnter orig, CallAirstrikeBase self)
         {
             orig(self);
-            if (AncientScepterItem.GetCount(self.outer.commonComponents.characterBody) > 0)
+            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
             {
                 self.damageCoefficient = 5f;
                 self.AddRecoil(-1f, 1f, -1f, 1f);
@@ -108,7 +110,7 @@ namespace AncientScepter
         private void On_SetupAirstrikeStateEnter(On.EntityStates.Captain.Weapon.SetupAirstrike.orig_OnEnter orig, EntityStates.Captain.Weapon.SetupAirstrike self)
         {
             var origOverride = SetupAirstrike.primarySkillDef;
-            if (AncientScepterItem.GetCount(self.outer.commonComponents.characterBody) > 0)
+            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
             {
                 SetupAirstrike.primarySkillDef = myCallDef;
             }

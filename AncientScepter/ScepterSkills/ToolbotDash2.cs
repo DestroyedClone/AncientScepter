@@ -65,7 +65,7 @@ namespace AncientScepter
         {
             orig(self);
             if (!self.outer.commonComponents.characterBody) return;
-            if (AncientScepterItem.GetCount(self.outer.commonComponents.characterBody) < 1) return;
+            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) < 1) return;
             var cpt = self.outer.commonComponents.characterBody.GetComponent<ScepterToolbotDashTracker>();
             if (!cpt) cpt = self.outer.commonComponents.characterBody.gameObject.AddComponent<ScepterToolbotDashTracker>();
             cpt.enabled = true;

@@ -10,10 +10,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using static AncientScepter.ItemHelpers;
-using static AncientScepter.T2Module;
+using static AncientScepter.SkillUtil;
+using static AncientScepter.MiscUtil;
 
 namespace AncientScepter
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
     public abstract class ScepterSkill
     {
         public abstract SkillDef myDef { get; protected set; }
@@ -47,7 +49,7 @@ namespace AncientScepter
 
         public override string ItemName => "Ancient Scepter";
 
-        public override string ItemLangTokenName => "SHIELDING_CORE";
+        public override string ItemLangTokenName => "ANCIENT_SCEPTER";
 
         public override string ItemPickupDesc => "Upgrades one of your skills.";
 
@@ -74,13 +76,11 @@ namespace AncientScepter
             "It's Much better then your Lance of Legends, that's for sure. " +
             "And before you ask, yes, the handle is designed to be hard to hold, culls the weak.");
         public override ItemTier Tier => ItemTier.Tier3;
-        public override ItemTag[] ItemTags => new ItemTag[] { ItemTag.Utility };
+        public override ItemTag[] ItemTags => new ItemTag[] { ItemTag.Utility, ItemTag.AIBlacklist };
         public override string ItemModelPath => "@Aetherium:Assets/Models/Prefabs/Item/ShieldingCore/ShieldingCore.prefab";
         public override string ItemIconPath => "@Aetherium:Assets/Textures/Icons/Item/ShieldingCoreIconAlt.png";
 
         public override bool AIBlacklisted => true;
-        //public override string ItemModelPath => "@Aetherium:Assets/Models/Prefabs/Item/ShieldingCore/ShieldingCore.prefab";
-        //public override string ItemIconPath => UseNewIcons ? "@Aetherium:Assets/Textures/Icons/Item/ShieldingCoreIconAlt.png" : "@Aetherium:Assets/Textures/Icons/Item/shieldingCoreIcon.png";
 
         //public static GameObject ItemBodyModelPrefab;
 
@@ -89,7 +89,6 @@ namespace AncientScepter
             RegisterSkills();
             CreateConfig(config);
             CreateLang();
-            CreateMaterials();
             CreateItem();
             Hooks();
         }
@@ -102,23 +101,13 @@ namespace AncientScepter
             artiFlamePerformanceMode = config.Bind<bool>("Item: " + ItemName, "ArtiFlamePerformance", false, "If true, Dragon's Breath will use significantly lighter particle effects and no dynamic lighting.").Value;
             stridesInteractionMode = config.Bind<StridesInteractionMode>("Item: " + ItemName, "Scepter Rerolls", StridesInteractionMode.ScepterRerolls, "Changes what happens when a character whose Utility skill is affected by Ancient Scepter has both Ancient Scepter and Strides of Heresy at the same time.").Value; //defer until next stage
 
-            ConfigEntryChanged += (sender, args) => {
-                switch (args.target.boundProperty.Name)
-                {
-                    case nameof(engiTurretAdjustCooldown):
-                        var engiSkill = skills.First(x => x is EngiTurret2);
-                        engiSkill.myDef.baseRechargeInterval = EngiTurret2.oldDef.baseRechargeInterval * (((bool)args.newValue) ? 2f / 3f : 1f);
-                        GlobalUpdateSkillDef(engiSkill.myDef);
-                        break;
-                    case nameof(engiWalkerAdjustCooldown):
-                        var engiSkill2 = skills.First(x => x is EngiWalker2);
-                        engiSkill2.myDef.baseRechargeInterval = EngiWalker2.oldDef.baseRechargeInterval / (((bool)args.newValue) ? 2f : 1f);
-                        GlobalUpdateSkillDef(engiSkill2.myDef);
-                        break;
-                    default:
-                        break;
-                }
-            };
+            var engiSkill = skills.First(x => x is EngiTurret2);
+            engiSkill.myDef.baseRechargeInterval = EngiTurret2.oldDef.baseRechargeInterval * (engiTurretAdjustCooldown ? 2f / 3f : 1f);
+            GlobalUpdateSkillDef(engiSkill.myDef);
+
+            var engiSkill2 = skills.First(x => x is EngiWalker2);
+            engiSkill2.myDef.baseRechargeInterval = EngiWalker2.oldDef.baseRechargeInterval / (engiWalkerAdjustCooldown ? 2f : 1f);
+            GlobalUpdateSkillDef(engiSkill2.myDef);
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
@@ -157,9 +146,7 @@ namespace AncientScepter
 
         public override void Hooks()
         {
-            GetStatCoefficients += GrantBaseShield;
-            On.RoR2.CharacterBody.FixedUpdate += ShieldedCoreValidator;
-            GetStatCoefficients += ShieldedCoreArmorCalc;
+            Install();
         }
 
         public void SetupAttributes()
@@ -267,12 +254,12 @@ namespace AncientScepter
         {
             if (targetVariant < 0)
             {
-                ClassicItemsPlugin._logger.LogError("Can't register a scepter skill to negative variant index");
+                AncientScepterMain._logger.LogError("Can't register a scepter skill to negative variant index");
                 return false;
             }
             if (scepterReplacers.Exists(x => x.bodyName == targetBodyName && (x.slotIndex != targetSlot || x.variantIndex == targetVariant)))
             {
-                ClassicItemsPlugin._logger.LogError("A scepter skill already exists for this character; can't add multiple for different slots nor for the same variant");
+                AncientScepterMain._logger.LogError("A scepter skill already exists for this character; can't add multiple for different slots nor for the same variant");
                 return false;
             }
             scepterReplacers.Add(new ScepterReplacer { bodyName = targetBodyName, slotIndex = targetSlot, variantIndex = targetVariant, replDef = replacingDef });
@@ -303,10 +290,10 @@ namespace AncientScepter
         private void Reroll(CharacterBody self, int count)
         {
             if (count <= 0) return;
-            var list = Run.instance.availableTier3DropList.Except(new[] { pickupIndex }).ToList();
+            var list = Run.instance.availableTier3DropList.Except(new[] { PickupCatalog.FindPickupIndex(Index) }).ToList(); //todo optimize
             for (var i = 0; i < count; i++)
             {
-                self.inventory.RemoveItem(catalogIndex, 1);
+                self.inventory.RemoveItem(Index, 1);
                 self.inventory.GiveItem(PickupCatalog.GetPickupDef(list[UnityEngine.Random.Range(0, list.Count)]).itemIndex);
             }
         }

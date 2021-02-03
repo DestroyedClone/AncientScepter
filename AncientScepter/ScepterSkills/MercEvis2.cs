@@ -52,7 +52,7 @@ namespace AncientScepter
         private void Evt_GEMOnCharacterDeathGlobal(DamageReport rep)
         {
             var attackerState = rep.attackerBody?.GetComponent<EntityStateMachine>()?.state;
-            if (attackerState is Evis asEvis && AncientScepterItem.GetCount(rep.attackerBody) > 0
+            if (attackerState is Evis asEvis && AncientScepterItem.instance.GetCount(rep.attackerBody) > 0
                 && Vector3.Distance(rep.attackerBody.transform.position, rep.victim.transform.position) < Evis.maxRadius)
                 asEvis.stopwatch = 0f;
         }
@@ -60,7 +60,7 @@ namespace AncientScepter
         private void On_EvisFixedUpdate(On.EntityStates.Merc.Evis.orig_FixedUpdate orig, Evis self)
         {
             var origDuration = Evis.duration;
-            if (Scepter_V2.instance.GetCount(self.outer.commonComponents.characterBody) > 0) Evis.duration *= 2f;
+            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0) Evis.duration *= 2f;
             orig(self);
             Evis.duration = origDuration;
         }

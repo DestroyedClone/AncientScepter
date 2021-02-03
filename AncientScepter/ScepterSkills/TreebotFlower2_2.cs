@@ -55,21 +55,21 @@ namespace AncientScepter
         {
             var owner = self.outer.GetComponent<ProjectileController>()?.owner;
             var origRadius = TreebotFlower2Projectile.radius;
-            if (AncientScepterItem.GetCount(owner.GetComponent<CharacterBody>()) > 0) TreebotFlower2Projectile.radius *= 2f;
+            if (AncientScepterItem.instance.GetCount(owner.GetComponent<CharacterBody>()) > 0) TreebotFlower2Projectile.radius *= 2f;
             orig(self);
             TreebotFlower2Projectile.radius = origRadius;
         }
 
         private void On_TreebotFlower2RootPulse(On.EntityStates.Treebot.TreebotFlower.TreebotFlower2Projectile.orig_RootPulse orig, TreebotFlower2Projectile self)
         {
-            var isBoosted = AncientScepterItem.GetCount(self.owner?.GetComponent<CharacterBody>()) > 0;
+            var isBoosted = AncientScepterItem.instance.GetCount(self.owner?.GetComponent<CharacterBody>()) > 0;
             var origRadius = TreebotFlower2Projectile.radius;
             if (isBoosted) TreebotFlower2Projectile.radius *= 2f;
             orig(self);
             TreebotFlower2Projectile.radius = origRadius;
             if (!isBoosted) return;
             self.rootedBodies.ForEach(cb => {
-                var nbi = AncientScepterItem.rng.NextElementUniform(new[] {
+                var nbi = AncientScepterItem.instance.rng.NextElementUniform(new[] {
                     BuffIndex.Bleeding,
                     BuffIndex.ClayGoo,
                     BuffIndex.Cripple,

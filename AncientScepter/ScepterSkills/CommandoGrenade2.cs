@@ -62,7 +62,7 @@ namespace AncientScepter
             var cc = self.outer.commonComponents;
             bool isBoosted = self is ThrowGrenade
                 && Util.HasEffectiveAuthority(self.outer.networkIdentity)
-                && AncientScepterItem.GetCount(cc.characterBody) > 0;
+                && AncientScepterItem.instance.GetCount(cc.characterBody) > 0;
             if (isBoosted) self.projectilePrefab = projReplacer;
             orig(self);
             if (isBoosted)

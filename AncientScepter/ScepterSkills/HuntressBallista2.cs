@@ -8,6 +8,8 @@ using EntityStates.Huntress.Weapon;
 
 namespace AncientScepter
 {
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
     public class HuntressBallista2 : ScepterSkill
     {
         public override SkillDef myDef { get; protected set; }
@@ -66,7 +68,7 @@ namespace AncientScepter
         private void On_FireArrowSnipeFire(On.EntityStates.Huntress.Weapon.FireArrowSnipe.orig_FireBullet orig, FireArrowSnipe self, Ray aimRay)
         {
             orig(self, aimRay);
-            if (AncientScepterItem.GetCount(self.outer.commonComponents.characterBody) < 1) return;
+            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) < 1) return;
 
             for (var i = 1; i < 6; i++)
             {
@@ -88,7 +90,7 @@ namespace AncientScepter
             orig(self);
             var sloc = self.outer.commonComponents.skillLocator;
             if (!sloc || !sloc.primary) return;
-            if (AncientScepterItem.GetCount(self.outer.commonComponents.characterBody) > 0)
+            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
             {
                 sloc.primary.UnsetSkillOverride(self, AimArrowSnipe.primarySkillDef, GenericSkill.SkillOverridePriority.Contextual);
                 sloc.primary.SetSkillOverride(self, myCtxDef, GenericSkill.SkillOverridePriority.Contextual);
@@ -100,7 +102,7 @@ namespace AncientScepter
             orig(self);
             var sloc = self.outer.commonComponents.skillLocator;
             if (!sloc || !sloc.primary) return;
-            if (AncientScepterItem.GetCount(self.outer.commonComponents.characterBody) > 0)
+            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
                 sloc.primary.UnsetSkillOverride(self, myCtxDef, GenericSkill.SkillOverridePriority.Contextual);
         }
     }
