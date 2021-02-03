@@ -91,6 +91,8 @@ namespace AncientScepter
             CreateLang();
             CreateItem();
             Hooks();
+            Install();
+            InstallLanguage();
         }
 
         private void CreateConfig(ConfigFile config)
@@ -146,7 +148,6 @@ namespace AncientScepter
 
         public override void Hooks()
         {
-            Install();
         }
 
         public void SetupAttributes()

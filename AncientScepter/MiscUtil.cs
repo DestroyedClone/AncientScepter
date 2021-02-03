@@ -20,34 +20,6 @@ namespace AncientScepter
     {
 
         /// <summary>
-        /// Wraps a float within the bounds of two other floats.
-        /// </summary>
-        /// <param name="x">The number to perform a wrap operation on.</param>
-        /// <param name="min">The lower bound of the wrap operation.</param>
-        /// <param name="max">The upper bound of the wrap operation.</param>
-        /// <returns>The result of the wrap operation of x within min, max.</returns>
-        public static float Wrap(float x, float min, float max)
-        {
-            if (x < min)
-                return max - (min - x) % (max - min);
-            else
-                return min + (x - min) % (max - min);
-        }
-
-        /// <summary>
-        /// Uses reflection to subscribe an event handler to an EventInfo.
-        /// </summary>
-        /// <param name="evt">The EventInfo to subscribe to.</param>
-        /// <param name="o">The object instance to apply this subscription to.</param>
-        /// <param name="lam">The method to subscribe with.</param>
-        public static void ReflAddEventHandler(this EventInfo evt, object o, Action<object, EventArgs> lam)
-        {
-            var pArr = evt.EventHandlerType.GetMethod("Invoke").GetParameters().Select(p => Expression.Parameter(p.ParameterType)).ToArray();
-            var h = Expression.Lambda(evt.EventHandlerType, Expression.Call(Expression.Constant(lam), lam.GetType().GetMethod("Invoke"), pArr[0], pArr[1]), pArr).Compile();
-            evt.AddEventHandler(o, h);
-        }
-
-        /// <summary>
         /// A collection of unique class instances which all inherit the same base type.
         /// </summary>
         /// <typeparam name="T">The type to enforce inheritance from for the contents of the FilingDictionary.</typeparam>
@@ -172,47 +144,6 @@ namespace AncientScepter
             IEnumerator IEnumerable.GetEnumerator() => baseCollection.GetEnumerator();
         }
 
-        /// <summary>
-        /// Formats a float as a fixed-precision percentage string.
-        /// </summary>
-        /// <param name="tgt">The number to format.</param>
-        /// <param name="prec">The fixed decimal precision of the output.</param>
-        /// <param name="mult">The amount to multiply the number by before formatting.</param>
-        /// <returns></returns>
-        public static string Pct(float tgt, uint prec = 0, float mult = 100f)
-        {
-            return (tgt * mult).ToString("N" + prec) + "%";
-        }
-
-        /// <summary>
-        /// Retrieves the plural form to use in references to a certain number, using a fixed precision to help with epsilon cases.
-        /// </summary>
-        /// <param name="tgt">The number to analyze.</param>
-        /// <param name="prec">The fixed decimal precision to analyze at.</param>
-        /// <returns>"" if tgt is approximately -1 or 1; "s" otherwise</returns>
-        public static string NPlur(float tgt, uint prec = 0)
-        {
-            if (prec == 0)
-                return (tgt == 1 || tgt == -1) ? "" : "s";
-            else
-                return (Math.Abs(Math.Abs(tgt) - 1) < Math.Pow(10, -prec)) ? "" : "s";
-        }
-
-        /// <summary>
-        /// Calculates the projected increase in RoR2.Run.instance.difficultyCoefficient after a certain amount of passed time and completed stages.
-        /// </summary>
-        /// <param name="time">The amount of passed time to simulate.</param>
-        /// <param name="stages">The number of completed stages to simulate.</param>
-        /// <returns>A float representing the increase in difficulty coefficient that the given parameters would cause.</returns>
-        public static float GetDifficultyCoeffIncreaseAfter(float time, int stages)
-        {
-            DifficultyDef difficultyDef = DifficultyCatalog.GetDifficultyDef(Run.instance.selectedDifficulty);
-            float num2 = Mathf.Floor((Run.instance.GetRunStopwatch() + time) * 0.0166666675f);
-            float num4 = 0.7f + (float)Run.instance.participatingPlayerCount * 0.3f;
-            float num7 = 0.046f * difficultyDef.scalingValue * Mathf.Pow((float)Run.instance.participatingPlayerCount, 0.2f);
-            float num9 = Mathf.Pow(1.15f, (float)Run.instance.stageClearCount + (float)stages);
-            return (num4 + num7 * num2) * num9 - Run.instance.difficultyCoefficient;
-        }
 
         /// <summary>
         /// Returns a list of all CharacterMasters which have living CharacterBodies.
