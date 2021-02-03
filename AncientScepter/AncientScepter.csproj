@@ -58,8 +58,4 @@
     </Reference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ScepterSkills\" />
-  </ItemGroup>
-
 </Project>

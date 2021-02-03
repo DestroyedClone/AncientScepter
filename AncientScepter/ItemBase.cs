@@ -36,7 +36,7 @@ namespace AncientScepter
         public abstract string ItemModelPath { get; }
         public abstract string ItemIconPath { get; }
 
-        public ItemIndex Index;
+        public static ItemIndex Index;
 
         public virtual bool CanRemove { get; } = true;
 
@@ -85,25 +85,28 @@ namespace AncientScepter
         // https://github.com/ThinkInvis/RoR2-TILER2
         // https://thunderstore.io/package/ThinkInvis/TILER2/
 
-        public int GetCount(CharacterBody body)
+        public static int GetCount(CharacterBody body)
         {
             if (!body || !body.inventory) { return 0; }
 
             return body.inventory.GetItemCount(Index);
         }
 
-        public int GetCount(CharacterMaster master)
+        public static int GetCount(CharacterMaster master)
         {
             if (!master || !master.inventory) { return 0; }
 
             return master.inventory.GetItemCount(Index);
         }
 
-        public int GetCountSpecific(CharacterBody body, ItemIndex itemIndex)
+        public static int GetCountSpecific(CharacterBody body, ItemIndex itemIndex)
         {
             if (!body || !body.inventory) { return 0; }
 
             return body.inventory.GetItemCount(itemIndex);
         }
+
+        ///<summary>A server-only rng instance based on the current run's seed.</summary>
+        public static Xoroshiro128Plus rng { get; internal set; }
     }
 }

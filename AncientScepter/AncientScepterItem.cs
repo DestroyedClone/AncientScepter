@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using static AncientScepter.ItemHelpers;
+using static AncientScepter.T2Module;
 
 namespace AncientScepter
 {
@@ -163,8 +164,6 @@ namespace AncientScepter
 
         public void SetupAttributes()
         {
-            base.SetupAttributes();
-
             foreach (var skill in skills)
             {
                 skill.SetupAttributes();
@@ -216,7 +215,7 @@ namespace AncientScepter
             {
                 if (skill.oldDescToken == null)
                 {
-                    ClassicItemsPlugin._logger.LogError(skill.GetType().Name + " oldDescToken is null!");
+                    AncientScepterMain._logger.LogError(skill.GetType().Name + " oldDescToken is null!");
                     continue;
                 }
                 languageOverlays.Add(LanguageAPI.AddOverlay(skill.newDescToken, Language.GetString(skill.oldDescToken) + skill.overrideStr, Language.currentLanguageName));
@@ -229,7 +228,7 @@ namespace AncientScepter
             if (stridesInteractionMode != StridesInteractionMode.ScepterTakesPrecedence
                 || skillDef.skillIndex != CharacterBody.CommonAssets.lunarUtilityReplacementSkillDef.skillIndex
                 || !(source is CharacterBody body)
-                || body.inventory.GetItemCount(catalogIndex) < 1
+                || body.inventory.GetItemCount(Index) < 1
                 || handlingOverride)
                 orig(self, source, skillDef, priority);
             else
