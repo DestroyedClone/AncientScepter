@@ -178,7 +178,7 @@ namespace AncientScepter
             }
         }
 
-        public void Uninstall()
+        public void Uninstall() //legacy
         {
             On.RoR2.CharacterBody.OnInventoryChanged -= On_CBOnInventoryChanged;
             On.RoR2.CharacterMaster.GetDeployableSameSlotLimit -= On_CMGetDeployableSameSlotLimit;
