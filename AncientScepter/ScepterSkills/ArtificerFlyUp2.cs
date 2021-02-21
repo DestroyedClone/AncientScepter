@@ -24,8 +24,8 @@ namespace AncientScepter
             var oldDef = Resources.Load<SkillDef>("skilldefs/magebody/MageBodyFlyUp");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "CLASSICITEMS_SCEPMAGE_FLYUPNAME";
-            newDescToken = "CLASSICITEMS_SCEPMAGE_FLYUPDESC";
+            var nametoken = "ANCIENTSCEPTER_SCEPMAGE_FLYUPNAME";
+            newDescToken = "ANCIENTSCEPTER_SCEPMAGE_FLYUPDESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "Antimatter Surge";
             LanguageAPI.Add(nametoken, namestr);
@@ -33,7 +33,7 @@ namespace AncientScepter
             myDef.skillName = namestr;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
-            myDef.icon = Resources.Load<Sprite>("@ClassicItems:Assets/ClassicItems/icons/scepter/mage_flyupicon.png");
+            myDef.icon = Resources.Load<Sprite>("@AncientScepter:Assets/AssetBundle/AncientScepter/Icons/texAncientScepterIcon.png");
 
             LoadoutAPI.AddSkillDef(myDef);
         }

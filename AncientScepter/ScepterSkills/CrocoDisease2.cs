@@ -29,8 +29,8 @@ namespace AncientScepter
 			var oldDef = Resources.Load<SkillDef>("skilldefs/crocobody/CrocoDisease");
 			myDef = CloneSkillDef(oldDef);
 
-			var nametoken = "CLASSICITEMS_SCEPCROCO_DISEASENAME";
-			newDescToken = "CLASSICITEMS_SCEPCROCO_DISEASEDESC";
+			var nametoken = "ANCIENTSCEPTER_SCEPCROCO_DISEASENAME";
+			newDescToken = "ANCIENTSCEPTER_SCEPCROCO_DISEASEDESC";
 			oldDescToken = oldDef.skillDescriptionToken;
 			var namestr = "Plague";
 			LanguageAPI.Add(nametoken, namestr);
@@ -38,7 +38,7 @@ namespace AncientScepter
 			myDef.skillName = namestr;
 			myDef.skillNameToken = nametoken;
 			myDef.skillDescriptionToken = newDescToken;
-			myDef.icon = Resources.Load<Sprite>("@ClassicItems:Assets/ClassicItems/icons/scepter/croco_firediseaseicon.png");
+			myDef.icon = Resources.Load<Sprite>("@AncientScepter:Assets/AssetBundle/AncientScepter/Icons/texAncientScepterIcon.png");
 
 			LoadoutAPI.AddSkillDef(myDef);
 
@@ -172,7 +172,7 @@ namespace AncientScepter
 						isCrit = false,
 						lightningType = LightningOrb.LightningType.CrocoDisease,
 						origin = transform.position,
-						procChainMask = default,
+						procChainMask = default(ProcChainMask),
 						procCoefficient = 1f,
 						target = tcpt.body.mainHurtBox,
 						teamIndex = teamFilter.teamIndex,

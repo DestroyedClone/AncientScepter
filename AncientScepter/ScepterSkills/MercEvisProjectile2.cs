@@ -23,8 +23,8 @@ namespace AncientScepter
             var oldDef = Resources.Load<SkillDef>("skilldefs/mercbody/MercBodyEvisProjectile");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "CLASSICITEMS_SCEPMERC_EVISPROJNAME";
-            newDescToken = "CLASSICITEMS_SCEPMERC_EVISPROJDESC";
+            var nametoken = "ANCIENTSCEPTER_SCEPMERC_EVISPROJNAME";
+            newDescToken = "ANCIENTSCEPTER_SCEPMERC_EVISPROJDESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "Gale-Force";
             LanguageAPI.Add(nametoken, namestr);
@@ -32,7 +32,7 @@ namespace AncientScepter
             myDef.skillName = namestr;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
-            myDef.icon = Resources.Load<Sprite>("@ClassicItems:Assets/ClassicItems/icons/scepter/merc_evisprojectileicon.png");
+            myDef.icon = Resources.Load<Sprite>("@AncientScepter:Assets/AssetBundle/AncientScepter/Icons/texAncientScepterIcon.png");
             myDef.baseMaxStock *= 4;
             myDef.baseRechargeInterval /= 4f;
 

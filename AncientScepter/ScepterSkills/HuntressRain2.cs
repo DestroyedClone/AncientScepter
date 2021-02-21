@@ -26,8 +26,8 @@ namespace AncientScepter
             var oldDef = Resources.Load<SkillDef>("skilldefs/huntressbody/HuntressBodyArrowRain");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "CLASSICITEMS_SCEPHUNTRESS_RAINNAME";
-            newDescToken = "CLASSICITEMS_SCEPHUNTRESS_RAINDESC";
+            var nametoken = "ANCIENTSCEPTER_SCEPHUNTRESS_RAINNAME";
+            newDescToken = "ANCIENTSCEPTER_SCEPHUNTRESS_RAINDESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "Burning Rain";
             LanguageAPI.Add(nametoken, namestr);
@@ -35,7 +35,7 @@ namespace AncientScepter
             myDef.skillName = namestr;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
-            myDef.icon = Resources.Load<Sprite>("@ClassicItems:Assets/ClassicItems/icons/scepter/huntress_arrowrainicon.png");
+            myDef.icon = Resources.Load<Sprite>("@AncientScepter:Assets/AssetBundle/AncientScepter/Icons/texAncientScepterIcon.png");
 
             LoadoutAPI.AddSkillDef(myDef);
 
