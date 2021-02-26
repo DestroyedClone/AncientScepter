@@ -26,8 +26,8 @@ namespace AncientScepter
             oldDef = Resources.Load<SkillDef>("skilldefs/engibody/EngiBodyPlaceWalkerTurret");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "CLASSICITEMS_SCEPENGI_WALKERNAME";
-            newDescToken = "CLASSICITEMS_SCEPENGI_WALKERDESC";
+            var nametoken = "ANCIENTSCEPTER_SCEPENGI_WALKERNAME";
+            newDescToken = "ANCIENTSCEPTER_SCEPENGI_WALKERDESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "TR58-C Carbonizer Mini";
             LanguageAPI.Add(nametoken, namestr);
@@ -35,7 +35,7 @@ namespace AncientScepter
             myDef.skillName = namestr;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
-            myDef.icon = Resources.Load<Sprite>("@ClassicItems:Assets/ClassicItems/icons/scepter/engi_walkericon.png");
+            myDef.icon = Resources.Load<Sprite>("@AncientScepter:Assets/AssetBundle/AncientScepter/Icons/texAncientScepterIcon.png");
             myDef.baseMaxStock += 2;
 
             LoadoutAPI.AddSkillDef(myDef);

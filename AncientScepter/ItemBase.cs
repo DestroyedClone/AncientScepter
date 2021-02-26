@@ -3,6 +3,7 @@ using R2API;
 using RoR2;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace AncientScepter
 {
@@ -22,7 +23,6 @@ namespace AncientScepter
             instance = this as T;
         }
     }
-
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
     public abstract class ItemBase
@@ -82,6 +82,17 @@ namespace AncientScepter
         }
 
         public abstract void Hooks();
+
+        protected virtual void SetupMaterials(GameObject modelPrefab)
+        {
+            Renderer[] children = modelPrefab.GetComponentsInChildren<Renderer>();
+
+            for (int i = 0; i < children.Length; i++)
+            {
+                children[i].material.shader = Assets.hotpoo;
+            }
+        }
+
 
         // The below is entirely from TILER2 API (by ThinkInvis) specifically the Item module. Utilized to keep easy count functionality as I migrate off TILER2.
         // TILER2 API can be found at the following places:

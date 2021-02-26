@@ -30,8 +30,8 @@ namespace AncientScepter
             var oldDef = Resources.Load<SkillDef>("skilldefs/captainbody/PrepAirstrike");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "CLASSICITEMS_SCEPCAPTAIN_AIRSTRIKENAME";
-            newDescToken = "CLASSICITEMS_SCEPCAPTAIN_AIRSTRIKEDESC";
+            var nametoken = "ANCIENTSCEPTER_SCEPCAPTAIN_AIRSTRIKENAME";
+            newDescToken = "ANCIENTSCEPTER_SCEPCAPTAIN_AIRSTRIKEDESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "21-Probe Salute";
             LanguageAPI.Add(nametoken, namestr);
@@ -39,7 +39,7 @@ namespace AncientScepter
             myDef.skillName = namestr;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
-            myDef.icon = Resources.Load<Sprite>("@ClassicItems:Assets/ClassicItems/icons/scepter/captain_airstrikeicon.png");
+            myDef.icon = Resources.Load<Sprite>("@AncientScepter:Assets/AssetBundle/AncientScepter/Icons/texAncientScepterIcon.png");
 
             LoadoutAPI.AddSkillDef(myDef);
 
@@ -50,7 +50,7 @@ namespace AncientScepter
             myCallDef.isBullets = true;
             myCallDef.shootDelay = 0.07f;
             myCallDef.baseRechargeInterval = 0.07f;
-            myCallDef.icon = Resources.Load<Sprite>("@ClassicItems:Assets/ClassicItems/icons/scepter/captain_airstrikeicon.png");
+            myCallDef.icon = Resources.Load<Sprite>("@AncientScepter:Assets/AssetBundle/AncientScepter/Icons/texAncientScepterIcon.png");
 
             LoadoutAPI.AddSkillDef(myCallDef);
         }

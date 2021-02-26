@@ -28,8 +28,8 @@ namespace AncientScepter
             var oldDef = Resources.Load<SkillDef>("skilldefs/magebody/MageBodyFlamethrower");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "CLASSICITEMS_SCEPMAGE_FLAMETHROWERNAME";
-            newDescToken = "CLASSICITEMS_SCEPMAGE_FLAMETHROWERDESC";
+            var nametoken = "ANCIENTSCEPTER_SCEPMAGE_FLAMETHROWERNAME";
+            newDescToken = "ANCIENTSCEPTER_SCEPMAGE_FLAMETHROWERDESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "Dragon's Breath";
             LanguageAPI.Add(nametoken, namestr);
@@ -37,7 +37,7 @@ namespace AncientScepter
             myDef.skillName = namestr;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
-            myDef.icon = Resources.Load<Sprite>("@ClassicItems:Assets/ClassicItems/icons/scepter/mage_flamethrowericon.png");
+            myDef.icon = Resources.Load<Sprite>("@AncientScepter:Assets/AssetBundle/AncientScepter/Icons/texAncientScepterIcon.png");
 
             LoadoutAPI.AddSkillDef(myDef);
 
@@ -117,7 +117,7 @@ namespace AncientScepter
                         {
                             crit = false,
                             damage = origAttack.damage,
-                            damageColorIndex = default,
+                            damageColorIndex = DamageColorIndex.Default,
                             damageTypeOverride = DamageType.PercentIgniteOnHit,
                             force = 0f,
                             owner = origAttack.owner,

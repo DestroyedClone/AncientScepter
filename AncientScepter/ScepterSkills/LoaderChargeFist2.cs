@@ -26,8 +26,8 @@ namespace AncientScepter
             var oldDef = Resources.Load<SkillDef>("skilldefs/loaderbody/ChargeFist");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "CLASSICITEMS_SCEPLOADER_CHARGEFISTNAME";
-            newDescToken = "CLASSICITEMS_SCEPLOADER_CHARGEFISTDESC";
+            var nametoken = "ANCIENTSCEPTER_SCEPLOADER_CHARGEFISTNAME";
+            newDescToken = "ANCIENTSCEPTER_SCEPLOADER_CHARGEFISTDESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "Megaton Punch";
             LanguageAPI.Add(nametoken, namestr);
@@ -35,7 +35,7 @@ namespace AncientScepter
             myDef.skillName = namestr;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
-            myDef.icon = Resources.Load<Sprite>("@ClassicItems:Assets/ClassicItems/icons/scepter/loader_chargefisticon.png");
+            myDef.icon = Resources.Load<Sprite>("@AncientScepter:Assets/AssetBundle/AncientScepter/Icons/texAncientScepterIcon.png");
 
             LoadoutAPI.AddSkillDef(myDef);
         }

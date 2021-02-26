@@ -23,8 +23,8 @@ namespace AncientScepter
             var oldDef = Resources.Load<SkillDef>("skilldefs/toolbotbody/ToolbotBodyToolbotDash");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "CLASSICITEMS_SCEPTOOLBOT_DASHNAME";
-            newDescToken = "CLASSICITEMS_SCEPTOOLBOT_DASHDESC";
+            var nametoken = "ANCIENTSCEPTER_SCEPTOOLBOT_DASHNAME";
+            newDescToken = "ANCIENTSCEPTER_SCEPTOOLBOT_DASHDESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "Breach Mode";
             LanguageAPI.Add(nametoken, namestr);
@@ -32,7 +32,7 @@ namespace AncientScepter
             myDef.skillName = namestr;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
-            myDef.icon = Resources.Load<Sprite>("@ClassicItems:Assets/ClassicItems/icons/scepter/toolbot_dashicon.png");
+            myDef.icon = Resources.Load<Sprite>("@AncientScepter:Assets/AssetBundle/AncientScepter/Icons/texAncientScepterIcon.png");
 
             LoadoutAPI.AddSkillDef(myDef);
         }
@@ -86,14 +86,14 @@ namespace AncientScepter
                 baseForce = 1000f,
                 bonusForce = Vector3.up * 500f,
                 crit = self.outer.commonComponents.characterBody.RollCrit(),
-                damageColorIndex = default,
+                damageColorIndex = DamageColorIndex.Default,
                 damageType = DamageType.Stun1s,
                 falloffModel = BlastAttack.FalloffModel.Linear,
                 losType = BlastAttack.LoSType.None,
                 position = self.outer.commonComponents.transform.position,
                 procCoefficient = 1f,
                 radius = 20f,
-                teamIndex = self.outer.commonComponents.teamComponent?.teamIndex ?? default
+                teamIndex = self.outer.commonComponents.teamComponent?.teamIndex ?? TeamIndex.Count
             }.Fire();
             EffectManager.SpawnEffect(Resources.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFX"),
                 new EffectData
