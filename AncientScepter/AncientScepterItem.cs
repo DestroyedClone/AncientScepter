@@ -1,5 +1,4 @@
-﻿
-using BepInEx.Configuration;
+﻿using BepInEx.Configuration;
 using R2API;
 using R2API.Utils;
 using RoR2;
@@ -77,12 +76,12 @@ namespace AncientScepter
             "And before you ask, yes, the handle is designed to be hard to hold, culls the weak.");
         public override ItemTier Tier => ItemTier.Tier3;
         public override ItemTag[] ItemTags => new ItemTag[] { ItemTag.Utility, ItemTag.AIBlacklist };
-        public override string ItemModelPath => "@Aetherium:Assets/Models/Prefabs/Item/ShieldingCore/ShieldingCore.prefab";
-        public override string ItemIconPath => "@Aetherium:Assets/Textures/Icons/Item/ShieldingCoreIconAlt.png";
+        public override string ItemModelPath => "@AncientScepter:Assets/AssetBundle/AncientScepter/mdlAncientScepterPickup.prefab";
+        public override string ItemIconPath => "@AncientScepter:Assets/AssetBundle/AncientScepter/Icons/texAncientScepterIcon.png";
 
         public override bool AIBlacklisted => true;
 
-        //public static GameObject ItemBodyModelPrefab;
+        public static GameObject ItemBodyModelPrefab;
 
         public override void Init(ConfigFile config)
         {
@@ -114,6 +113,11 @@ namespace AncientScepter
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
         { return null; }
+
+        protected override void SetupMaterials(GameObject modelPrefab)
+        {
+            modelPrefab.GetComponentInChildren<Renderer>().material = Assets.CreateMaterial("matAncientScepter", 1, Color.white, 1);
+        }
 
         internal List<ScepterSkill> skills = new List<ScepterSkill>();
 

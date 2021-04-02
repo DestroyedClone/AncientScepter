@@ -26,8 +26,8 @@ namespace AncientScepter
             oldDef = Resources.Load<SkillDef>("skilldefs/engibody/EngiBodyPlaceTurret");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "CLASSICITEMS_SCEPENGI_TURRETNAME";
-            newDescToken = "CLASSICITEMS_SCEPENGI_TURRETDESC";
+            var nametoken = "ANCIENTSCEPTER_SCEPENGI_TURRETNAME";
+            newDescToken = "ANCIENTSCEPTER_SCEPENGI_TURRETDESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "TR12-C Gauss Compact";
             LanguageAPI.Add(nametoken, namestr);
@@ -35,7 +35,7 @@ namespace AncientScepter
             myDef.skillName = namestr;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
-            myDef.icon = Resources.Load<Sprite>("@ClassicItems:Assets/ClassicItems/icons/scepter/engi_turreticon.png");
+            myDef.icon = Resources.Load<Sprite>("@AncientScepter:Assets/AssetBundle/AncientScepter/Icons/texAncientScepterIcon.png");
             myDef.baseMaxStock += 1;
 
             LoadoutAPI.AddSkillDef(myDef);

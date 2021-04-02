@@ -1,0 +1,45 @@
+ManifestFileVersion: 0
+CRC: 3564924167
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 01e8497713e0787d46e3c749e46218c9
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: b4eedefcbaea47b7eded363c047469dd
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 90
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 137
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/AssetBundle/AncientScepter/mdlAncientScepterPickup.prefab
+- Assets/AssetBundle/AncientScepter/Textures/texAncientScepterEmission.png
+- Assets/AssetBundle/AncientScepter/Textures/texAncientScepter.png
+- Assets/AssetBundle/AncientScepter/Icons/texAncientScepterIcon.png
+- Assets/AssetBundle/AncientScepter/Animations/ScepterIdle.anim
+- Assets/AssetBundle/AncientScepter/Animations/animScepter.controller
+- Assets/AssetBundle/AncientScepter/mdlAncientScepterDisplay.prefab
+- Assets/AssetBundle/AncientScepter/Materials/matAncientScepter.mat
+Dependencies: []

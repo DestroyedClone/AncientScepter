@@ -40,10 +40,10 @@ namespace AncientScepter
         public List<ItemBase> Items = new List<ItemBase>();
         public static Dictionary<ItemBase, bool> ItemStatusDictionary = new Dictionary<ItemBase, bool>();
 
-
-
         public void Awake()
         {
+            Assets.PopulateAssets();
+
             var ItemTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(ItemBase)));
             foreach (var itemType in ItemTypes)
             {

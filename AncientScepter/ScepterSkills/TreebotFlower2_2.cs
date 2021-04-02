@@ -25,8 +25,8 @@ namespace AncientScepter
             var oldDef = Resources.Load<SkillDef>("skilldefs/treebotbody/TreebotBodyFireFlower2");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "CLASSICITEMS_SCEPTREEBOT_FLOWER2NAME";
-            newDescToken = "CLASSICITEMS_SCEPTREEBOT_FLOWER2DESC";
+            var nametoken = "ANCIENTSCEPTER_SCEPTREEBOT_FLOWER2NAME";
+            newDescToken = "ANCIENTSCEPTER_SCEPTREEBOT_FLOWER2DESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "Chaotic Growth";
             LanguageAPI.Add(nametoken, namestr);
@@ -34,7 +34,7 @@ namespace AncientScepter
             myDef.skillName = namestr;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
-            myDef.icon = Resources.Load<Sprite>("@ClassicItems:Assets/ClassicItems/icons/scepter/treebot_entangleicon.png");
+            myDef.icon = Resources.Load<Sprite>("@AncientScepter:Assets/AssetBundle/AncientScepter/Icons/texAncientScepterIcon.png");
 
             LoadoutAPI.AddSkillDef(myDef);
         }

@@ -24,8 +24,8 @@ namespace AncientScepter
             var oldDef = Resources.Load<SkillDef>("skilldefs/commandobody/CommandoBodyBarrage");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "CLASSICITEMS_SCEPCOMMANDO_BARRAGENAME";
-            newDescToken = "CLASSICITEMS_SCEPCOMMANDO_BARRAGEDESC";
+            var nametoken = "ANCIENTSCEPTER_SCEPCOMMANDO_BARRAGENAME";
+            newDescToken = "ANCIENTSCEPTER_SCEPCOMMANDO_BARRAGEDESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "Death Blossom";
             LanguageAPI.Add(nametoken, namestr);
@@ -34,7 +34,7 @@ namespace AncientScepter
             myDef.skillName = namestr;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
-            myDef.icon = Resources.Load<Sprite>("@ClassicItems:Assets/ClassicItems/icons/scepter/commando_barrageicon.png");
+            myDef.icon = Resources.Load<Sprite>("@AncientScepter:Assets/AssetBundle/AncientScepter/Icons/texAncientScepterIcon.png");
 
             LoadoutAPI.AddSkillDef(myDef);
         }
