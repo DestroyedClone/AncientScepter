@@ -72,7 +72,7 @@ namespace AncientScepter
             "A glowing scepter, with a name engraved in the handle. " +
             "I can't read what it says; I was hoping you could decipher it. " +
             "It must have some magical powers; look how impressive it is! " +
-            "It's Much better then your Lance of Legends, that's for sure. " +
+            "It's much better then your Lance of Legends, that's for sure. " +
             "And before you ask, yes, the handle is designed to be hard to hold, culls the weak.");
         public override ItemTier Tier => ItemTier.Tier3;
         public override ItemTag[] ItemTags => new ItemTag[] { ItemTag.Utility, ItemTag.AIBlacklist };
