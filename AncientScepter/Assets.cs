@@ -1,9 +1,5 @@
-﻿using R2API;
-using RoR2;
-using System;
-using System.Collections.Generic;
+﻿using RoR2;
 using System.Reflection;
-using System.Text;
 using UnityEngine;
 
 namespace AncientScepter
@@ -22,8 +18,6 @@ namespace AncientScepter
                 using (var assetStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("AncientScepter.ancientscepter"))
                 {
                     mainAssetBundle = AssetBundle.LoadFromStream(assetStream);
-                    var provider = new AssetBundleResourcesProvider("@AncientScepter", mainAssetBundle);
-                    ResourcesAPI.AddProvider(provider);
                 }
             }
         }
@@ -64,6 +58,25 @@ namespace AncientScepter
         public static Material CreateMaterial(string materialName, float emission, Color emissionColor)
         {
             return Assets.CreateMaterial(materialName, emission, emissionColor, 0f);
+        }
+
+        public static CharacterModel.RendererInfo[] SetupRendererInfos(GameObject obj)
+        {
+            Renderer[] meshes = obj.GetComponentsInChildren<Renderer>();
+            CharacterModel.RendererInfo[] rendererInfos = new CharacterModel.RendererInfo[meshes.Length];
+
+            for (int i = 0; i < meshes.Length; i++)
+            {
+                rendererInfos[i] = new CharacterModel.RendererInfo
+                {
+                    defaultMaterial = meshes[i].material,
+                    renderer = meshes[i],
+                    defaultShadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On,
+                    ignoreOverlays = false
+                };
+            }
+
+            return rendererInfos;
         }
     }
 }
