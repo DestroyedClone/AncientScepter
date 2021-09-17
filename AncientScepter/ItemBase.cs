@@ -4,13 +4,10 @@ using RoR2;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Runtime.CompilerServices;
 
 namespace AncientScepter
 {
-    // The directly below is entirely from TILER2 API (by ThinkInvis) specifically the Item module. Utilized to keep instance checking functionality as I migrate off TILER2.
-    // TILER2 API can be found at the following places:
-    // https://github.com/ThinkInvis/RoR2-TILER2
-    // https://thunderstore.io/package/ThinkInvis/TILER2/
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
     public abstract class ItemBase<T> : ItemBase where T : ItemBase<T>
@@ -36,16 +33,32 @@ namespace AncientScepter
         public abstract ItemTier Tier { get; }
         public virtual ItemTag[] ItemTags { get; set; } = new ItemTag[] { };
 
-        public abstract string ItemModelPath { get; }
-        public abstract string ItemIconPath { get; }
+        public abstract GameObject ItemModel { get; }
+        public abstract Sprite ItemIcon { get; }
+        public abstract GameObject ItemDisplay { get; }
 
-        public static ItemIndex Index;
+        public ItemDef ItemDef;
 
         public virtual bool CanRemove { get; } = true;
 
         public virtual bool AIBlacklisted { get; set; } = false;
 
+        public virtual bool TILER2_MimicBlacklisted { get; set; } = false;
+
+        /// <summary>
+        /// This method structures your code execution of this class. An example implementation inside of it would be:
+        /// <para>CreateConfig(config);</para>
+        /// <para>CreateLang();</para>
+        /// <para>CreateItem();</para>
+        /// <para>Hooks();</para>
+        /// <para>This ensures that these execute in this order, one after another, and is useful for having things available to be used in later methods.</para>
+        /// <para>P.S. CreateItemDisplayRules(); does not have to be called in this, as it already gets called in CreateItem();</para>
+        /// </summary>
+        /// <param name="config">The config file that will be passed into this from the main class.</param>
         public abstract void Init(ConfigFile config);
+        public static GameObject displayPrefab;
+
+        public virtual void CreateConfig(ConfigFile config) { }
 
         protected void CreateLang()
         {
@@ -55,7 +68,10 @@ namespace AncientScepter
             LanguageAPI.Add("ITEM_" + ItemLangTokenName + "_LORE", ItemLore);
         }
 
-        public abstract ItemDisplayRuleDict CreateItemDisplayRules();
+        public virtual ItemDisplayRuleDict CreateDisplayRules()
+        {
+            return new ItemDisplayRuleDict(new ItemDisplayRule[0]);
+        }
 
         protected void CreateItem()
         {
@@ -63,25 +79,37 @@ namespace AncientScepter
             {
                 ItemTags = new List<ItemTag>(ItemTags) { ItemTag.AIBlacklist }.ToArray();
             }
-            ItemDef itemDef = new RoR2.ItemDef()
+            ItemDef = ScriptableObject.CreateInstance<ItemDef>();
+            ItemDef.name = "ITEM_" + ItemLangTokenName;
+            ItemDef.nameToken = "ITEM_" + ItemLangTokenName + "_NAME";
+            ItemDef.pickupToken = "ITEM_" + ItemLangTokenName + "_PICKUP";
+            ItemDef.descriptionToken = "ITEM_" + ItemLangTokenName + "_DESCRIPTION";
+            ItemDef.loreToken = "ITEM_" + ItemLangTokenName + "_LORE";
+            ItemDef.pickupModelPrefab = ItemModel;
+            ItemDef.pickupIconSprite = ItemIcon;
+            ItemDef.hidden = false;
+            ItemDef.tags = ItemTags;
+            ItemDef.canRemove = CanRemove;
+            ItemDef.tier = Tier;
+            if (ItemTags.Length > 0) { ItemDef.tags = ItemTags; }
+
+            if (TILER2_MimicBlacklisted)
             {
-                name = "ITEM_" + ItemLangTokenName,
-                nameToken = "ITEM_" + ItemLangTokenName + "_NAME",
-                pickupToken = "ITEM_" + ItemLangTokenName + "_PICKUP",
-                descriptionToken = "ITEM_" + ItemLangTokenName + "_DESCRIPTION",
-                loreToken = "ITEM_" + ItemLangTokenName + "_LORE",
-                pickupModelPath = ItemModelPath,
-                pickupIconPath = ItemIconPath,
-                hidden = false,
-                tags = ItemTags,
-                canRemove = CanRemove,
-                tier = Tier
-            };
-            var itemDisplayRules = CreateItemDisplayRules();
-            Index = ItemAPI.Add(new CustomItem(itemDef, itemDisplayRules));
+                if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey(TILER2.TILER2Plugin.ModGuid))
+                {
+                    TILER2_BlacklistItem(ItemDef);
+                }
+            }
+            ItemAPI.Add(new CustomItem(ItemDef, CreateDisplayRules()));
         }
 
-        public abstract void Hooks();
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        public static void TILER2_BlacklistItem(ItemDef itemDef)
+        {
+            TILER2.FakeInventory.blacklist.Add(itemDef);
+        }
+
+        public virtual void Hooks() { }
 
         protected virtual void SetupMaterials(GameObject modelPrefab)
         {
@@ -93,36 +121,30 @@ namespace AncientScepter
             }
         }
 
-
-        // The below is entirely from TILER2 API (by ThinkInvis) specifically the Item module. Utilized to keep easy count functionality as I migrate off TILER2.
-        // TILER2 API can be found at the following places:
-        // https://github.com/ThinkInvis/RoR2-TILER2
-        // https://thunderstore.io/package/ThinkInvis/TILER2/
-
+        //Based on ThinkInvis' methods
         public int GetCount(CharacterBody body)
         {
             if (!body || !body.inventory) { return 0; }
 
-            return body.inventory.GetItemCount(Index);
+            return body.inventory.GetItemCount(ItemDef);
         }
 
         public int GetCount(CharacterMaster master)
         {
             if (!master || !master.inventory) { return 0; }
 
-            return master.inventory.GetItemCount(Index);
+            return master.inventory.GetItemCount(ItemDef);
         }
 
-        public static int GetCountSpecific(CharacterBody body, ItemIndex itemIndex)
+        public int GetCountSpecific(CharacterBody body, ItemDef itemDef)
         {
             if (!body || !body.inventory) { return 0; }
 
-            return body.inventory.GetItemCount(itemIndex);
+            return body.inventory.GetItemCount(itemDef);
         }
 
         ///<summary>A server-only rng instance based on the current run's seed.</summary>
         public Xoroshiro128Plus rng { get; internal set; }
-
 
         protected readonly List<LanguageAPI.LanguageOverlay> languageOverlays = new List<LanguageAPI.LanguageOverlay>();
         protected readonly Dictionary<string, string> genericLanguageTokens = new Dictionary<string, string>();
