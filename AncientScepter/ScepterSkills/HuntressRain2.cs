@@ -35,7 +35,7 @@ namespace AncientScepter
             myDef.skillName = namestr;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
-            myDef.icon = Resources.Load<Sprite>("@AncientScepter:Assets/AssetBundle/AncientScepter/Icons/texAncientScepterIcon.png");
+            myDef.icon = Resources.Load<Sprite>("@AncientScepter:Assets/AssetBundle/AncientScepter/Icons/Skills/texHuntressR1.png");
 
             LoadoutAPI.AddSkillDef(myDef);
 
@@ -59,7 +59,7 @@ namespace AncientScepter
             flashlight.GetComponent<Light>().range = 15f;
             flashlight.gameObject.SetActive(true);
 
-            ProjectileCatalog.getAdditionalEntries += (list) => list.Add(projReplacer);
+            ProjectileAPI.Add(projReplacer);
         }
 
         internal override void LoadBehavior()
