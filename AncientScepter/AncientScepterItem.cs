@@ -37,6 +37,8 @@ namespace AncientScepter
 
         public static bool rerollExtras;
 
+        public static bool rerollScrap;
+
         public static bool artiFlamePerformanceMode;
 
         public static StridesInteractionMode stridesInteractionMode;
@@ -53,7 +55,7 @@ namespace AncientScepter
         public override string ItemPickupDesc => "Upgrades one of your skills.";
 
         public override string ItemFullDescription => $"While held, one of your selected character's <style=cIsUtility>skills</style> <style=cStack>(unique per character)</style> becomes a <style=cIsUtility>more powerful version</style>."
-                        + $" <style=cStack>{(rerollExtras ? "Extra/unusable" : "Unusable (but NOT extra)")} pickups will reroll into other red items.</style>";
+                        + $" <style=cStack>{(rerollExtras ? "Extra/unusable" : "Unusable (but NOT extra)")} pickups will reroll into {(rerollScrap ? "red scrap" : "other red items.")}</style>";
 
         public override string ItemLore => OrderManifestLoreFormatter(
 
@@ -72,12 +74,15 @@ namespace AncientScepter
             "A glowing scepter, with a name engraved in the handle. " +
             "I can't read what it says; I was hoping you could decipher it. " +
             "It must have some magical powers; look how impressive it is! " +
-            "It's Much better then your Lance of Legends, that's for sure. " +
+            "It's much better then your Lance of Legends, that's for sure. " +
             "And before you ask, yes, the handle is designed to be hard to hold, culls the weak.");
         public override ItemTier Tier => ItemTier.Tier3;
         public override ItemTag[] ItemTags => new ItemTag[] { ItemTag.Utility, ItemTag.AIBlacklist };
-        public override string ItemModelPath => "@AncientScepter:Assets/AssetBundle/AncientScepter/mdlAncientScepterPickup.prefab";
-        public override string ItemIconPath => "@AncientScepter:Assets/AssetBundle/AncientScepter/Icons/texAncientScepterIcon.png";
+
+        public override GameObject ItemModel => Assets.mainAssetBundle.LoadAsset<GameObject>("mdlAncientScepterPickup");
+        public override Sprite ItemIcon => Assets.mainAssetBundle.LoadAsset<Sprite>("texAncientScepterIcon");
+        public override GameObject ItemDisplay => Assets.mainAssetBundle.LoadAsset<GameObject>("mdlAncientScepterDisplay");
+        public override bool TILER2_MimicBlacklisted => true;
 
         public override bool AIBlacklisted => true;
 
@@ -91,14 +96,15 @@ namespace AncientScepter
             CreateItem();
             Hooks();
             Install();
-            InstallLanguage();
+            //InstallLanguage();
         }
 
-        private void CreateConfig(ConfigFile config)
+        public override void CreateConfig(ConfigFile config)
         {
             engiTurretAdjustCooldown = config.Bind<bool>("Item: " + ItemName, "TR12-C Gauss Compact Faster Recharge", false, "If true, TR12-C Gauss Compact will recharge faster to match the additional stock.").Value;
             engiWalkerAdjustCooldown = config.Bind<bool>("Item: " + ItemName, "TR58-C Carbonizer Mini Faster Recharge", false, "If true, TR58-C Carbonizer Mini will recharge faster to match the additional stock.").Value;
-            rerollExtras = config.Bind<bool>("Item: " + ItemName, "Reroll on pickup for extra", true, "If true, any stacks picked up past the first will reroll to other red items. If false, this behavior will only be used for characters which cannot benefit from the item at all.").Value;
+            rerollExtras = config.Bind<bool>("Item: " + ItemName, "Reroll on pickup for extra", true, "Requirement: Reroll on pickup for extra\nIf true, any stacks picked up past the first will reroll to other red items. If false, this behavior will only be used for characters which cannot benefit from the item at all.").Value;
+            rerollScrap = config.Bind("Item: " + ItemName, "Reroll on pickup for scrap", false, "If true, instead of rerolling stacks, it will give you a red scrap instead. Disabled by default to maintain original behaviour.").Value;
             artiFlamePerformanceMode = config.Bind<bool>("Item: " + ItemName, "ArtiFlamePerformance", false, "If true, Dragon's Breath will use significantly lighter particle effects and no dynamic lighting.").Value;
             stridesInteractionMode = config.Bind<StridesInteractionMode>("Item: " + ItemName, "Scepter Rerolls", StridesInteractionMode.ScepterRerolls, "Changes what happens when a character whose Utility skill is affected by Ancient Scepter has both Ancient Scepter and Strides of Heresy at the same time.").Value; //defer until next stage
 
@@ -110,9 +116,159 @@ namespace AncientScepter
             engiSkill2.myDef.baseRechargeInterval = EngiWalker2.oldDef.baseRechargeInterval / (engiWalkerAdjustCooldown ? 2f : 1f);
             GlobalUpdateSkillDef(engiSkill2.myDef);
         }
+        public override ItemDisplayRuleDict CreateDisplayRules()
+        {
+            SetupMaterials(ItemModel);
+            displayPrefab = ItemDisplay;
+            SetupMaterials(displayPrefab);
+            var disp = displayPrefab.AddComponent<ItemDisplay>();
+            disp.rendererInfos = Assets.SetupRendererInfos(displayPrefab);
 
-        public override ItemDisplayRuleDict CreateItemDisplayRules()
-        { return null; }
+            ItemDisplayRuleDict rules = new ItemDisplayRuleDict(new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = displayPrefab,
+childName = "Pelvis",
+localPos = new Vector3(0.1473F, -0.073F, -0.0935F),
+localAngles = new Vector3(333.2843F, 198.8161F, 165.1177F),
+localScale = new Vector3(0.2235F, 0.2235F, 0.2235F)
+                }
+            });
+
+            rules.Add("mdlHuntress", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = displayPrefab,
+childName = "Pelvis",
+localPos = new Vector3(0F, 0.0638F, 0.0973F),
+localAngles = new Vector3(76.6907F, 0F, 0F),
+localScale = new Vector3(0.2812F, 0.2812F, 0.2812F)
+                }
+            });
+
+            rules.Add("mdlMage", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = displayPrefab,
+childName = "HandR",
+localPos = new Vector3(-0.0021F, 0.1183F, 0.063F),
+localAngles = new Vector3(0F, 34.1F, 90F),
+localScale = new Vector3(0.4416F, 0.4416F, 0.4416F)
+                }
+            });
+
+            rules.Add("mdlEngi", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = displayPrefab,
+childName = "CannonHeadR",
+localPos = new Vector3(0.0186F, 0.3435F, 0.2246F),
+localAngles = new Vector3(0F, 0F, 0F),
+localScale = new Vector3(0.5614F, 0.5614F, 0.5614F)
+                }
+            });
+
+            rules.Add("mdlMerc", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = displayPrefab,
+childName = "Pelvis",
+localPos = new Vector3(0.1712F, 0F, 0F),
+localAngles = new Vector3(69.8111F, 180F, 180F),
+localScale = new Vector3(0.2679F, 0.2679F, 0.2679F)
+                }
+            });
+
+            rules.Add("mdlLoader", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = displayPrefab,
+childName = "MechLowerArmR",
+localPos = new Vector3(0.0813F, 0.4165F, -0.0212F),
+localAngles = new Vector3(0F, 180F, 180F),
+localScale = new Vector3(0.4063F, 0.4063F, 0.4063F)
+                }
+            });
+
+            rules.Add("mdlCaptain", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = displayPrefab,
+childName = "Chest",
+localPos = new Vector3(-0.0046F, 0.0099F, -0.286F),
+localAngles = new Vector3(10.4706F, 1.6895F, 24.8468F),
+localScale = new Vector3(0.4928F, 0.4928F, 0.4928F)
+                }
+            });
+
+            rules.Add("mdlToolbot", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = displayPrefab,
+childName = "Chest",
+localPos = new Vector3(1.1191F, 0.358F, -1.6717F),
+localAngles = new Vector3(0F, 0F, 270F),
+localScale = new Vector3(2.4696F, 2.4696F, 2.4696F)
+                }
+            });
+
+            rules.Add("mdlTreebot", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = displayPrefab,
+childName = "CalfFrontL",
+localPos = new Vector3(0F, 0.8376F, -0.1766F),
+localAngles = new Vector3(0F, 0F, 0F),
+localScale = new Vector3(0.8037F, 0.8037F, 0.8037F)
+                }
+            });
+
+            rules.Add("mdlCroco", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = displayPrefab,
+childName = "MouthMuzzle",
+localPos = new Vector3(0F, 2.1215F, 2.9939F),
+localAngles = new Vector3(0F, 0F, 270F),
+localScale = new Vector3(5.2969F, 5.2969F, 5.2969F)
+                }
+            });
+
+            rules.Add("mdlBandit", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = displayPrefab,
+childName = "Pelvis",
+localPos = new Vector3(-0.1152f, -0.1278f, 0.2056f),
+localAngles = new Vector3(20F, 285F, 10F),
+localScale = new Vector3(0.2235F, 0.2235F, 0.2235F)
+                }
+            });
+
+            return rules;
+        }
 
         protected override void SetupMaterials(GameObject modelPrefab)
         {
@@ -182,35 +338,15 @@ namespace AncientScepter
             }
         }
 
-        public void Uninstall() //legacy
-        {
-            On.RoR2.CharacterBody.OnInventoryChanged -= On_CBOnInventoryChanged;
-            On.RoR2.CharacterMaster.GetDeployableSameSlotLimit -= On_CMGetDeployableSameSlotLimit;
-            On.RoR2.GenericSkill.SetSkillOverride -= On_GSSetSkillOverride;
-
-            foreach (var cm in AliveList())
-            {
-                if (!cm.hasBody) continue;
-                var body = cm.GetBody();
-                HandleScepterSkill(body, true);
-            }
-
-            foreach (var skill in skills)
-            {
-                skill.UnloadBehavior();
-            }
-        }
-
         public void InstallLanguage()
         {
             foreach (var skill in skills)
             {
                 if (skill.oldDescToken == null)
                 {
-                    AncientScepterMain._logger.LogError(skill.GetType().Name + " oldDescToken is null!");
                     continue;
                 }
-                languageOverlays.Add(LanguageAPI.AddOverlay(skill.newDescToken, Language.GetString(skill.oldDescToken) + skill.overrideStr, Language.currentLanguageName));
+                languageOverlays.Add(LanguageAPI.AddOverlay(skill.newDescToken, Language.GetString(skill.oldDescToken) + skill.overrideStr));
             }
         }
 
@@ -220,7 +356,7 @@ namespace AncientScepter
             if (stridesInteractionMode != StridesInteractionMode.ScepterTakesPrecedence
                 || skillDef.skillIndex != CharacterBody.CommonAssets.lunarUtilityReplacementSkillDef.skillIndex
                 || !(source is CharacterBody body)
-                || body.inventory.GetItemCount(Index) < 1
+                || body.inventory.GetItemCount(ItemDef) < 1
                 || handlingOverride)
                 orig(self, source, skillDef, priority);
             else
@@ -295,17 +431,26 @@ namespace AncientScepter
         private void Reroll(CharacterBody self, int count)
         {
             if (count <= 0) return;
-            var list = Run.instance.availableTier3DropList.Except(new[] { PickupCatalog.FindPickupIndex(Index) }).ToList(); //todo optimize
+            if (rerollScrap)
+            {
+                for (var i = 0; i < count; i++)
+                {
+                    self.inventory.RemoveItem(ItemDef, 1);
+                    self.inventory.GiveItem(RoR2Content.Items.ScrapRed);
+                }
+                return;
+            }
+            var list = Run.instance.availableTier3DropList.Except(new[] { PickupCatalog.FindPickupIndex(ItemDef.itemIndex) }).ToList(); //todo optimize
             for (var i = 0; i < count; i++)
             {
-                self.inventory.RemoveItem(Index, 1);
+                self.inventory.RemoveItem(ItemDef, 1);
                 self.inventory.GiveItem(PickupCatalog.GetPickupDef(list[UnityEngine.Random.Range(0, list.Count)]).itemIndex);
             }
         }
 
         private bool HandleScepterSkill(CharacterBody self, bool forceOff = false)
         {
-            bool hasStrides = self.inventory.GetItemCount(ItemIndex.LunarUtilityReplacement) > 0;
+            bool hasStrides = self.inventory.GetItemCount(RoR2Content.Items.LunarUtilityReplacement) > 0;
             if (self.skillLocator && self.master?.loadout != null)
             {
                 var bodyName = BodyCatalog.GetBodyName(self.bodyIndex);
