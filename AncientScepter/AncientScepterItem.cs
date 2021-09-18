@@ -289,6 +289,8 @@ localScale = new Vector3(0.2235F, 0.2235F, 0.2235F)
         {
             skills.Add(new ArtificerFlamethrower2());
             skills.Add(new ArtificerFlyUp2());
+            skills.Add(new Bandit2ResetRevolver2());
+            skills.Add(new Bandit2SkullRevolver2());
             skills.Add(new CaptainAirstrike2());
             skills.Add(new CommandoBarrage2());
             skills.Add(new CommandoGrenade2());
