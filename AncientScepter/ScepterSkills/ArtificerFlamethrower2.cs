@@ -1,12 +1,12 @@
-﻿using UnityEngine;
-using RoR2.Skills;
-using static AncientScepter.SkillUtil;
-using RoR2;
-using R2API;
+﻿using Mono.Cecil.Cil;
 using MonoMod.Cil;
-using System;
+using R2API;
+using RoR2;
 using RoR2.Projectile;
-using Mono.Cecil.Cil;
+using RoR2.Skills;
+using System;
+using UnityEngine;
+using static AncientScepter.SkillUtil;
 
 namespace AncientScepter
 {
@@ -110,9 +110,11 @@ namespace AncientScepter
             if (ilFound)
             {
                 c.Emit(OpCodes.Ldarg_0);
-                c.EmitDelegate<Func<BulletAttack, EntityStates.Mage.Weapon.Flamethrower, BulletAttack>>((origAttack, state) => {
+                c.EmitDelegate<Func<BulletAttack, EntityStates.Mage.Weapon.Flamethrower, BulletAttack>>((origAttack, state) =>
+                {
                     if (AncientScepterItem.instance.GetCount(state.outer.commonComponents.characterBody) < 1) return origAttack;
-                    origAttack.hitCallback = (ref BulletAttack.BulletHit h) => {
+                    origAttack.hitCallback = (ref BulletAttack.BulletHit h) =>
+                    {
                         ProjectileManager.instance.FireProjectile(new FireProjectileInfo
                         {
                             crit = false,

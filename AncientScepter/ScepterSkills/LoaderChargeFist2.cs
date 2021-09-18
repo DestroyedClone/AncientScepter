@@ -1,13 +1,12 @@
-﻿using UnityEngine;
-using RoR2.Skills;
-using static AncientScepter.SkillUtil;
-using RoR2;
+﻿using EntityStates.Loader;
 using R2API;
-using EntityStates.Loader;
+using RoR2;
+using RoR2.Skills;
+using UnityEngine;
+using static AncientScepter.SkillUtil;
 
 namespace AncientScepter
 {
-
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
     public class LoaderChargeFist2 : ScepterSkill
     {
@@ -45,6 +44,7 @@ namespace AncientScepter
             On.EntityStates.Loader.BaseSwingChargedFist.OnEnter += on_BaseSwingChargedFistEnter;
             On.EntityStates.Loader.BaseSwingChargedFist.OnMeleeHitAuthority += BaseSwingChargedFist_OnMeleeHitAuthority;
         }
+
         internal override void UnloadBehavior()
         {
             On.EntityStates.Loader.BaseSwingChargedFist.OnEnter -= on_BaseSwingChargedFistEnter;

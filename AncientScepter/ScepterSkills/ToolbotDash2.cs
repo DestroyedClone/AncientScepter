@@ -1,8 +1,8 @@
-﻿using UnityEngine;
-using RoR2.Skills;
-using static AncientScepter.SkillUtil;
+﻿using R2API;
 using RoR2;
-using R2API;
+using RoR2.Skills;
+using UnityEngine;
+using static AncientScepter.SkillUtil;
 
 namespace AncientScepter
 {

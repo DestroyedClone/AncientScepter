@@ -1,10 +1,10 @@
-﻿using UnityEngine;
-using RoR2.Skills;
-using static AncientScepter.SkillUtil;
-using RoR2;
+﻿using EntityStates.Treebot.TreebotFlower;
 using R2API;
-using EntityStates.Treebot.TreebotFlower;
+using RoR2;
 using RoR2.Projectile;
+using RoR2.Skills;
+using UnityEngine;
+using static AncientScepter.SkillUtil;
 
 namespace AncientScepter
 {
@@ -68,7 +68,8 @@ namespace AncientScepter
             orig(self);
             TreebotFlower2Projectile.radius = origRadius;
             if (!isBoosted) return;
-            self.rootedBodies.ForEach(cb => {
+            self.rootedBodies.ForEach(cb =>
+            {
                 var nbi = AncientScepterItem.instance.rng.NextElementUniform(new[] {
                     RoR2Content.Buffs.Bleeding,
                     RoR2Content.Buffs.ClayGoo,

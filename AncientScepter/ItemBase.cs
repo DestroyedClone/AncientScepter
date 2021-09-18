@@ -3,12 +3,11 @@ using R2API;
 using RoR2;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Runtime.CompilerServices;
+using UnityEngine;
 
 namespace AncientScepter
 {
-
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
     public abstract class ItemBase<T> : ItemBase where T : ItemBase<T>
     {
@@ -56,9 +55,12 @@ namespace AncientScepter
         /// </summary>
         /// <param name="config">The config file that will be passed into this from the main class.</param>
         public abstract void Init(ConfigFile config);
+
         public static GameObject displayPrefab;
 
-        public virtual void CreateConfig(ConfigFile config) { }
+        public virtual void CreateConfig(ConfigFile config)
+        {
+        }
 
         protected void CreateLang()
         {
@@ -109,7 +111,9 @@ namespace AncientScepter
             TILER2.FakeInventory.blacklist.Add(itemDef);
         }
 
-        public virtual void Hooks() { }
+        public virtual void Hooks()
+        {
+        }
 
         protected virtual void SetupMaterials(GameObject modelPrefab)
         {

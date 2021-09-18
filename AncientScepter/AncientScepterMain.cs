@@ -1,30 +1,19 @@
-﻿using System.Security;
-using System.Security.Permissions;
-using BepInEx;
-using MonoMod.Cil;
+﻿using BepInEx;
 using R2API;
 using R2API.Utils;
 using RoR2;
 using System.Collections.Generic;
-using System.Reflection;
-using UnityEngine;
-using BepInEx.Configuration;
-using Mono.Cecil.Cil;
-using System;
-using TMPro;
-using UnityEngine.Networking;
-using Path = System.IO.Path;
-using System.Collections.ObjectModel;
-using System.Runtime.Serialization;
-using R2API.Networking;
 using System.Linq;
+using System.Reflection;
+using System.Security;
+using System.Security.Permissions;
+using UnityEngine.Networking;
 
 [module: UnverifiableCode]
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 
 namespace AncientScepter
 {
-
     [BepInPlugin(ModGuid, ModName, ModVer)]
     [BepInDependency(R2API.R2API.PluginGUID, R2API.R2API.PluginVersion)]
     [R2APISubmoduleDependency(nameof(ItemAPI), nameof(ResourcesAPI), nameof(ProjectileAPI), nameof(LanguageAPI), nameof(LoadoutAPI))]
@@ -57,13 +46,19 @@ namespace AncientScepter
 
             Run.onRunStartGlobal += Run_onRunStartGlobal;
             On.RoR2.UI.MainMenu.MainMenuController.Start += MainMenuController_Start;
+            Language.onCurrentLanguageChanged += Language_onCurrentLanguageChanged;
+        }
+
+        private void Language_onCurrentLanguageChanged()
+        {
+            InstallLanguage();
         }
 
         private void MainMenuController_Start(On.RoR2.UI.MainMenu.MainMenuController.orig_Start orig, RoR2.UI.MainMenu.MainMenuController self)
         {
             orig(self);
-
             InstallLanguage();
+            On.RoR2.UI.MainMenu.MainMenuController.Start -= MainMenuController_Start;
         }
 
         private void Run_onRunStartGlobal(Run run)
@@ -81,14 +76,14 @@ namespace AncientScepter
                 {
                     continue;
                 }
-                Debug.Log($"Setting up language.");
-                Debug.Log($"Setting up language for {skill}");
-                Debug.Log($"{skill.oldDescToken} : {Language.GetString(skill.oldDescToken)}");
-                Debug.Log($"{skill.overrideStr}");
+                //Debug.Log($"Setting up language.");
+                //Debug.Log($"Setting up language for {skill}");
+                //Debug.Log($"{skill.oldDescToken} : {Language.GetString(skill.oldDescToken)}");
+                //Debug.Log($"{skill.overrideStr}");
 
                 var languageOverlay = LanguageAPI.AddOverlay(skill.newDescToken, Language.GetString(skill.oldDescToken) + skill.overrideStr, Language.currentLanguageName);
 
-                Debug.Log($"{skill.newDescToken}");
+                //Debug.Log($"{skill.newDescToken}");
 
                 languageOverlays.Add(languageOverlay);
             }

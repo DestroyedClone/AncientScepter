@@ -1,16 +1,13 @@
 ﻿using BepInEx.Configuration;
 using R2API;
-using R2API.Utils;
 using RoR2;
-using UnityEngine;
-using System.Collections.ObjectModel;
 using RoR2.Skills;
 using System.Collections.Generic;
 using System.Linq;
-using System;
+using UnityEngine;
 using static AncientScepter.ItemHelpers;
-using static AncientScepter.SkillUtil;
 using static AncientScepter.MiscUtil;
+using static AncientScepter.SkillUtil;
 
 namespace AncientScepter
 {
@@ -21,9 +18,17 @@ namespace AncientScepter
         public abstract string oldDescToken { get; protected set; }
         public abstract string newDescToken { get; protected set; }
         public abstract string overrideStr { get; }
+
         internal abstract void SetupAttributes();
-        internal virtual void LoadBehavior() { }
-        internal virtual void UnloadBehavior() { }
+
+        internal virtual void LoadBehavior()
+        {
+        }
+
+        internal virtual void UnloadBehavior()
+        {
+        }
+
         public abstract string targetBody { get; }
         public abstract SkillSlot targetSlot { get; }
         public abstract int targetVariantIndex { get; }
@@ -42,6 +47,7 @@ namespace AncientScepter
         public static bool artiFlamePerformanceMode;
 
         public static StridesInteractionMode stridesInteractionMode;
+
         //TODO: test w/ stage changes
         public enum StridesInteractionMode
         {
@@ -76,6 +82,7 @@ namespace AncientScepter
             "It must have some magical powers; look how impressive it is! " +
             "It's much better then your Lance of Legends, that's for sure. " +
             "And before you ask, yes, the handle is designed to be hard to hold, culls the weak.");
+
         public override ItemTier Tier => ItemTier.Tier3;
         public override ItemTag[] ItemTags => new ItemTag[] { ItemTag.Utility, ItemTag.AIBlacklist };
 
@@ -116,6 +123,7 @@ namespace AncientScepter
             engiSkill2.myDef.baseRechargeInterval = EngiWalker2.oldDef.baseRechargeInterval / (engiWalkerAdjustCooldown ? 2f : 1f);
             GlobalUpdateSkillDef(engiSkill2.myDef);
         }
+
         public override ItemDisplayRuleDict CreateDisplayRules()
         {
             SetupMaterials(ItemModel);
@@ -295,6 +303,7 @@ localScale = new Vector3(0.2235F, 0.2235F, 0.2235F)
             skills.Add(new MercEvisProjectile2());
             skills.Add(new ToolbotDash2());
             skills.Add(new TreebotFlower2_2());
+            skills.Add(new TreebotFireFruitSeed2());
         }
 
         public void RegisterSkills()
@@ -350,7 +359,8 @@ localScale = new Vector3(0.2235F, 0.2235F, 0.2235F)
             }
         }
 
-        bool handlingOverride = false;
+        private bool handlingOverride = false;
+
         private void On_GSSetSkillOverride(On.RoR2.GenericSkill.orig_SetSkillOverride orig, GenericSkill self, object source, SkillDef skillDef, GenericSkill.SkillOverridePriority priority)
         {
             if (stridesInteractionMode != StridesInteractionMode.ScepterTakesPrecedence
@@ -408,7 +418,8 @@ localScale = new Vector3(0.2235F, 0.2235F, 0.2235F)
             return true;
         }
 
-        bool handlingInventory = false;
+        private bool handlingInventory = false;
+
         private void On_CBOnInventoryChanged(On.RoR2.CharacterBody.orig_OnInventoryChanged orig, CharacterBody self)
         {
             orig(self);

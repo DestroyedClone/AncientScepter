@@ -1,9 +1,9 @@
-﻿using UnityEngine;
-using RoR2.Skills;
-using static AncientScepter.SkillUtil;
+﻿using EntityStates.Merc;
 using R2API;
-using EntityStates.Merc;
 using RoR2;
+using RoR2.Skills;
+using UnityEngine;
+using static AncientScepter.SkillUtil;
 
 namespace AncientScepter
 {
@@ -49,6 +49,7 @@ namespace AncientScepter
             GlobalEventManager.onCharacterDeathGlobal -= Evt_GEMOnCharacterDeathGlobal;
             On.EntityStates.Merc.Evis.FixedUpdate -= On_EvisFixedUpdate;
         }
+
         private void Evt_GEMOnCharacterDeathGlobal(DamageReport rep)
         {
             var attackerState = rep.attackerBody?.GetComponent<EntityStateMachine>()?.state;

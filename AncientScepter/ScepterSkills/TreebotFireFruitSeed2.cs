@@ -1,17 +1,10 @@
-﻿using UnityEngine;
-using RoR2.Skills;
-using static AncientScepter.SkillUtil;
+﻿using R2API;
 using RoR2;
-using R2API;
-using EntityStates.Treebot.TreebotFlower;
-using RoR2.Projectile;
-using UnityEngine.Networking;
+using RoR2.Skills;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using HG;
-using JetBrains.Annotations;
-using RoR2.Orbs;
+using UnityEngine;
+using UnityEngine.Networking;
+using static AncientScepter.SkillUtil;
 
 namespace AncientScepter
 {

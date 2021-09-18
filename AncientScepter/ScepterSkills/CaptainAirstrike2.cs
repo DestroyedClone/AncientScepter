@@ -1,15 +1,14 @@
-﻿using UnityEngine;
-using RoR2.Skills;
-using static AncientScepter.SkillUtil;
-using RoR2;
-using R2API;
-using EntityStates.Captain.Weapon;
+﻿using EntityStates.Captain.Weapon;
 using MonoMod.Cil;
+using R2API;
+using RoR2;
+using RoR2.Skills;
 using System;
+using UnityEngine;
+using static AncientScepter.SkillUtil;
 
 namespace AncientScepter
 {
-
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
     public class CaptainAirstrike2 : ScepterSkill
     {
@@ -84,7 +83,8 @@ namespace AncientScepter
         {
             var c = new ILCursor(il);
             c.GotoNext(MoveType.After, x => x.MatchCallOrCallvirt<GenericSkill>("get_stock"));
-            c.EmitDelegate<Func<int, int>>((origStock) => {
+            c.EmitDelegate<Func<int, int>>((origStock) =>
+            {
                 if (origStock == 0) return 0;
                 return origStock % 2 + 1;
             });

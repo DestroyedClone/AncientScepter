@@ -1,8 +1,8 @@
 ﻿using RoR2;
+using RoR2.Skills;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using RoR2.Skills;
 
 namespace AncientScepter
 {
@@ -17,7 +17,8 @@ namespace AncientScepter
         /// <param name="targetDef">The SkillDef to attempt to update.</param>
         public static void GlobalUpdateSkillDef(SkillDef targetDef)
         {
-            MiscUtil.AliveList().ForEach(cb => {
+            MiscUtil.AliveList().ForEach(cb =>
+            {
                 if (!cb.hasBody) return;
                 var sloc = cb.GetBody().skillLocator;
                 if (!sloc) return;
