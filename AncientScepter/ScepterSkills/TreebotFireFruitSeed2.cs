@@ -49,25 +49,28 @@ namespace AncientScepter
         {
             if (!NetworkServer.active) return;
             if (!damageReport.victimBody) return;
-            var victimBody = damageReport.victimBody;
-            GameObject gameObject = damageReport.victim.gameObject;
-            TeamIndex attackerTeamIndex = damageReport.attackerTeamIndex;
-            if (victimBody.HasBuff(RoR2Content.Buffs.Fruiting) || (damageReport.damageInfo.damageType & DamageType.FruitOnHit) > DamageType.Generic)
+            if (damageReport.attackerBody && AncientScepterItem.instance.GetCount(damageReport.attackerBody) > 0)
             {
-                EffectManager.SpawnEffect(Resources.Load<GameObject>("Prefabs/Effects/TreebotFruitDeathEffect.prefab"), new EffectData
+                var victimBody = damageReport.victimBody;
+                GameObject gameObject = damageReport.victim.gameObject;
+                TeamIndex attackerTeamIndex = damageReport.attackerTeamIndex;
+                if (victimBody.HasBuff(RoR2Content.Buffs.Fruiting) || (damageReport.damageInfo.damageType & DamageType.FruitOnHit) > DamageType.Generic)
                 {
-                    origin = gameObject.transform.position,
-                    rotation = UnityEngine.Random.rotation
-                }, true);
-                int num2 = Mathf.Min(Math.Max(1, (int)(victimBody.bestFitRadius * 2f)), 8);
-                GameObject original = Resources.Load<GameObject>("Prefabs/NetworkedObjects/TreebotFruitPack");
-                for (int j = 0; j < num2; j++)
-                {
-                    GameObject gameObject4 = UnityEngine.Object.Instantiate<GameObject>(original, gameObject.transform.position + UnityEngine.Random.insideUnitSphere * victimBody.radius * 0.5f, UnityEngine.Random.rotation);
-                    gameObject4.GetComponent<TeamFilter>().teamIndex = attackerTeamIndex;
-                    gameObject4.GetComponentInChildren<HealthPickup>();
-                    gameObject4.transform.localScale = new Vector3(1f, 1f, 1f);
-                    NetworkServer.Spawn(gameObject4);
+                    EffectManager.SpawnEffect(Resources.Load<GameObject>("Prefabs/Effects/TreebotFruitDeathEffect.prefab"), new EffectData
+                    {
+                        origin = gameObject.transform.position,
+                        rotation = UnityEngine.Random.rotation
+                    }, true);
+                    int num2 = Mathf.Min(Math.Max(1, (int)(victimBody.bestFitRadius * 2f)), 8);
+                    GameObject original = Resources.Load<GameObject>("Prefabs/NetworkedObjects/TreebotFruitPack");
+                    for (int j = 0; j < num2; j++)
+                    {
+                        GameObject gameObject4 = UnityEngine.Object.Instantiate<GameObject>(original, gameObject.transform.position + UnityEngine.Random.insideUnitSphere * victimBody.radius * 0.5f, UnityEngine.Random.rotation);
+                        gameObject4.GetComponent<TeamFilter>().teamIndex = attackerTeamIndex;
+                        gameObject4.GetComponentInChildren<HealthPickup>();
+                        gameObject4.transform.localScale = new Vector3(1f, 1f, 1f);
+                        NetworkServer.Spawn(gameObject4);
+                    }
                 }
             }
         }

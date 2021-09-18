@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Security;
 using System.Security.Permissions;
+using UnityEngine;
 using UnityEngine.Networking;
 
 [module: UnverifiableCode]
@@ -33,6 +34,7 @@ namespace AncientScepter
         public void Awake()
         {
             Assets.PopulateAssets();
+            CustomDamageTypes.SetupDamageTypes();
 
             var ItemTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(ItemBase)));
             foreach (var itemType in ItemTypes)
