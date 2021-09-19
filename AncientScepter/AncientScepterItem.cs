@@ -60,8 +60,8 @@ namespace AncientScepter
 
         public override string ItemPickupDesc => "Upgrades one of your skills.";
 
-        public override string ItemFullDescription => $"While held, one of your selected character's <style=cIsUtility>skills</style> <style=cStack>(unique per character)</style> becomes a <style=cIsUtility>more powerful version</style>."
-                        + $" <style=cStack>{(rerollExtras ? "Extra/unusable" : "Unusable (but NOT extra)")} pickups will reroll into {(rerollScrap ? "red scrap" : "other red items.")}</style>";
+        public override string ItemFullDescription => $"While held, upgrade one of your survivor's <style=cIsUtility>skills</style> <style=cStack>(unique per character)</style> into a <style=cIsUtility>more powerful version</style>."
+                        + $" <style=cStack>{(rerollExtras ? "Extra/Unusable" : "Unusable (but NOT extra)")} pickups will reroll into {(rerollScrap ? "red scrap" : "other legendary items.")}</style>";
 
         public override string ItemLore => OrderManifestLoreFormatter(
 
