@@ -12,13 +12,11 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Hitting the same target deals up to +50% increased damage.</color>";
+        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Deal 50% more damage if your enemy is targeting you.</color>";
 
         public override string targetBody => "Bandit2Body";
         public override SkillSlot targetSlot => SkillSlot.Special;
         public override int targetVariantIndex => 1;
-
-        public static HealthComponent lastTarget;
 
         internal override void SetupAttributes()
         {
@@ -46,15 +44,16 @@ namespace AncientScepter
 
         private void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
-            if ((damageInfo.damageType & DamageType.ResetCooldownsOnKill) == DamageType.ResetCooldownsOnKill)
+            if ((damageInfo.damageType & DamageType.GiveSkullOnKill) == DamageType.GiveSkullOnKill)
             {
-                if (damageInfo.attacker && AncientScepterItem.instance.GetCount(damageInfo.attacker.GetComponent<CharacterBody>()) > 0)
+                if (self.body && self.body.master && damageInfo.attacker && damageInfo.attacker.GetComponent<HealthComponent>() && AncientScepterItem.instance.GetCount(damageInfo.attacker.GetComponent<CharacterBody>()) > 0)
                 {
-                    if (lastTarget == self)
+                    var attackerHC = damageInfo.attacker.GetComponent<HealthComponent>();
+                    var baseAI = self.body.master.GetComponent<RoR2.CharacterAI.BaseAI>();
+                    if (baseAI && baseAI.currentEnemy != null && baseAI.currentEnemy.healthComponent == attackerHC)
                     {
                         damageInfo.damage *= 1.5f;
                     }
-                    lastTarget = self;
                 }
             }
             orig(self, damageInfo);
@@ -62,7 +61,6 @@ namespace AncientScepter
 
         internal override void UnloadBehavior()
         {
-            On.RoR2.HealthComponent.TakeDamage -= HealthComponent_TakeDamage;
         }
     }
 }

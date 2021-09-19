@@ -2,6 +2,7 @@
 using R2API;
 using R2API.Utils;
 using RoR2;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -17,7 +18,7 @@ namespace AncientScepter
 {
     [BepInPlugin(ModGuid, ModName, ModVer)]
     [BepInDependency(R2API.R2API.PluginGUID, R2API.R2API.PluginVersion)]
-    [R2APISubmoduleDependency(nameof(ItemAPI), nameof(ResourcesAPI), nameof(ProjectileAPI), nameof(LanguageAPI), nameof(LoadoutAPI))]
+    [R2APISubmoduleDependency(nameof(ItemAPI), nameof(ResourcesAPI), nameof(ProjectileAPI), nameof(LanguageAPI), nameof(LoadoutAPI), nameof(DamageAPI), nameof(PrefabAPI))]
     [BepInDependency(TILER2.TILER2Plugin.ModGuid, BepInDependency.DependencyFlags.SoftDependency)]
     public class AncientScepterMain : BaseUnityPlugin
     {
@@ -103,6 +104,23 @@ namespace AncientScepter
                 item.AIBlacklisted = true;
             }
             return enabled;
+        }
+
+        // Aetherium: https://github.com/KomradeSpectre/AetheriumMod/blob/6f35f9d8c57f4b7fa14375f620518e7c904c8287/Aetherium/Items/AccursedPotion.cs#L344-L358
+        public static void AddBuffAndDot(BuffDef buff, float duration, int stackCount, RoR2.CharacterBody body)
+        {
+            RoR2.DotController.DotIndex index = (RoR2.DotController.DotIndex)Array.FindIndex(RoR2.DotController.dotDefs, (dotDef) => dotDef.associatedBuff == buff);
+            for (int y = 0; y < stackCount; y++)
+            {
+                if (index != RoR2.DotController.DotIndex.None)
+                {
+                    RoR2.DotController.InflictDot(body.gameObject, body.gameObject, index, duration, 0.25f);
+                }
+                else
+                {
+                    body.AddTimedBuffAuthority(buff.buffIndex, duration);
+                }
+            }
         }
     }
 }

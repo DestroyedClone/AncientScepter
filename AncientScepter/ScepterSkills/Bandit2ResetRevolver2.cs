@@ -16,7 +16,7 @@ namespace AncientScepter
 
         public override string targetBody => "Bandit2Body";
         public override SkillSlot targetSlot => SkillSlot.Special;
-        public override int targetVariantIndex => 1;
+        public override int targetVariantIndex => 0;
 
         internal override void SetupAttributes()
         {
@@ -39,70 +39,60 @@ namespace AncientScepter
 
         internal override void LoadBehavior()
         {
-            On.EntityStates.Bandit2.Weapon.BaseFireSidearmRevolverState.OnEnter += BaseFireSidearmRevolverState_OnEnter;
+            On.EntityStates.Bandit2.Weapon.BaseFireSidearmRevolverState.FixedUpdate += BaseFireSidearmRevolverState_FixedUpdate;
         }
 
         internal override void UnloadBehavior()
-        { 
-            On.EntityStates.Bandit2.Weapon.BaseFireSidearmRevolverState.OnEnter -= BaseFireSidearmRevolverState_OnEnter;
+        {
+            On.EntityStates.Bandit2.Weapon.BaseFireSidearmRevolverState.FixedUpdate -= BaseFireSidearmRevolverState_FixedUpdate;
         }
 
-        private void BaseFireSidearmRevolverState_OnEnter(On.EntityStates.Bandit2.Weapon.BaseFireSidearmRevolverState.orig_OnEnter orig, EntityStates.Bandit2.Weapon.BaseFireSidearmRevolverState self)
+        private void BaseFireSidearmRevolverState_FixedUpdate(On.EntityStates.Bandit2.Weapon.BaseFireSidearmRevolverState.orig_FixedUpdate orig, EntityStates.Bandit2.Weapon.BaseFireSidearmRevolverState self)
         {
             orig(self);
-            bool isScepter = self is EntityStates.Bandit2.Weapon.FireSidearmResetRevolver;
-            if (isScepter)
+            if (self.fixedAge >= 0 && self.fixedAge < self.duration * 0.03f && self.isAuthority)
             {
-                self.AddRecoil(-3f * self.recoilAmplitude, -4f * self.recoilAmplitude, -0.5f * self.recoilAmplitude, 0.5f * self.recoilAmplitude);
-                Ray aimRay = self.GetAimRay();
-                self.StartAimMode(aimRay, 2f, false);
-                string muzzleName = "MuzzlePistol";
-                Util.PlaySound(self.attackSoundString, self.gameObject);
-                self.PlayAnimation("Gesture, Additive", "FireSideWeapon", "FireSideWeapon.playbackRate", self.duration);
-                if (self.effectPrefab)
+                bool isScepter = self is EntityStates.Bandit2.Weapon.FireSidearmResetRevolver
+                   && AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0;
+                if (isScepter)
                 {
-                    EffectManager.SimpleMuzzleFlash(self.effectPrefab, self.gameObject, muzzleName, false);
+                    self.AddRecoil(-3f * self.recoilAmplitude, -4f * self.recoilAmplitude, -0.5f * self.recoilAmplitude, 0.5f * self.recoilAmplitude);
+                    Ray aimRay = self.GetAimRay();
+                    self.StartAimMode(aimRay, 2f, false);
+                    string muzzleName = "MuzzlePistol";
+                    Util.PlaySound(self.attackSoundString, self.gameObject);
+                    self.PlayAnimation("Gesture, Additive", "FireSideWeapon", "FireSideWeapon.playbackRate", self.duration);
+                    if (self.effectPrefab)
+                    {
+                        EffectManager.SimpleMuzzleFlash(self.effectPrefab, self.gameObject, muzzleName, false);
+                    }
+                    if (self.isAuthority)
+                    {
+                        BulletAttack bulletAttack = new BulletAttack
+                        {
+                            owner = self.gameObject,
+                            weapon = self.gameObject,
+                            origin = aimRay.origin,
+                            aimVector = aimRay.direction,
+                            minSpread = self.minSpread,
+                            maxSpread = self.maxSpread,
+                            bulletCount = 1U,
+                            damage = self.damageCoefficient * self.damageStat,
+                            force = self.force,
+                            falloffModel = BulletAttack.FalloffModel.None,
+                            tracerEffectPrefab = self.tracerEffectPrefab,
+                            muzzleName = muzzleName,
+                            hitEffectPrefab = self.hitEffectPrefab,
+                            isCrit = self.RollCrit(),
+                            HitEffectNormal = false,
+                            radius = self.bulletRadius,
+                            smartCollision = true
+                        };
+                        bulletAttack.damageType |= DamageType.BonusToLowHealth;
+                        self.ModifyBullet(bulletAttack);
+                        bulletAttack.Fire();
+                    }
                 }
-                if (self.isAuthority)
-                {
-                    BulletAttack bulletAttack = new BulletAttack();
-                    bulletAttack.owner = self.gameObject;
-                    bulletAttack.weapon = self.gameObject;
-                    bulletAttack.origin = aimRay.origin;
-                    bulletAttack.aimVector = aimRay.direction;
-                    bulletAttack.minSpread = self.minSpread;
-                    bulletAttack.maxSpread = self.maxSpread;
-                    bulletAttack.bulletCount = 1U;
-                    bulletAttack.damage = self.damageCoefficient * self.damageStat;
-                    bulletAttack.force = self.force;
-                    bulletAttack.falloffModel = BulletAttack.FalloffModel.None;
-                    bulletAttack.tracerEffectPrefab = self.tracerEffectPrefab;
-                    bulletAttack.muzzleName = muzzleName;
-                    bulletAttack.hitEffectPrefab = self.hitEffectPrefab;
-                    bulletAttack.isCrit = self.RollCrit();
-                    bulletAttack.HitEffectNormal = false;
-                    bulletAttack.radius = self.bulletRadius;
-                    bulletAttack.damageType |= DamageType.BonusToLowHealth;
-                    bulletAttack.smartCollision = true;
-                    self.ModifyBullet(bulletAttack);
-                    bulletAttack.Fire();
-                }
-            }
-        }
-
-
-
-        private void On_FireFMJEnter(On.EntityStates.GenericProjectileBaseState.orig_OnEnter orig, EntityStates.GenericProjectileBaseState self)
-        {
-            orig(self);
-            if (!(self is EntityStates.Merc.Weapon.ThrowEvisProjectile) || AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) < 1) return;
-            if (!self.outer.commonComponents.skillLocator?.special) return;
-            var fireCount = self.outer.commonComponents.skillLocator.special.stock;
-            self.outer.commonComponents.skillLocator.special.stock = 0;
-            for (var i = 0; i < fireCount; i++)
-            {
-                self.FireProjectile();
-                self.DoFireEffects();
             }
         }
     }

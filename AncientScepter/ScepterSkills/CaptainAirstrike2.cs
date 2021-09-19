@@ -75,11 +75,12 @@ namespace AncientScepter
 
         private bool On_CallAirstrikeBaseKeyIsDown(On.EntityStates.Captain.Weapon.CallAirstrikeBase.orig_KeyIsDown orig, CallAirstrikeBase self)
         {
+            Chat.AddMessage("cum");
             if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0) return false;
             return orig(self);
         }
 
-        private void IL_CallAirstrikeEnterEnter(ILContext il)
+        private void IL_CallAirstrikeEnterEnter(ILContext il) //exclusively used by normal airstrike so can be left alone
         {
             var c = new ILCursor(il);
             c.GotoNext(MoveType.After, x => x.MatchCallOrCallvirt<GenericSkill>("get_stock"));
@@ -99,14 +100,18 @@ namespace AncientScepter
         private void On_CallAirstrikeBaseEnter(On.EntityStates.Captain.Weapon.CallAirstrikeBase.orig_OnEnter orig, CallAirstrikeBase self)
         {
             orig(self);
-            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
+            var isAirstrike = self is CallAirstrike1
+                || self is CallAirstrike2
+                || self is CallAirstrike3;
+
+            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0 && isAirstrike)
             {
                 self.damageCoefficient = 5f;
                 self.AddRecoil(-1f, 1f, -1f, 1f);
             }
         }
 
-        private void On_SetupAirstrikeStateEnter(On.EntityStates.Captain.Weapon.SetupAirstrike.orig_OnEnter orig, EntityStates.Captain.Weapon.SetupAirstrike self)
+        private void On_SetupAirstrikeStateEnter(On.EntityStates.Captain.Weapon.SetupAirstrike.orig_OnEnter orig, EntityStates.Captain.Weapon.SetupAirstrike self) //exc
         {
             var origOverride = SetupAirstrike.primarySkillDef;
             if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
@@ -117,7 +122,7 @@ namespace AncientScepter
             SetupAirstrike.primarySkillDef = origOverride;
         }
 
-        private void On_SetupAirstrikeStateExit(On.EntityStates.Captain.Weapon.SetupAirstrike.orig_OnExit orig, EntityStates.Captain.Weapon.SetupAirstrike self)
+        private void On_SetupAirstrikeStateExit(On.EntityStates.Captain.Weapon.SetupAirstrike.orig_OnExit orig, EntityStates.Captain.Weapon.SetupAirstrike self) //exc
         {
             if (self.primarySkillSlot)
                 self.primarySkillSlot.UnsetSkillOverride(self, myCallDef, GenericSkill.SkillOverridePriority.Contextual);
