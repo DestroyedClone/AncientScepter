@@ -139,6 +139,7 @@ namespace AncientScepter
         /// <param name="targetFamily">The SkillFamily to perform an addition on.</param>
         /// <param name="newDef">The SkillDef to add.</param>
         /// <param name="unlockableName">The name of the unlockable which should restrict access to this variant until unlocked. Default value results in no unlockable.</param>
+        [Obsolete]
         public static void AddVariant(this SkillFamily targetFamily, SkillDef newDef, string unlockableName = "")
         {
             Array.Resize(ref targetFamily.variants, targetFamily.variants.Length + 1);
@@ -147,6 +148,23 @@ namespace AncientScepter
                 skillDef = newDef,
                 viewableNode = new ViewablesCatalog.Node(newDef.skillNameToken, false, null),
                 unlockableName = unlockableName
+            };
+        }
+
+        /// <summary>
+        /// Adds a new variant to a SkillFamily, via direct access to the SkillFamily.
+        /// </summary>
+        /// <param name="targetFamily">The SkillFamily to perform an addition on.</param>
+        /// <param name="newDef">The SkillDef to add.</param>
+        /// <param name="unlockableName">The name of the unlockable which should restrict access to this variant until unlocked. Default value results in no unlockable.</param>
+        public static void AddVariant(this SkillFamily targetFamily, SkillDef newDef, UnlockableDef unlockableDef = null)
+        {
+            Array.Resize(ref targetFamily.variants, targetFamily.variants.Length + 1);
+            targetFamily.variants[targetFamily.variants.Length - 1] = new SkillFamily.Variant
+            {
+                skillDef = newDef,
+                viewableNode = new ViewablesCatalog.Node(newDef.skillNameToken, false, null),
+                unlockableDef = unlockableDef
             };
         }
 
