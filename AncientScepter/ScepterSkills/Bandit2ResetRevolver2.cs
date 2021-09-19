@@ -32,7 +32,7 @@ namespace AncientScepter
             myDef.skillName = namestr;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
-            myDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texBandit2R1");
+            myDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texBanditR1");
 
             LoadoutAPI.AddSkillDef(myDef);
         }

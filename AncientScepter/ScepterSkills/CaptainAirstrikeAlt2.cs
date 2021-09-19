@@ -40,7 +40,7 @@ namespace AncientScepter
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
             myDef.baseRechargeInterval = 60f;
-            myDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texCapU1");
+            myDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texCapU2");
 
             LoadoutAPI.AddSkillDef(myDef);
 
