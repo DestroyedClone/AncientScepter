@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 773600838
+CRC: 2233415447
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: de5383ffab8230c6faa6820e4c9a873f
+    Hash: 7d38c1593d0987c43ab12c9c5ad7fb4d
   TypeTreeHash:
     serializedVersion: 2
-    Hash: af0546f2cc5a51a7ebca6aa02b83b943
+    Hash: 0792913792f1c822bd8776f0053f7de8
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -15,7 +15,11 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 21
   Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
 - Class: 28
+  Script: {instanceID: 0}
+- Class: 33
   Script: {instanceID: 0}
 - Class: 43
   Script: {instanceID: 0}
@@ -40,17 +44,24 @@ ClassTypes:
 - Class: 213
   Script: {instanceID: 0}
 Assets:
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texCapU2.png
+- Assets/AssetBundle/AncientScepter/mdlAncientScepterNewCrystal.prefab
 - Assets/AssetBundle/AncientScepter/Textures/texAncientScepterEmission.png
 - Assets/AssetBundle/AncientScepter/Icons/Skills/texAcridR1.png
 - Assets/AssetBundle/AncientScepter/Textures/texAncientScepter.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texHereticR2.png
 - Assets/AssetBundle/AncientScepter/VFX/matRound.mat
 - Assets/AssetBundle/AncientScepter/Icons/Skills/texLoaderU1.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texHereticR1.png
 - Assets/AssetBundle/AncientScepter/Icons/Skills/texMultU1.png
 - Assets/AssetBundle/AncientScepter/Icons/Skills/texMercR1.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texRexR2.png
 - Assets/AssetBundle/AncientScepter/Icons/Skills/texArtiR2.png
 - Assets/AssetBundle/AncientScepter/Icons/Skills/texArtiR1.png
 - Assets/AssetBundle/AncientScepter/VFX/texAura.tif
-- Assets/AssetBundle/AncientScepter/Icons/texAncientScepterIcon.png
+- Assets/AssetBundle/AncientScepter/Textures/Ancientscepter_Material_Roughness.png
+- Assets/AssetBundle/AncientScepter/Icons/texAncientScepterIconOld.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texBanditR2.png
 - Assets/AssetBundle/AncientScepter/Animations/ScepterIdle.anim
 - Assets/AssetBundle/AncientScepter/Animations/animScepter.controller
 - Assets/AssetBundle/AncientScepter/VFX/matAura.mat
@@ -61,11 +72,15 @@ Assets:
 - Assets/AssetBundle/AncientScepter/Icons/Skills/texRexR1.png
 - Assets/AssetBundle/AncientScepter/Icons/Skills/texCommandoR1.png
 - Assets/AssetBundle/AncientScepter/Icons/Skills/texEngiR2.png
+- Assets/AssetBundle/AncientScepter/Textures/Ancientscepter_Material_BaseColor.png
 - Assets/AssetBundle/AncientScepter/Icons/Skills/texLoaderU2.png
 - Assets/AssetBundle/AncientScepter/VFX/texRound.png
+- Assets/AssetBundle/AncientScepter/Icons/texAncientScepterIcon.png
+- Assets/AssetBundle/AncientScepter/Textures/Ancientscepter_Material_Normal.png
 - Assets/AssetBundle/AncientScepter/Icons/Skills/texCapU1.png
 - Assets/AssetBundle/AncientScepter/mdlAncientScepterDisplay.prefab
 - Assets/AssetBundle/AncientScepter/Icons/Skills/texHuntressR2.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texBanditR1.png
 - Assets/AssetBundle/AncientScepter/Materials/matAncientScepter.mat
 - Assets/AssetBundle/AncientScepter/Icons/Skills/texCommandoR2.png
 Dependencies: []
