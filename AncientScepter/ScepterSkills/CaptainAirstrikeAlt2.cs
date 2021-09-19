@@ -116,7 +116,7 @@ namespace AncientScepter
             orig(self);
             bool isScepter = AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0
                 && self is EntityStates.Captain.Weapon.CallAirstrikeAlt;
-            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
+            if (isScepter)
             {
                 self.damageCoefficient = 100000f;
             }

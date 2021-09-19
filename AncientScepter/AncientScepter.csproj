@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ScepterSkills\AurelioniteEyeLaser2.cs" />
     <Compile Remove="ScepterSkills\CaptainAirstrikeAlt2z.cs" />
   </ItemGroup>
 

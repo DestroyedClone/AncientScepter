@@ -322,15 +322,6 @@ localScale = new Vector3(0.2235F, 0.2235F, 0.2235F)
         {
         }
 
-        public void SetupAttributes()
-        {
-            foreach (var skill in skills)
-            {
-                skill.SetupAttributes();
-                RegisterScepterSkill(skill.myDef, skill.targetBody, skill.targetSlot, skill.targetVariantIndex);
-            }
-        }
-
         public void Install()
         {
             On.RoR2.CharacterBody.OnInventoryChanged += On_CBOnInventoryChanged;
