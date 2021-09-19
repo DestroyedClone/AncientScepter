@@ -75,8 +75,10 @@ namespace AncientScepter
 
         private bool On_CallAirstrikeBaseKeyIsDown(On.EntityStates.Captain.Weapon.CallAirstrikeBase.orig_KeyIsDown orig, CallAirstrikeBase self)
         {
-            Chat.AddMessage("cum");
-            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0) return false;
+            var isAirstrike = self is CallAirstrike1
+                || self is CallAirstrike2
+                || self is CallAirstrike3;
+            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0 && isAirstrike) return false;
             return orig(self);
         }
 

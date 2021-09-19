@@ -34,8 +34,8 @@ namespace AncientScepter
 
         public void Awake()
         {
-            Assets.PopulateAssets();
             CustomDamageTypes.SetupDamageTypes();
+            Assets.PopulateAssets();
 
             var ItemTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(ItemBase)));
             foreach (var itemType in ItemTypes)

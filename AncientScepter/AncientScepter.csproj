@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ScepterSkills\CaptainAirstrikeAlt2z.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="ancientscepter" />
   </ItemGroup>
 
