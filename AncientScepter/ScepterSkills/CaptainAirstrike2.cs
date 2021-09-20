@@ -48,7 +48,7 @@ namespace AncientScepter
             myCallDef.mustKeyPress = false;
             myCallDef.resetCooldownTimerOnUse = true;
             myCallDef.baseRechargeInterval = 0.07f;
-            myCallDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texCapU2");
+            myCallDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texCapU1");
 
             LoadoutAPI.AddSkillDef(myCallDef);
         }

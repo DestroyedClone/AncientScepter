@@ -26,7 +26,7 @@ namespace AncientScepter
         public const string ModName = "StandaloneAncientScepter";
         public const string ModGuid = "com.DestroyedClone.AncientScepter";
 
-        internal static BepInEx.Logging.ManualLogSource _logger;
+        internal static BepInEx.Logging.ManualLogSource _logger = null;
 
         public List<ItemBase> Items = new List<ItemBase>();
         public static Dictionary<ItemBase, bool> ItemStatusDictionary = new Dictionary<ItemBase, bool>();
@@ -34,6 +34,7 @@ namespace AncientScepter
 
         public void Awake()
         {
+            _logger = Logger;
             CustomDamageTypes.SetupDamageTypes();
             Assets.PopulateAssets();
 
@@ -121,6 +122,19 @@ namespace AncientScepter
                     body.AddTimedBuffAuthority(buff.buffIndex, duration);
                 }
             }
+        }
+
+        internal static BuffDef AddNewBuff(string buffName, Sprite buffIcon, Color buffColor, bool canStack, bool isDebuff)
+        {
+            BuffDef buffDef = ScriptableObject.CreateInstance<BuffDef>();
+            buffDef.name = buffName;
+            buffDef.buffColor = buffColor;
+            buffDef.canStack = canStack;
+            buffDef.isDebuff = isDebuff;
+            buffDef.eliteDef = null;
+            buffDef.iconSprite = buffIcon;
+
+            return buffDef;
         }
     }
 }

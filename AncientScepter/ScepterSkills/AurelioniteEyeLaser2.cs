@@ -54,12 +54,11 @@ namespace AncientScepter
 
         private void FireMegaLaser_FireBullet(On.EntityStates.TitanMonster.FireMegaLaser.orig_FireBullet orig, FireMegaLaser self, Transform modelTransform, Ray aimRay, string targetMuzzle, float maxDistance)
         {
-            orig(self, modelTransform, aimRay, targetMuzzle, maxDistance);
             if (self is FireGoldMegaLaser && AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
             {
-                if (self.isAuthority && self.lockedOnHurtBox)
+                if (self.isAuthority && self.lockedOnHurtBox && self.lockedOnHurtBox.healthComponent)
                 {
-                    new DamageInfo
+                    var damageInfo = new DamageInfo
                     {
                         attacker = self.gameObject,
                         crit = self.RollCrit(),
@@ -69,8 +68,10 @@ namespace AncientScepter
                         procCoefficient = 0f,
                         procChainMask = default,
                     };
+                    self.lockedOnHurtBox.healthComponent.TakeDamage(damageInfo);
                 }
             }
+            orig(self, modelTransform, aimRay, targetMuzzle, maxDistance);
         }
     }
 }

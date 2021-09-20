@@ -298,6 +298,7 @@ localScale = new Vector3(0.2235F, 0.2235F, 0.2235F)
             skills.Add(new CrocoDisease2());
             skills.Add(new EngiTurret2());
             skills.Add(new EngiWalker2());
+            skills.Add(new HereticNevermore2());
             skills.Add(new HuntressBallista2());
             skills.Add(new HuntressRain2());
             skills.Add(new LoaderChargeFist2());
@@ -305,6 +306,7 @@ localScale = new Vector3(0.2235F, 0.2235F, 0.2235F)
             skills.Add(new MercEvis2());
             skills.Add(new MercEvisProjectile2());
             skills.Add(new ToolbotDash2());
+            skills.Add(new AurelioniteEyeLaser2());
             skills.Add(new TreebotFlower2_2());
             skills.Add(new TreebotFireFruitSeed2());
         }
@@ -404,6 +406,21 @@ localScale = new Vector3(0.2235F, 0.2235F, 0.2235F)
             }
             if (scepterReplacers.Exists(x => x.bodyName == targetBodyName && (x.slotIndex != targetSlot || x.variantIndex == targetVariant)))
             {
+                foreach (var a in scepterReplacers)
+                {
+                    if (a.bodyName == targetBodyName)
+                    {
+                        AncientScepterMain._logger.LogMessage(a.bodyName);
+                    }
+                    if (a.slotIndex != targetSlot)
+                    {
+                        AncientScepterMain._logger.LogMessage($"BB");
+                    }
+                    if (a.variantIndex == targetVariant)
+                    {
+                        AncientScepterMain._logger.LogMessage($"CC");
+                    }
+                }
                 AncientScepterMain._logger.LogError("A scepter skill already exists for this character; can't add multiple for different slots nor for the same variant");
                 return false;
             }
