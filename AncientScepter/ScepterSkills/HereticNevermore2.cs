@@ -19,7 +19,7 @@ namespace AncientScepter
         public override SkillSlot targetSlot => SkillSlot.Special;
         public override int targetVariantIndex => 0;
 
-        public static BuffDef buffDef;
+        public static CustomBuff perishSongDebuff;
 
         internal override void SetupAttributes()
         {
@@ -40,7 +40,8 @@ namespace AncientScepter
 
             LoadoutAPI.AddSkillDef(myDef);
 
-            buffDef = AncientScepterMain.AddNewBuff("Perish Song\nYou are going to die.", Resources.Load<Sprite>("textures/difficultyicons/texDifficultyHardIcon"), Color.red, false, false);
+            var buffDef = AncientScepterMain.AddNewBuff("Perish Song\nYou are going to die.", Resources.Load<Sprite>("textures/difficultyicons/texDifficultyHardIcon"), Color.red, false, false);
+            perishSongDebuff = new CustomBuff(buffDef);
         }
 
         internal override void LoadBehavior()
@@ -76,7 +77,7 @@ namespace AncientScepter
         }
         private void CharacterBody_RemoveBuff_BuffIndex(On.RoR2.CharacterBody.orig_RemoveBuff_BuffIndex orig, CharacterBody self, BuffIndex buffType)
         {
-            if (buffType == RoR2Content.Buffs.Overheat.buffIndex && self.healthComponent)
+            if (buffType == perishSongDebuff.BuffDef.buffIndex && self.healthComponent)
             {
                 self.healthComponent.Suicide();
             }
@@ -94,7 +95,7 @@ namespace AncientScepter
                     if (c)
                     {
                         if (UnityEngine.Networking.NetworkServer.active)
-                            c.AddTimedBuff(RoR2Content.Buffs.Overheat, 30f);
+                            c.AddTimedBuff(perishSongDebuff.BuffDef, 30f);
                         Util.PlaySound(self.soundName, c.gameObject);
                     }
                 }
