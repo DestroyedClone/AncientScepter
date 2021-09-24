@@ -117,6 +117,9 @@ namespace AncientScepter
 
         private void ProjectileExplosion_DetonateServer(On.RoR2.Projectile.ProjectileExplosion.orig_DetonateServer orig, ProjectileExplosion self)
         {
+            var cachedExplosionEffect = self.explosionEffect;
+            var cachedProjectileDamage = self.projectileDamage;
+            var cachedSelfFireChildren = self.fireChildren;
             if (self is ProjectileImpactExplosion && self.GetComponent<ScepterAirstrikeMarker>())
             {
                 if (self.explosionEffect)
@@ -127,6 +130,8 @@ namespace AncientScepter
                         scale = self.blastRadius
                     }, true);
                 }
+                self.explosionEffect = null;
+
                 if (self.projectileDamage)
                 {
                     new BlastAttack
@@ -149,10 +154,8 @@ namespace AncientScepter
                         losType = BlastAttack.LoSType.NearestHit
                     }.Fire();
                 }
-                if (self.explosionSoundString.Length > 0)
-                {
-                    Util.PlaySound(self.explosionSoundString, self.gameObject);
-                }
+                self.projectileDamage = null;
+
                 if (self.fireChildren)
                 {
                     for (int i = 0; i < self.childrenCount; i++)
@@ -160,9 +163,12 @@ namespace AncientScepter
                         self.FireChild();
                     }
                 }
-                return;
+                self.fireChildren = false;
             }
             orig(self);
+            self.explosionEffect = cachedExplosionEffect;
+            self.projectileDamage = cachedProjectileDamage;
+            self.fireChildren = cachedSelfFireChildren;
         }
 
         internal override void UnloadBehavior()
