@@ -1,187 +1,188 @@
-﻿using UnityEngine;
-using RoR2.Skills;
-using static AncientScepter.SkillUtil;
+﻿using R2API;
 using RoR2;
-using R2API;
-using UnityEngine.Networking;
-using System.Collections.ObjectModel;
 using RoR2.Orbs;
+using RoR2.Skills;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using UnityEngine;
+using UnityEngine.Networking;
+using static AncientScepter.SkillUtil;
 
 namespace AncientScepter
 {
-	public class CrocoDisease2 : ScepterSkill
-	{
-		private static GameObject diseaseWardPrefab;
+    public class CrocoDisease2 : ScepterSkill
+    {
+        private static GameObject diseaseWardPrefab;
 
-		public override SkillDef myDef { get; protected set; }
+        public override SkillDef myDef { get; protected set; }
 
-		public override string oldDescToken { get; protected set; }
-		public override string newDescToken { get; protected set; }
-		public override string overrideStr => "\n<color=#d299ff>SCEPTER: Victims become walking sources of Plague.</color>";
+        public override string oldDescToken { get; protected set; }
+        public override string newDescToken { get; protected set; }
+        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Victims become walking sources of Plague.</color>";
 
-		public override string targetBody => "CrocoBody";
-		public override SkillSlot targetSlot => SkillSlot.Special;
-		public override int targetVariantIndex => 0;
+        public override string targetBody => "CrocoBody";
+        public override SkillSlot targetSlot => SkillSlot.Special;
+        public override int targetVariantIndex => 0;
 
-		internal override void SetupAttributes()
-		{
-			var oldDef = Resources.Load<SkillDef>("skilldefs/crocobody/CrocoDisease");
-			myDef = CloneSkillDef(oldDef);
+        internal override void SetupAttributes()
+        {
+            var oldDef = Resources.Load<SkillDef>("skilldefs/crocobody/CrocoDisease");
+            myDef = CloneSkillDef(oldDef);
 
-			var nametoken = "ANCIENTSCEPTER_SCEPCROCO_DISEASENAME";
-			newDescToken = "ANCIENTSCEPTER_SCEPCROCO_DISEASEDESC";
-			oldDescToken = oldDef.skillDescriptionToken;
-			var namestr = "Plague";
-			LanguageAPI.Add(nametoken, namestr);
+            var nametoken = "ANCIENTSCEPTER_SCEPCROCO_DISEASENAME";
+            newDescToken = "ANCIENTSCEPTER_SCEPCROCO_DISEASEDESC";
+            oldDescToken = oldDef.skillDescriptionToken;
+            var namestr = "Plague";
+            LanguageAPI.Add(nametoken, namestr);
 
-			myDef.skillName = namestr;
-			myDef.skillNameToken = nametoken;
-			myDef.skillDescriptionToken = newDescToken;
-			myDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texAcridR1");
+            myDef.skillName = namestr;
+            myDef.skillNameToken = nametoken;
+            myDef.skillDescriptionToken = newDescToken;
+            myDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texAcridR1");
 
-			LoadoutAPI.AddSkillDef(myDef);
+            LoadoutAPI.AddSkillDef(myDef);
 
-			var mshPrefab = Resources.Load<GameObject>("Prefabs/NetworkedObjects/MushroomWard");
+            var mshPrefab = Resources.Load<GameObject>("Prefabs/NetworkedObjects/MushroomWard");
 
-			var dwPrefabPrefab = new GameObject("CIDiseaseAuraPrefabPrefab");
-			dwPrefabPrefab.AddComponent<TeamFilter>();
-			dwPrefabPrefab.AddComponent<MeshFilter>().mesh = mshPrefab.GetComponentInChildren<MeshFilter>().mesh;
-			dwPrefabPrefab.AddComponent<MeshRenderer>().material = UnityEngine.Object.Instantiate(mshPrefab.GetComponentInChildren<MeshRenderer>().material);
-			dwPrefabPrefab.GetComponent<MeshRenderer>().material.SetVector("_TintColor", new Vector4(1.5f, 0.3f, 1f, 0.3f));
-			dwPrefabPrefab.AddComponent<NetworkedBodyAttachment>().forceHostAuthority = true;
-			var dw = dwPrefabPrefab.AddComponent<DiseaseWard>();
-			dw.rangeIndicator = dwPrefabPrefab.GetComponent<MeshRenderer>().transform;
-			dw.interval = 1f;
-			diseaseWardPrefab = dwPrefabPrefab.InstantiateClone("CIDiseaseWardAuraPrefab");
-			UnityEngine.Object.Destroy(dwPrefabPrefab);
-		}
+            var dwPrefabPrefab = new GameObject("CIDiseaseAuraPrefabPrefab");
+            dwPrefabPrefab.AddComponent<TeamFilter>();
+            dwPrefabPrefab.AddComponent<MeshFilter>().mesh = mshPrefab.GetComponentInChildren<MeshFilter>().mesh;
+            dwPrefabPrefab.AddComponent<MeshRenderer>().material = UnityEngine.Object.Instantiate(mshPrefab.GetComponentInChildren<MeshRenderer>().material);
+            dwPrefabPrefab.GetComponent<MeshRenderer>().material.SetVector("_TintColor", new Vector4(1.5f, 0.3f, 1f, 0.3f));
+            dwPrefabPrefab.AddComponent<NetworkedBodyAttachment>().forceHostAuthority = true;
+            var dw = dwPrefabPrefab.AddComponent<DiseaseWard>();
+            dw.rangeIndicator = dwPrefabPrefab.GetComponent<MeshRenderer>().transform;
+            dw.interval = 1f;
+            diseaseWardPrefab = dwPrefabPrefab.InstantiateClone("CIDiseaseWardAuraPrefab");
+            UnityEngine.Object.Destroy(dwPrefabPrefab);
+        }
 
-		internal override void LoadBehavior()
-		{
-			On.RoR2.Orbs.LightningOrb.OnArrival += On_LightningOrbArrival;
-		}
-		internal override void UnloadBehavior()
-		{
-			On.RoR2.Orbs.LightningOrb.OnArrival -= On_LightningOrbArrival;
-		}
+        internal override void LoadBehavior()
+        {
+            On.RoR2.Orbs.LightningOrb.OnArrival += On_LightningOrbArrival;
+        }
 
-		private void On_LightningOrbArrival(On.RoR2.Orbs.LightningOrb.orig_OnArrival orig, LightningOrb self)
-		{
-			orig(self);
-			if (self.lightningType != LightningOrb.LightningType.CrocoDisease || AncientScepterItem.instance.GetCount(self.attacker?.GetComponent<CharacterBody>()) < 1) return;
-			if (!self.target || !self.target.healthComponent) return;
+        internal override void UnloadBehavior()
+        {
+            On.RoR2.Orbs.LightningOrb.OnArrival -= On_LightningOrbArrival;
+        }
 
-			var cpt = self.target.healthComponent.gameObject.GetComponentInChildren<DiseaseWard>()?.gameObject;
-			if (!cpt)
-			{
-				cpt = UnityEngine.Object.Instantiate(diseaseWardPrefab);
-				cpt.GetComponent<TeamFilter>().teamIndex = self.target.GetComponent<TeamComponent>()?.teamIndex ?? TeamIndex.Monster;
-				cpt.GetComponent<DiseaseWard>().attacker = self.attacker;
-				cpt.GetComponent<DiseaseWard>().owner = self.target.healthComponent.gameObject;
-				cpt.GetComponent<NetworkedBodyAttachment>().AttachToGameObjectAndSpawn(self.target.healthComponent.gameObject);
-			}
-			cpt.GetComponent<DiseaseWard>().netDamage = self.damageValue;
-		}
-	}
+        private void On_LightningOrbArrival(On.RoR2.Orbs.LightningOrb.orig_OnArrival orig, LightningOrb self)
+        {
+            orig(self);
+            if (self.lightningType != LightningOrb.LightningType.CrocoDisease || AncientScepterItem.instance.GetCount(self.attacker?.GetComponent<CharacterBody>()) < 1) return;
+            if (!self.target || !self.target.healthComponent) return;
 
+            var cpt = self.target.healthComponent.gameObject.GetComponentInChildren<DiseaseWard>()?.gameObject;
+            if (!cpt)
+            {
+                cpt = UnityEngine.Object.Instantiate(diseaseWardPrefab);
+                cpt.GetComponent<TeamFilter>().teamIndex = self.target.GetComponent<TeamComponent>()?.teamIndex ?? TeamIndex.Monster;
+                cpt.GetComponent<DiseaseWard>().attacker = self.attacker;
+                cpt.GetComponent<DiseaseWard>().owner = self.target.healthComponent.gameObject;
+                cpt.GetComponent<NetworkedBodyAttachment>().AttachToGameObjectAndSpawn(self.target.healthComponent.gameObject);
+            }
+            cpt.GetComponent<DiseaseWard>().netDamage = self.damageValue;
+        }
+    }
 
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
-	[RequireComponent(typeof(TeamFilter))]
-	public class DiseaseWard : NetworkBehaviour
-	{
-		readonly float radius = 10f;
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
+    [RequireComponent(typeof(TeamFilter))]
+    public class DiseaseWard : NetworkBehaviour
+    {
+        private readonly float radius = 10f;
 
-		[SyncVar]
-		float damage;
-		public float netDamage
-		{
-			get { return damage; }
-			set { base.SetSyncVar<float>(value, ref damage, 1u); }
-		}
+        [SyncVar]
+        private float damage;
 
-		public float interval;
-		public Transform rangeIndicator;
+        public float netDamage
+        {
+            get { return damage; }
+            set { base.SetSyncVar<float>(value, ref damage, 1u); }
+        }
 
-		public GameObject attacker;
-		public GameObject owner;
+        public float interval;
+        public Transform rangeIndicator;
 
-		private TeamFilter teamFilter;
-		private float rangeIndicatorScaleVelocity;
+        public GameObject attacker;
+        public GameObject owner;
 
-		private float procStopwatch;
-		private float stopwatch;
+        private TeamFilter teamFilter;
+        private float rangeIndicatorScaleVelocity;
 
-		public DamageType baseDamageType = DamageType.Generic;
+        private float procStopwatch;
+        private float stopwatch;
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Code Quality", "IDE0051:Remove unused private members", Justification = "Used by UnityEngine")]
-		private void Awake()
-		{
-			teamFilter = base.GetComponent<TeamFilter>();
-			stopwatch = 5f;
-		}
+        public DamageType baseDamageType = DamageType.Generic;
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Code Quality", "IDE0051:Remove unused private members", Justification = "Used by UnityEngine")]
-		private void Update()
-		{
-			float num = Mathf.SmoothDamp(rangeIndicator.localScale.x, radius * 2f, ref rangeIndicatorScaleVelocity, 0.2f);
-			rangeIndicator.localScale = new Vector3(num, num, num);
-		}
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Code Quality", "IDE0051:Remove unused private members", Justification = "Used by UnityEngine")]
+        private void Awake()
+        {
+            teamFilter = base.GetComponent<TeamFilter>();
+            stopwatch = 5f;
+        }
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Code Quality", "IDE0051:Remove unused private members", Justification = "Used by UnityEngine")]
-		private void FixedUpdate()
-		{
-			procStopwatch -= Time.fixedDeltaTime;
-			if (procStopwatch <= 0f)
-			{
-				if (NetworkServer.active)
-				{
-					procStopwatch = interval;
-					ServerProc();
-				}
-			}
-			stopwatch -= Time.fixedDeltaTime;
-			if (stopwatch <= 0f) Destroy(this.gameObject);
-		}
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Code Quality", "IDE0051:Remove unused private members", Justification = "Used by UnityEngine")]
+        private void Update()
+        {
+            float num = Mathf.SmoothDamp(rangeIndicator.localScale.x, radius * 2f, ref rangeIndicatorScaleVelocity, 0.2f);
+            rangeIndicator.localScale = new Vector3(num, num, num);
+        }
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Code Quality", "IDE0051:Remove unused private members", Justification = "Used by UnityEngine")]
-		private void OnDestroy()
-		{
-			Destroy(rangeIndicator);
-		}
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Code Quality", "IDE0051:Remove unused private members", Justification = "Used by UnityEngine")]
+        private void FixedUpdate()
+        {
+            procStopwatch -= Time.fixedDeltaTime;
+            if (procStopwatch <= 0f)
+            {
+                if (NetworkServer.active)
+                {
+                    procStopwatch = interval;
+                    ServerProc();
+                }
+            }
+            stopwatch -= Time.fixedDeltaTime;
+            if (stopwatch <= 0f) Destroy(this.gameObject);
+        }
 
-		[Server]
-		private void ServerProc()
-		{
-			var tind = teamFilter.teamIndex;
-			ReadOnlyCollection<TeamComponent> teamMembers = TeamComponent.GetTeamMembers(tind);
-			float sqrad = radius * radius;
-			int foundCount = 0;
-			foreach (TeamComponent tcpt in teamMembers)
-			{
-				if (tcpt.body && tcpt.body.gameObject != owner && (tcpt.transform.position - transform.position).sqrMagnitude <= sqrad
-					&& tcpt.body.mainHurtBox && tcpt.body.isActiveAndEnabled)
-				{
-					OrbManager.instance.AddOrb(new LightningOrb
-					{
-						attacker = attacker,
-						bouncesRemaining = 0,
-						damageColorIndex = DamageColorIndex.Poison,
-						damageType = DamageType.AOE | baseDamageType,
-						damageValue = damage,
-						isCrit = false,
-						lightningType = LightningOrb.LightningType.CrocoDisease,
-						origin = transform.position,
-						procChainMask = default(ProcChainMask),
-						procCoefficient = 1f,
-						target = tcpt.body.mainHurtBox,
-						teamIndex = teamFilter.teamIndex,
-						bouncedObjects = new List<HealthComponent> { owner.GetComponent<HealthComponent>() }
-					});
-					foundCount++;
-					if (foundCount > 1) break;
-				}
-			}
-		}
-	}
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Code Quality", "IDE0051:Remove unused private members", Justification = "Used by UnityEngine")]
+        private void OnDestroy()
+        {
+            Destroy(rangeIndicator);
+        }
+
+        [Server]
+        private void ServerProc()
+        {
+            var tind = teamFilter.teamIndex;
+            ReadOnlyCollection<TeamComponent> teamMembers = TeamComponent.GetTeamMembers(tind);
+            float sqrad = radius * radius;
+            int foundCount = 0;
+            foreach (TeamComponent tcpt in teamMembers)
+            {
+                if (tcpt.body && tcpt.body.gameObject != owner && (tcpt.transform.position - transform.position).sqrMagnitude <= sqrad
+                    && tcpt.body.mainHurtBox && tcpt.body.isActiveAndEnabled)
+                {
+                    OrbManager.instance.AddOrb(new LightningOrb
+                    {
+                        attacker = attacker,
+                        bouncesRemaining = 0,
+                        damageColorIndex = DamageColorIndex.Poison,
+                        damageType = DamageType.AOE | baseDamageType,
+                        damageValue = damage,
+                        isCrit = false,
+                        lightningType = LightningOrb.LightningType.CrocoDisease,
+                        origin = transform.position,
+                        procChainMask = default(ProcChainMask),
+                        procCoefficient = 1f,
+                        target = tcpt.body.mainHurtBox,
+                        teamIndex = teamFilter.teamIndex,
+                        bouncedObjects = new List<HealthComponent> { owner.GetComponent<HealthComponent>() }
+                    });
+                    foundCount++;
+                    if (foundCount > 1) break;
+                }
+            }
+        }
+    }
 }

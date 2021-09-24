@@ -1,14 +1,13 @@
-﻿using UnityEngine;
-using RoR2.Skills;
-using static AncientScepter.SkillUtil;
-using EntityStates.Huntress;
-using RoR2;
-using R2API;
+﻿using EntityStates.Huntress;
 using EntityStates.Huntress.Weapon;
+using R2API;
+using RoR2;
+using RoR2.Skills;
+using UnityEngine;
+using static AncientScepter.SkillUtil;
 
 namespace AncientScepter
 {
-
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
     public class HuntressBallista2 : ScepterSkill
     {
@@ -58,6 +57,7 @@ namespace AncientScepter
             On.EntityStates.Huntress.AimArrowSnipe.OnExit += On_AimArrowSnipeExit;
             On.EntityStates.Huntress.Weapon.FireArrowSnipe.FireBullet += On_FireArrowSnipeFire;
         }
+
         internal override void UnloadBehavior()
         {
             On.EntityStates.Huntress.AimArrowSnipe.OnEnter -= On_AimArrowSnipeEnter;
@@ -78,7 +78,8 @@ namespace AncientScepter
                 self.ModifyBullet(pew);
                 pew.damage /= 10f / 3f;
                 pew.force /= 20f / 3f;
-                RoR2Application.fixedTimeTimers.CreateTimer(i * 0.06f, () => {
+                RoR2Application.fixedTimeTimers.CreateTimer(i * 0.06f, () =>
+                {
                     pew.Fire();
                     Util.PlaySound(self.fireSoundString, self.outer.gameObject);
                 });

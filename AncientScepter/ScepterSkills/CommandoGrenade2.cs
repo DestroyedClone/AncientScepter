@@ -1,10 +1,10 @@
-﻿using UnityEngine;
-using RoR2.Skills;
-using static AncientScepter.SkillUtil;
+﻿using EntityStates.Commando.CommandoWeapon;
 using R2API;
-using RoR2.Projectile;
 using RoR2;
-using EntityStates.Commando.CommandoWeapon;
+using RoR2.Projectile;
+using RoR2.Skills;
+using UnityEngine;
+using static AncientScepter.SkillUtil;
 
 namespace AncientScepter
 {

@@ -1,15 +1,14 @@
-﻿using UnityEngine;
-using RoR2.Skills;
-using static AncientScepter.SkillUtil;
-using RoR2;
-using R2API;
-using EntityStates.Captain.Weapon;
+﻿using EntityStates.Captain.Weapon;
 using MonoMod.Cil;
+using R2API;
+using RoR2;
+using RoR2.Skills;
 using System;
+using UnityEngine;
+using static AncientScepter.SkillUtil;
 
 namespace AncientScepter
 {
-
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
     public class CaptainAirstrike2 : ScepterSkill
     {
@@ -49,7 +48,7 @@ namespace AncientScepter
             myCallDef.mustKeyPress = false;
             myCallDef.resetCooldownTimerOnUse = true;
             myCallDef.baseRechargeInterval = 0.07f;
-            myCallDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texCapU2");
+            myCallDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texCapU1");
 
             LoadoutAPI.AddSkillDef(myCallDef);
         }
@@ -76,15 +75,19 @@ namespace AncientScepter
 
         private bool On_CallAirstrikeBaseKeyIsDown(On.EntityStates.Captain.Weapon.CallAirstrikeBase.orig_KeyIsDown orig, CallAirstrikeBase self)
         {
-            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0) return false;
+            var isAirstrike = self is CallAirstrike1
+                || self is CallAirstrike2
+                || self is CallAirstrike3;
+            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0 && isAirstrike) return false;
             return orig(self);
         }
 
-        private void IL_CallAirstrikeEnterEnter(ILContext il)
+        private void IL_CallAirstrikeEnterEnter(ILContext il) //exclusively used by normal airstrike so can be left alone
         {
             var c = new ILCursor(il);
             c.GotoNext(MoveType.After, x => x.MatchCallOrCallvirt<GenericSkill>("get_stock"));
-            c.EmitDelegate<Func<int, int>>((origStock) => {
+            c.EmitDelegate<Func<int, int>>((origStock) =>
+            {
                 if (origStock == 0) return 0;
                 return origStock % 2 + 1;
             });
@@ -99,14 +102,18 @@ namespace AncientScepter
         private void On_CallAirstrikeBaseEnter(On.EntityStates.Captain.Weapon.CallAirstrikeBase.orig_OnEnter orig, CallAirstrikeBase self)
         {
             orig(self);
-            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
+            var isAirstrike = self is CallAirstrike1
+                || self is CallAirstrike2
+                || self is CallAirstrike3;
+
+            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0 && isAirstrike)
             {
                 self.damageCoefficient = 5f;
                 self.AddRecoil(-1f, 1f, -1f, 1f);
             }
         }
 
-        private void On_SetupAirstrikeStateEnter(On.EntityStates.Captain.Weapon.SetupAirstrike.orig_OnEnter orig, EntityStates.Captain.Weapon.SetupAirstrike self)
+        private void On_SetupAirstrikeStateEnter(On.EntityStates.Captain.Weapon.SetupAirstrike.orig_OnEnter orig, EntityStates.Captain.Weapon.SetupAirstrike self) //exc
         {
             var origOverride = SetupAirstrike.primarySkillDef;
             if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
@@ -117,7 +124,7 @@ namespace AncientScepter
             SetupAirstrike.primarySkillDef = origOverride;
         }
 
-        private void On_SetupAirstrikeStateExit(On.EntityStates.Captain.Weapon.SetupAirstrike.orig_OnExit orig, EntityStates.Captain.Weapon.SetupAirstrike self)
+        private void On_SetupAirstrikeStateExit(On.EntityStates.Captain.Weapon.SetupAirstrike.orig_OnExit orig, EntityStates.Captain.Weapon.SetupAirstrike self) //exc
         {
             if (self.primarySkillSlot)
                 self.primarySkillSlot.UnsetSkillOverride(self, myCallDef, GenericSkill.SkillOverridePriority.Contextual);

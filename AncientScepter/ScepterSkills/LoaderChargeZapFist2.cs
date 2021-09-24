@@ -1,13 +1,13 @@
-﻿using UnityEngine;
-using RoR2.Skills;
-using static AncientScepter.SkillUtil;
-using RoR2;
-using R2API;
-using MonoMod.Cil;
-using RoR2.Projectile;
+﻿using EntityStates.Loader;
 using Mono.Cecil.Cil;
+using MonoMod.Cil;
+using R2API;
+using RoR2;
+using RoR2.Projectile;
+using RoR2.Skills;
 using System;
-using EntityStates.Loader;
+using UnityEngine;
+using static AncientScepter.SkillUtil;
 
 namespace AncientScepter
 {
@@ -83,7 +83,8 @@ namespace AncientScepter
             if (ilFound)
             {
                 c.Emit(OpCodes.Ldarg_0);
-                c.EmitDelegate<Func<GameObject, SwingZapFist, GameObject>>((origProj, state) => {
+                c.EmitDelegate<Func<GameObject, SwingZapFist, GameObject>>((origProj, state) =>
+                {
                     if (AncientScepterItem.instance.GetCount(state.outer.commonComponents.characterBody) < 1) return origProj;
                     var mTsf = state.outer.commonComponents.modelLocator?.modelTransform?.GetComponent<ChildLocator>()?.FindChild(state.swingEffectMuzzleString);
                     EffectManager.SpawnEffect(Resources.Load<GameObject>("prefabs/effects/ImpactEffects/LightningStrikeImpact"),

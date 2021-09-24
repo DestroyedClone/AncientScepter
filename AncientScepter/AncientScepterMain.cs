@@ -1,33 +1,24 @@
-﻿using System.Security;
-using System.Security.Permissions;
-using BepInEx;
-using MonoMod.Cil;
+﻿using BepInEx;
 using R2API;
 using R2API.Utils;
 using RoR2;
-using System.Collections.Generic;
-using System.Reflection;
-using UnityEngine;
-using BepInEx.Configuration;
-using Mono.Cecil.Cil;
 using System;
-using TMPro;
-using UnityEngine.Networking;
-using Path = System.IO.Path;
-using System.Collections.ObjectModel;
-using System.Runtime.Serialization;
-using R2API.Networking;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Security;
+using System.Security.Permissions;
+using UnityEngine;
+using UnityEngine.Networking;
 
 [module: UnverifiableCode]
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 
 namespace AncientScepter
 {
-
     [BepInPlugin(ModGuid, ModName, ModVer)]
     [BepInDependency(R2API.R2API.PluginGUID, R2API.R2API.PluginVersion)]
-    [R2APISubmoduleDependency(nameof(ItemAPI), nameof(ResourcesAPI), nameof(ProjectileAPI), nameof(LanguageAPI), nameof(LoadoutAPI))]
+    [R2APISubmoduleDependency(nameof(ItemAPI), nameof(ResourcesAPI), nameof(ProjectileAPI), nameof(LanguageAPI), nameof(LoadoutAPI), nameof(DamageAPI), nameof(PrefabAPI))]
     [BepInDependency(TILER2.TILER2Plugin.ModGuid, BepInDependency.DependencyFlags.SoftDependency)]
     public class AncientScepterMain : BaseUnityPlugin
     {
@@ -35,7 +26,7 @@ namespace AncientScepter
         public const string ModName = "StandaloneAncientScepter";
         public const string ModGuid = "com.DestroyedClone.AncientScepter";
 
-        internal static BepInEx.Logging.ManualLogSource _logger;
+        internal static BepInEx.Logging.ManualLogSource _logger = null;
 
         public List<ItemBase> Items = new List<ItemBase>();
         public static Dictionary<ItemBase, bool> ItemStatusDictionary = new Dictionary<ItemBase, bool>();
@@ -43,6 +34,8 @@ namespace AncientScepter
 
         public void Awake()
         {
+            _logger = Logger;
+            CustomDamageTypes.SetupDamageTypes();
             Assets.PopulateAssets();
 
             var ItemTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(ItemBase)));
@@ -57,13 +50,19 @@ namespace AncientScepter
 
             Run.onRunStartGlobal += Run_onRunStartGlobal;
             On.RoR2.UI.MainMenu.MainMenuController.Start += MainMenuController_Start;
+            Language.onCurrentLanguageChanged += Language_onCurrentLanguageChanged;
+        }
+
+        private void Language_onCurrentLanguageChanged()
+        {
+            InstallLanguage();
         }
 
         private void MainMenuController_Start(On.RoR2.UI.MainMenu.MainMenuController.orig_Start orig, RoR2.UI.MainMenu.MainMenuController self)
         {
             orig(self);
-
             InstallLanguage();
+            On.RoR2.UI.MainMenu.MainMenuController.Start -= MainMenuController_Start;
         }
 
         private void Run_onRunStartGlobal(Run run)
@@ -81,14 +80,14 @@ namespace AncientScepter
                 {
                     continue;
                 }
-                Debug.Log($"Setting up language.");
-                Debug.Log($"Setting up language for {skill}");
-                Debug.Log($"{skill.oldDescToken} : {Language.GetString(skill.oldDescToken)}");
-                Debug.Log($"{skill.overrideStr}");
+                //Debug.Log($"Setting up language.");
+                //Debug.Log($"Setting up language for {skill}");
+                //Debug.Log($"{skill.oldDescToken} : {Language.GetString(skill.oldDescToken)}");
+                //Debug.Log($"{skill.overrideStr}");
 
                 var languageOverlay = LanguageAPI.AddOverlay(skill.newDescToken, Language.GetString(skill.oldDescToken) + skill.overrideStr, Language.currentLanguageName);
 
-                Debug.Log($"{skill.newDescToken}");
+                //Debug.Log($"{skill.newDescToken}");
 
                 languageOverlays.Add(languageOverlay);
             }
@@ -106,6 +105,36 @@ namespace AncientScepter
                 item.AIBlacklisted = true;
             }
             return enabled;
+        }
+
+        // Aetherium: https://github.com/KomradeSpectre/AetheriumMod/blob/6f35f9d8c57f4b7fa14375f620518e7c904c8287/Aetherium/Items/AccursedPotion.cs#L344-L358
+        public static void AddBuffAndDot(BuffDef buff, float duration, int stackCount, RoR2.CharacterBody body)
+        {
+            RoR2.DotController.DotIndex index = (RoR2.DotController.DotIndex)Array.FindIndex(RoR2.DotController.dotDefs, (dotDef) => dotDef.associatedBuff == buff);
+            for (int y = 0; y < stackCount; y++)
+            {
+                if (index != RoR2.DotController.DotIndex.None)
+                {
+                    RoR2.DotController.InflictDot(body.gameObject, body.gameObject, index, duration, 0.25f);
+                }
+                else
+                {
+                    body.AddTimedBuffAuthority(buff.buffIndex, duration);
+                }
+            }
+        }
+
+        internal static BuffDef AddNewBuff(string buffName, Sprite buffIcon, Color buffColor, bool canStack, bool isDebuff)
+        {
+            BuffDef buffDef = ScriptableObject.CreateInstance<BuffDef>();
+            buffDef.name = buffName;
+            buffDef.buffColor = buffColor;
+            buffDef.canStack = canStack;
+            buffDef.isDebuff = isDebuff;
+            buffDef.eliteDef = null;
+            buffDef.iconSprite = buffIcon;
+
+            return buffDef;
         }
     }
 }

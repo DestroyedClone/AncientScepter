@@ -1,15 +1,9 @@
 ﻿using RoR2;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using System.Collections;
-using System.Reflection;
-using System.Linq.Expressions;
-using MonoMod.Cil;
-using Mono.Cecil.Cil;
-using System.Collections.ObjectModel;
-using RoR2.Navigation;
 
 namespace AncientScepter
 {
@@ -18,7 +12,6 @@ namespace AncientScepter
     /// </summary>
     public static class MiscUtil
     {
-
         /// <summary>
         /// A collection of unique class instances which all inherit the same base type.
         /// </summary>
@@ -62,7 +55,7 @@ namespace AncientScepter
             }
 
             /// <summary>
-            /// Attempts to get an object of type <typeparamref name="subT"/> from the FilingDictionary. 
+            /// Attempts to get an object of type <typeparamref name="subT"/> from the FilingDictionary.
             /// </summary>
             /// <typeparam name="subT">The type of the object to retrieve.</typeparam>
             /// <returns>The unique object matching type <typeparamref name="subT"/> within this FilingDictionary if such an object exists; null otherwise.</returns>
@@ -144,7 +137,6 @@ namespace AncientScepter
             IEnumerator IEnumerable.GetEnumerator() => baseCollection.GetEnumerator();
         }
 
-
         /// <summary>
         /// Returns a list of all CharacterMasters which have living CharacterBodies.
         /// </summary>
@@ -170,21 +162,27 @@ namespace AncientScepter
                 case 1:
                     spawnList = Run.instance.availableTier2DropList;
                     break;
+
                 case 2:
                     spawnList = Run.instance.availableTier3DropList;
                     break;
+
                 case 3:
                     spawnList = Run.instance.availableLunarDropList;
                     break;
+
                 case 4:
                     spawnList = Run.instance.availableNormalEquipmentDropList;
                     break;
+
                 case 5:
                     spawnList = Run.instance.availableLunarEquipmentDropList;
                     break;
+
                 case 0:
                     spawnList = Run.instance.availableTier1DropList;
                     break;
+
                 default:
                     throw new ArgumentOutOfRangeException("tier", tier, "spawnItemFromBody: Item tier must be between 0 and 5 inclusive");
             }
