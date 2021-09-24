@@ -10,6 +10,8 @@ using System.Security;
 using System.Security.Permissions;
 using UnityEngine;
 using UnityEngine.Networking;
+using RoR2.Artifacts;
+using System.Runtime.CompilerServices;
 
 [module: UnverifiableCode]
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -55,7 +57,6 @@ namespace AncientScepter
             Run.onRunStartGlobal += Run_onRunStartGlobal;
             On.RoR2.UI.MainMenu.MainMenuController.Start += MainMenuController_Start;
             Language.onCurrentLanguageChanged += Language_onCurrentLanguageChanged;
-            
         }
 
         public static void SetupBuffs()

@@ -43,15 +43,19 @@ namespace AncientScepter
             myDef.skillDescriptionToken = newDescToken;
             myDef.baseRechargeInterval = 40f;
             myDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texHereticR2");
+            myDef.activationState = new EntityStates.SerializableEntityStateType(typeof(HereticPerishSong));
 
             LoadoutAPI.AddSkillDef(myDef);
 
-            
+
+        }
+        public static float GetEstimatedDamageForPerishSong()
+        {
+            return 18 + 3.6f * TeamManager.instance.GetTeamLevel(TeamIndex.Player);
         }
 
         internal override void LoadBehavior()
         {
-            On.EntityStates.Heretic.Weapon.Squawk.OnEnter += Squawk_OnEnter;
             On.RoR2.CharacterBody.UpdateBuffs += CharacterBody_UpdateBuffs;
         }
 
@@ -59,77 +63,61 @@ namespace AncientScepter
         {
             var currentPerishSongStack = self.GetBuffCount(AncientScepterMain.perishSongDebuff.BuffDef);
             orig(self, deltaTime);
-            if (self.GetBuffCount(AncientScepterMain.perishSongDebuff.BuffDef) < currentPerishSongStack && self.healthComponent)
+
+            if (self.GetBuffCount(AncientScepterMain.perishSongDebuff.BuffDef) < currentPerishSongStack && self.healthComponent && self.healthComponent.body && self.healthComponent.alive)
             {
                 var marker = self.GetComponent<ScepterPerishSongMarker>();
+                CharacterBody attacker = null;
+                float damage;
+                if (marker && marker.attackers.Count > 0)
+                {
+                    attacker = marker.attackers[0];
+                    damage = marker.damageAtTimeOfDamning[0];
+                } else
+                {
+                    damage = GetEstimatedDamageForPerishSong();
+                }
 
                 var damageInfo = new DamageInfo()
                 {
-                    attacker = marker && marker.attackers.Count > 0 ? marker.attackers[0].gameObject : null,
                     crit = false,
-                    damage = (marker && marker.attackers.Count > 0 ? marker.attackers[0].damage : self.damage) * perishSongDamageCoefficient,
                     damageColorIndex = DamageColorIndex.DeathMark,
                     damageType = bypassOSP ? DamageType.BypassOneShotProtection : DamageType.Generic,
                     force = Vector3.zero,
-                    inflictor = marker && marker.attackers.Count > 0 ? marker.attackers[0].gameObject : null,
                     position = self.corePosition,
                     procChainMask = default,
                     procCoefficient = 0,
-                    rejected = false
+                    rejected = false,
+
+                    attacker = attacker ? attacker.gameObject : null,
+                    damage = damage * perishSongDamageCoefficient,
+                    inflictor = attacker ? attacker.gameObject : null,
                 };
                 if (marker && marker.attackers.Count > 0)
+                {
                     marker.attackers.RemoveAt(0);
+                    marker.damageAtTimeOfDamning.Remove(0);
+                }
                 self.healthComponent.TakeDamage(damageInfo);
             }
         }
 
         internal override void UnloadBehavior()
         {
-            On.EntityStates.Heretic.Weapon.Squawk.OnEnter -= Squawk_OnEnter;
-        }
-
-        private void Squawk_OnEnter(On.EntityStates.Heretic.Weapon.Squawk.orig_OnEnter orig, EntityStates.Heretic.Weapon.Squawk self)
-        {
-            orig(self);
-            // HackingMainState
-            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
-            {
-                TeamMask enemyTeams = TeamMask.GetEnemyTeams(self.outer.commonComponents.characterBody.teamComponent.teamIndex);
-                HurtBox[] hurtBoxes = new SphereSearch
-                {
-                    radius = 400f,
-                    mask = LayerIndex.entityPrecise.mask,
-                    origin = self.transform.position,
-                    queryTriggerInteraction = QueryTriggerInteraction.UseGlobal
-                }.RefreshCandidates().FilterCandidatesByHurtBoxTeam(enemyTeams).OrderCandidatesByDistance().FilterCandidatesByDistinctHurtBoxEntities().GetHurtBoxes();
-
-                int i = 0;
-                int count = hurtBoxes.Length;
-                while (i < count)
-                {
-                    CurseBody(hurtBoxes[i].GetComponent<CharacterBody>(), self.outer.commonComponents.characterBody, self.soundName);
-
-                    i++;
-                }
-            }
-        }
-
-        public void CurseBody(CharacterBody victimBody, CharacterBody attackerBody = null, string soundName = "")
-        {
-            if (UnityEngine.Networking.NetworkServer.active)
-            {
-                victimBody.AddTimedBuff(AncientScepterMain.perishSongDebuff.BuffDef, 30f);
-
-                var marker = victimBody.GetComponent<ScepterPerishSongMarker>();
-                if (!marker) victimBody.gameObject.AddComponent<ScepterPerishSongMarker>();
-                if (attackerBody) marker.attackers.Add(attackerBody);
-            }
-            Util.PlaySound(soundName, victimBody.gameObject);
+            On.RoR2.CharacterBody.UpdateBuffs -= CharacterBody_UpdateBuffs;
         }
 
         public class ScepterPerishSongMarker : MonoBehaviour
         {
             public List<CharacterBody> attackers = new List<CharacterBody>();
+
+            public List<float> damageAtTimeOfDamning = new List<float>();
+
+            public void AddAttacker(CharacterBody characterBody = null)
+            {
+                attackers.Add(characterBody);
+                damageAtTimeOfDamning.Add(characterBody ? characterBody.damage : GetEstimatedDamageForPerishSong());
+            }
         }
     }
 }
