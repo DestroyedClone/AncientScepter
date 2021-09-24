@@ -54,28 +54,10 @@ namespace AncientScepter
 
         public override string ItemPickupDesc => "Upgrades one of your skills.";
 
-        public override string ItemFullDescription => $"While held, upgrade one of your survivor's <style=cIsUtility>skills</style> <style=cStack>(unique per character)</style> into a <style=cIsUtility>more powerful version</style>."
+        public override string ItemFullDescription => $"Upgrade one of your <style=cIsUtility>skills</style>. <style=cStack>(Unique per character)</style>"
                         + $" <style=cStack>{(rerollExtras ? "Extra/Unusable" : "Unusable (but NOT extra)")} pickups will reroll into {(rerollScrap ? "red scrap" : "other legendary items.")}</style>";
 
-        public override string ItemLore => OrderManifestLoreFormatter(
-
-            ItemName,
-
-            "1/30/1142",
-
-            "99th Floor, Crumbling Tower, Venus",
-
-            "836▪▪▪▪▪▪▪▪▪▪▪",
-
-            ItemPickupDesc,
-
-            "High Priority",
-
-            "A glowing scepter, with a name engraved in the handle. " +
-            "I can't read what it says; I was hoping you could decipher it. " +
-            "It must have some magical powers; look how impressive it is! " +
-            "It's much better then your Lance of Legends, that's for sure. " +
-            "And before you ask, yes, the handle is designed to be hard to hold, culls the weak.");
+        public override string ItemLore => "Perfected energies. <He> holds it before us. The crystal of foreign elements is not attached physically, yet it does not falter from the staff's structure.\n\nOverwhelming strength. We watch as <His> might splits the ground asunder with a single strike.\n\nWondrous possibilities. <His> knowledge unlocks further pathways of development. We are enlightened by <Him>.\n\nExcellent results. From <His> hands, [Nanga] takes hold. It is as <He> said: The weak are culled.\n\nRisking everything. The crystal destabilizies. [Nanga] is gone, and <He> is forced to wield it once again.\n\nPower comes at a cost. <He> is willing to pay.";
         public override ItemTier Tier => ItemTier.Tier3;
         public override ItemTag[] ItemTags => new ItemTag[] { ItemTag.Utility, ItemTag.AIBlacklist };
 
