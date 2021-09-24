@@ -18,7 +18,8 @@ namespace AncientScepter
 {
     [BepInPlugin(ModGuid, ModName, ModVer)]
     [BepInDependency(R2API.R2API.PluginGUID, R2API.R2API.PluginVersion)]
-    [R2APISubmoduleDependency(nameof(ItemAPI), nameof(ResourcesAPI), nameof(ProjectileAPI), nameof(LanguageAPI), nameof(LoadoutAPI), nameof(DamageAPI), nameof(PrefabAPI))]
+    [R2APISubmoduleDependency(nameof(ItemAPI), nameof(ResourcesAPI), nameof(ProjectileAPI), nameof(LanguageAPI), nameof(LoadoutAPI), nameof(DamageAPI), nameof(PrefabAPI)
+        , nameof(BuffAPI))]
     [BepInDependency(TILER2.TILER2Plugin.ModGuid, BepInDependency.DependencyFlags.SoftDependency)]
     public class AncientScepterMain : BaseUnityPlugin
     {
@@ -32,10 +33,13 @@ namespace AncientScepter
         public static Dictionary<ItemBase, bool> ItemStatusDictionary = new Dictionary<ItemBase, bool>();
         protected readonly List<LanguageAPI.LanguageOverlay> languageOverlays = new List<LanguageAPI.LanguageOverlay>();
 
+        public static CustomBuff perishSongDebuff;
+
         public void Awake()
         {
             _logger = Logger;
             CustomDamageTypes.SetupDamageTypes();
+            SetupBuffs();
             Assets.PopulateAssets();
 
             var ItemTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(ItemBase)));
@@ -51,6 +55,13 @@ namespace AncientScepter
             Run.onRunStartGlobal += Run_onRunStartGlobal;
             On.RoR2.UI.MainMenu.MainMenuController.Start += MainMenuController_Start;
             Language.onCurrentLanguageChanged += Language_onCurrentLanguageChanged;
+            
+        }
+
+        public static void SetupBuffs()
+        {
+            perishSongDebuff = new CustomBuff("Perish Song", Resources.Load<Sprite>("textures/difficultyicons/texDifficultyHardIcon"), Color.red, false, true);
+            BuffAPI.Add(perishSongDebuff);
         }
 
         private void Language_onCurrentLanguageChanged()
@@ -85,7 +96,7 @@ namespace AncientScepter
                 //Debug.Log($"{skill.oldDescToken} : {Language.GetString(skill.oldDescToken)}");
                 //Debug.Log($"{skill.overrideStr}");
 
-                var languageOverlay = LanguageAPI.AddOverlay(skill.newDescToken, Language.GetString(skill.oldDescToken) + skill.overrideStr, Language.currentLanguageName);
+                var languageOverlay = LanguageAPI.AddOverlay(skill.newDescToken, Language.GetString(skill.oldDescToken) + skill.overrideStr, Language.currentLanguageName ?? "en");
 
                 //Debug.Log($"{skill.newDescToken}");
 
@@ -122,19 +133,6 @@ namespace AncientScepter
                     body.AddTimedBuffAuthority(buff.buffIndex, duration);
                 }
             }
-        }
-
-        internal static BuffDef AddNewBuff(string buffName, Sprite buffIcon, Color buffColor, bool canStack, bool isDebuff)
-        {
-            BuffDef buffDef = ScriptableObject.CreateInstance<BuffDef>();
-            buffDef.name = buffName;
-            buffDef.buffColor = buffColor;
-            buffDef.canStack = canStack;
-            buffDef.isDebuff = isDebuff;
-            buffDef.eliteDef = null;
-            buffDef.iconSprite = buffIcon;
-
-            return buffDef;
         }
     }
 }
