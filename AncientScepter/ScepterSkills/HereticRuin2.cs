@@ -13,7 +13,7 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Louder.</color>";
+        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Enemies have an additional chance to gain a stack of Ruin on hit, regardless of cooldown.</color>";
 
         public override string targetBody => "HereticBody";
         public override SkillSlot targetSlot => SkillSlot.Special;
@@ -21,13 +21,13 @@ namespace AncientScepter
 
         internal override void SetupAttributes()
         {
-            var oldDef = Resources.Load<SkillDef>("skilldefs/hereticbody/HereticDefaultAbility");
+            var oldDef = Resources.Load<SkillDef>("skilldefs/lunarreplacements/LunarDetonatorSpecialReplacement");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_HERETIC_SQUAWKNAME";
-            newDescToken = "ANCIENTSCEPTER_HERETIC_SQUAWKDESC";
+            var nametoken = "ANCIENTSCEPTER_LUNARREPLACEMENT_DETONATENAME";
+            newDescToken = "ANCIENTSCEPTER_LUNARREPLACEMENT_DETONATEDESC";
             oldDescToken = oldDef.skillDescriptionToken;
-            var namestr = "Evermore";
+            var namestr = "Devastation";
             LanguageAPI.Add(nametoken, namestr);
 
             myDef.skillName = namestr;
@@ -40,25 +40,21 @@ namespace AncientScepter
 
         internal override void LoadBehavior()
         {
-            On.EntityStates.Heretic.Weapon.Squawk.OnEnter += Squawk_OnEnter;
+            On.RoR2.LunarDetonatorPassiveAttachment.DamageListener.OnDamageDealtServer += DamageListener_OnDamageDealtServer;
+        }
+
+        private void DamageListener_OnDamageDealtServer(On.RoR2.LunarDetonatorPassiveAttachment.DamageListener.orig_OnDamageDealtServer orig, MonoBehaviour self, DamageReport damageReport)
+        {
+            orig(self, damageReport);
+
+            if (damageReport.victim.alive && Util.CheckRoll(damageReport.damageInfo.procCoefficient * 100f, damageReport.attackerMaster))
+            {
+                damageReport.victimBody.AddTimedBuff(RoR2Content.Buffs.LunarDetonationCharge, 10f);
+            }
         }
 
         internal override void UnloadBehavior()
         {
-            On.EntityStates.Heretic.Weapon.Squawk.OnEnter -= Squawk_OnEnter;
-        }
-
-        private void Squawk_OnEnter(On.EntityStates.Heretic.Weapon.Squawk.orig_OnEnter orig, EntityStates.Heretic.Weapon.Squawk self)
-        {
-            orig(self);
-            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
-            {
-
-                for (int i = 0; i < 100; i++)
-                {
-                    Util.PlaySound(self.soundName, self.gameObject);
-                }
-            }
         }
 
     }

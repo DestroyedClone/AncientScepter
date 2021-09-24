@@ -14,11 +14,13 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: 2x fruits, grants random buffs.</color>";
+        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Spawns extra fruits that grant buffs.</color>";
 
         public override string targetBody => "TreebotBody";
         public override SkillSlot targetSlot => SkillSlot.Special;
         public override int targetVariantIndex => 0;
+
+        public static GameObject ScepterTreebotFruitPackPrefab;
 
         internal override void SetupAttributes()
         {
@@ -35,6 +37,17 @@ namespace AncientScepter
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
             myDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texRexR2");
+
+            //var a = Resources.Load<GameObject>("prefabs/networkedobjects/HealPack");
+
+            #region Fruitpack
+            ScepterTreebotFruitPackPrefab = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/NetworkedObjects/TreebotFruitPack"), "ScepterTreebotFruitPack");
+            var com = ScepterTreebotFruitPackPrefab.transform.Find("PickupTrigger").gameObject.AddComponent<FruitScepterMarker>();
+            //var healthPickup = ScepterTreebotFruitPackPrefab.transform.Find("PickupTrigger").gameObject.GetComponent<HealthPickup>();
+
+            //ScepterTreebotFruitPackPrefab.transform.Find("VFX/PulseGlow").GetComponent<ParticleSystemRenderer>().material = a.transform.Find("HealthOrbEffect/VFX/PulseGlow").GetComponent<ParticleSystemRenderer>().material;
+            ScepterTreebotFruitPackPrefab.transform.Find("VFX/PulseGlow").transform.localScale *= 2f;
+            #endregion
 
             LoadoutAPI.AddSkillDef(myDef);
         }
@@ -56,18 +69,17 @@ namespace AncientScepter
                 TeamIndex attackerTeamIndex = damageReport.attackerTeamIndex;
                 if (victimBody.HasBuff(RoR2Content.Buffs.Fruiting) || (damageReport.damageInfo.damageType & DamageType.FruitOnHit) > DamageType.Generic)
                 {
-                    EffectManager.SpawnEffect(Resources.Load<GameObject>("Prefabs/Effects/TreebotFruitDeathEffect.prefab"), new EffectData
+                    EffectManager.SpawnEffect(Resources.Load<GameObject>("Prefabs/Effects/TreebotFruitDeathEffect"), new EffectData
                     {
                         origin = gameObject.transform.position,
                         rotation = UnityEngine.Random.rotation
                     }, true);
                     int num2 = Mathf.Min(Math.Max(1, (int)(victimBody.bestFitRadius * 2f)), 8);
-                    GameObject original = Resources.Load<GameObject>("Prefabs/NetworkedObjects/TreebotFruitPack");
                     for (int j = 0; j < num2; j++)
                     {
-                        GameObject gameObject4 = UnityEngine.Object.Instantiate<GameObject>(original, gameObject.transform.position + UnityEngine.Random.insideUnitSphere * victimBody.radius * 0.5f, UnityEngine.Random.rotation);
+                        GameObject gameObject4 = UnityEngine.Object.Instantiate<GameObject>(ScepterTreebotFruitPackPrefab, gameObject.transform.position + UnityEngine.Random.insideUnitSphere * victimBody.radius * 0.5f, UnityEngine.Random.rotation);
                         gameObject4.GetComponent<TeamFilter>().teamIndex = attackerTeamIndex;
-                        gameObject4.GetComponentInChildren<HealthPickup>();
+                        //gameObject4.GetComponentInChildren<HealthPickup>();
                         gameObject4.transform.localScale = new Vector3(1f, 1f, 1f);
                         NetworkServer.Spawn(gameObject4);
                     }
@@ -77,7 +89,7 @@ namespace AncientScepter
 
         private void HealthPickup_OnTriggerStay(On.RoR2.HealthPickup.orig_OnTriggerStay orig, HealthPickup self, Collider other)
         {
-            if (self.flatHealing == 0 && self.fractionalHealing > 0.24 && self.fractionalHealing < 0.26)
+            if (self.GetComponent<FruitScepterMarker>())
             {
                 if (NetworkServer.active && self.alive && TeamComponent.GetObjectTeam(other.gameObject) == self.teamFilter.teamIndex)
                 {
@@ -85,39 +97,43 @@ namespace AncientScepter
                     if (component)
                     {
                         var nbi = AncientScepterItem.instance.rng.NextElementUniform(new[] {
-                            RoR2Content.Buffs.ArmorBoost,
+                            RoR2Content.Buffs.ArmorBoost, //+200
                             RoR2Content.Buffs.AttackSpeedOnCrit,
-                            RoR2Content.Buffs.Cloak,
-                            RoR2Content.Buffs.CloakSpeed,
-                            RoR2Content.Buffs.CrocoRegen,
-                            RoR2Content.Buffs.ElephantArmorBoost,
-                            RoR2Content.Buffs.Energized,
-                            RoR2Content.Buffs.EngiShield,
-                            RoR2Content.Buffs.EngiTeamShield,
-                            RoR2Content.Buffs.EnrageAncientWisp,
-                            RoR2Content.Buffs.FullCrit,
-                            RoR2Content.Buffs.GoldEmpowered,
-                            RoR2Content.Buffs.HiddenInvincibility,
-                            RoR2Content.Buffs.Immune,
-                            RoR2Content.Buffs.Intangible,
-                            RoR2Content.Buffs.LifeSteal,
-                            RoR2Content.Buffs.LightningShield,
-                            RoR2Content.Buffs.LoaderOvercharged,
-                            RoR2Content.Buffs.LoaderPylonPowered,
-                            RoR2Content.Buffs.MeatRegenBoost,
-                            RoR2Content.Buffs.NoCooldowns,
-                            RoR2Content.Buffs.PowerBuff,
-                            RoR2Content.Buffs.SmallArmorBoost,
+                            RoR2Content.Buffs.Cloak, //obvious
+                            RoR2Content.Buffs.CloakSpeed, //+40% movespeed
+                            RoR2Content.Buffs.CrocoRegen, //heal for 10% max hp in 0.5s = 20% per second?
+                            RoR2Content.Buffs.ElephantArmorBoost, //+500
+                            RoR2Content.Buffs.Energized, //+70% Attack Speed
+                            RoR2Content.Buffs.EngiShield, //100% health as shield (additive)
+                            RoR2Content.Buffs.EngiTeamShield, //50% health as shield (additive)
+                            RoR2Content.Buffs.EnrageAncientWisp, //+40% movespeed
+                            RoR2Content.Buffs.FullCrit, 
+                            RoR2Content.Buffs.GoldEmpowered, //some damage multiplier
+                            RoR2Content.Buffs.Immune, 
+                            RoR2Content.Buffs.Intangible, //no hurtbox
+                            RoR2Content.Buffs.LifeSteal, //20% heal of damage dealt
+                            //RoR2Content.Buffs.LightningShield, //no effect
+                            //RoR2Content.Buffs.LoaderOvercharged,
+                            //RoR2Content.Buffs.LoaderPylonPowered,
+                            RoR2Content.Buffs.MeatRegenBoost, //increases regen
+                            RoR2Content.Buffs.NoCooldowns, //0.5s cooldown
+                            RoR2Content.Buffs.PowerBuff, //damage multiplier
+                            RoR2Content.Buffs.SmallArmorBoost, //+100
                             RoR2Content.Buffs.TeamWarCry,
                             RoR2Content.Buffs.Warbanner,
                             RoR2Content.Buffs.WarCryBuff,
                             RoR2Content.Buffs.WhipBoost
                         });
-                        component.AddTimedBuff(nbi, 5f);
+                        component.AddTimedBuff(nbi, 9f);
                     }
                 }
             }
             orig(self, other);
+        }
+
+        public class FruitScepterMarker : MonoBehaviour
+        {
+            
         }
 
         internal override void UnloadBehavior()

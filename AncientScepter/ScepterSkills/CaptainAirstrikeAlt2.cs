@@ -7,6 +7,7 @@ using RoR2.Skills;
 using System;
 using UnityEngine;
 using static AncientScepter.SkillUtil;
+using static R2API.DamageAPI;
 
 namespace AncientScepter
 {
@@ -19,7 +20,7 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Launches a nuke for 100000% damage that blights everyone.</color>";
+        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Launches a nuke for 100000% damage that blights everyone after 40 seconds.</color>";
 
         public override string targetBody => "CaptainBody";
         public override SkillSlot targetSlot => SkillSlot.Utility;
@@ -53,6 +54,29 @@ namespace AncientScepter
 
             LoadoutAPI.AddSkillDef(myCallDef);
 
+            var newDuration = 40f;
+
+            var oldGhost = Resources.Load<GameObject>("prefabs/projectileghosts/CaptainAirstrikeAltGhost");
+            var airstrikeGhostPrefab = PrefabAPI.InstantiateClone(oldGhost, "ScepterCaptainAirstrikeAltGhost");
+            var areaIndicatorCenter = airstrikeGhostPrefab.transform.Find("AreaIndicatorCenter");
+            areaIndicatorCenter.Find("IndicatorRing").GetComponent<ObjectScaleCurve>().timeMax = newDuration;
+            /*foreach (var objectScaleCurve in airstrikeGhostPrefab.GetComponentsInChildren<ObjectScaleCurve>())
+            {
+                if ((int)objectScaleCurve.timeMax == 20)
+                    objectScaleCurve.timeMax = newDuration;
+            }*/
+            foreach (Transform child in areaIndicatorCenter)
+            {
+                if (child.name == "LaserRotationalOffset")
+                {
+                    child.Find("LaserVerticalOffset/Laser").GetComponent<ObjectTransformCurve>().timeMax = newDuration;
+                }
+            }
+            var airstrikeOrientation = airstrikeGhostPrefab.transform.Find("AirstrikeOrientation");
+            airstrikeOrientation.localScale *= 0.1f;
+            airstrikeOrientation.Find("FallingProjectile").GetComponent<ObjectTransformCurve>().timeMax = newDuration * 0.55f;
+            airstrikeGhostPrefab.transform.localScale *= 10f;
+
             var syringeProjectile = Resources.Load<GameObject>("prefabs/projectiles/SyringeProjectile");
             var irradiateProjectile = PrefabAPI.InstantiateClone(syringeProjectile, "CaptainScepterNukeIrradiate", true);
             UnityEngine.Object.Destroy(irradiateProjectile.GetComponent<ProjectileSingleTargetImpact>());
@@ -67,6 +91,9 @@ namespace AncientScepter
             projectileImpactExplosion.fireChildren = true;
             projectileImpactExplosion.childrenCount = 1;
             projectileImpactExplosion.childrenProjectilePrefab = irradiateProjectile;
+            projectileImpactExplosion.lifetime = newDuration;
+            airstrikePrefab.GetComponent<ProjectileController>().ghostPrefab = airstrikeGhostPrefab;
+            airstrikePrefab.AddComponent<ScepterAirstrikeMarker>();
 
             ProjectileAPI.Add(irradiateProjectile);
             ProjectileAPI.Add(airstrikePrefab);
@@ -80,6 +107,62 @@ namespace AncientScepter
             On.EntityStates.Captain.Weapon.CallAirstrikeAlt.ModifyProjectile += CallAirstrikeAlt_ModifyProjectile;
 
             On.RoR2.GlobalEventManager.OnHitEnemy += GlobalEventManager_OnHitEnemy;
+            On.RoR2.Projectile.ProjectileExplosion.DetonateServer += ProjectileExplosion_DetonateServer;
+        }
+
+        public class ScepterAirstrikeMarker : MonoBehaviour
+        {
+
+        }
+
+        private void ProjectileExplosion_DetonateServer(On.RoR2.Projectile.ProjectileExplosion.orig_DetonateServer orig, ProjectileExplosion self)
+        {
+            if (self is ProjectileImpactExplosion && self.GetComponent<ScepterAirstrikeMarker>())
+            {
+                if (self.explosionEffect)
+                {
+                    EffectManager.SpawnEffect(self.explosionEffect, new EffectData
+                    {
+                        origin = self.transform.position,
+                        scale = self.blastRadius
+                    }, true);
+                }
+                if (self.projectileDamage)
+                {
+                    new BlastAttack
+                    {
+                        position = self.transform.position,
+                        baseDamage = self.projectileDamage.damage * self.blastDamageCoefficient,
+                        baseForce = self.projectileDamage.force * self.blastDamageCoefficient,
+                        radius = self.blastRadius,
+                        attacker = (self.projectileController.owner ? self.projectileController.owner.gameObject : null),
+                        inflictor = self.gameObject,
+                        teamIndex = self.projectileController.teamFilter.teamIndex,
+                        crit = self.projectileDamage.crit,
+                        procChainMask = self.projectileController.procChainMask,
+                        procCoefficient = self.projectileController.procCoefficient * self.blastProcCoefficient,
+                        bonusForce = self.bonusBlastForce,
+                        falloffModel = self.falloffModel,
+                        damageColorIndex = self.projectileDamage.damageColorIndex,
+                        damageType = self.projectileDamage.damageType,
+                        attackerFiltering = self.blastAttackerFiltering,
+                        losType = BlastAttack.LoSType.NearestHit
+                    }.Fire();
+                }
+                if (self.explosionSoundString.Length > 0)
+                {
+                    Util.PlaySound(self.explosionSoundString, self.gameObject);
+                }
+                if (self.fireChildren)
+                {
+                    for (int i = 0; i < self.childrenCount; i++)
+                    {
+                        self.FireChild();
+                    }
+                }
+                return;
+            }
+            orig(self);
         }
 
         internal override void UnloadBehavior()
@@ -90,6 +173,7 @@ namespace AncientScepter
             On.EntityStates.Captain.Weapon.CallAirstrikeAlt.ModifyProjectile -= CallAirstrikeAlt_ModifyProjectile;
 
             On.RoR2.GlobalEventManager.OnHitEnemy -= GlobalEventManager_OnHitEnemy;
+            On.RoR2.Projectile.ProjectileExplosion.DetonateServer -= ProjectileExplosion_DetonateServer;
         }
 
         private void CallAirstrikeAlt_ModifyProjectile(On.EntityStates.Captain.Weapon.CallAirstrikeAlt.orig_ModifyProjectile orig, CallAirstrikeAlt self, ref FireProjectileInfo fireProjectileInfo)
@@ -172,6 +256,7 @@ namespace AncientScepter
                     damageColorIndex = DamageColorIndex.Poison,
                     damageType = DamageType.Stun1s,
                     attackerFiltering = AttackerFiltering.AlwaysHit,
+                    losType = BlastAttack.LoSType.NearestHit
                 };
                 blastAttack.AddModdedDamageType(CustomDamageTypes.ScepterCaptainNukeDT);
                 blastAttack.Fire();
