@@ -9,7 +9,7 @@ using System;
 using UnityEngine;
 using static AncientScepter.SkillUtil;
 
-namespace AncientScepter
+namespace AncientScepter.ScepterSkillsMonster
 {
     public class AurelioniteEyeLaser2 : ScepterSkill
     {

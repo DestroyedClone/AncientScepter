@@ -8,6 +8,7 @@ using UnityEngine;
 using static AncientScepter.ItemHelpers;
 using static AncientScepter.MiscUtil;
 using static AncientScepter.SkillUtil;
+using AncientScepter.ScepterSkillsMonster;
 
 namespace AncientScepter
 {
@@ -306,9 +307,13 @@ localScale = new Vector3(0.2235F, 0.2235F, 0.2235F)
             skills.Add(new MercEvis2());
             skills.Add(new MercEvisProjectile2());
             skills.Add(new ToolbotDash2());
-            skills.Add(new AurelioniteEyeLaser2());
             skills.Add(new TreebotFlower2_2());
             skills.Add(new TreebotFireFruitSeed2());
+
+            // Monster
+            skills.Add(new AurelioniteEyeLaser2());
+            skills.Add(new BrotherHurtShards());
+            skills.Add(new VultureWindblade2());
         }
 
         public void RegisterSkills()

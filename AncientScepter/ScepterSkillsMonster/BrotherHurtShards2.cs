@@ -10,7 +10,7 @@ using UnityEngine;
 using static AncientScepter.SkillUtil;
 using RoR2.CharacterAI;
 
-namespace AncientScepter
+namespace AncientScepter.ScepterSkillsMonster
 {
     public class BrotherHurtShards : ScepterSkill
     {

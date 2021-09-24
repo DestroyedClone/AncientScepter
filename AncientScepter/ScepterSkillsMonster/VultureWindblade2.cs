@@ -8,6 +8,8 @@ using RoR2.Skills;
 using System;
 using UnityEngine;
 using static AncientScepter.SkillUtil;
+using EntityStates.Vulture.Weapon;
+
 
 namespace AncientScepter.ScepterSkillsMonster
 {
@@ -17,21 +19,21 @@ namespace AncientScepter.ScepterSkillsMonster
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: 50% chance to bleed, and 25% chance to hemorrhage.</color>";
+        public override string overrideStr => "\n<color=#d299ff>SCEPTER: 50% chance to fire an additional windblade for half damage.</color>";
 
-        public override string targetBody => "TitanGoldBody";
+        public override string targetBody => "VultureBody";
         public override SkillSlot targetSlot => SkillSlot.Special;
         public override int targetVariantIndex => 0;
 
         internal override void SetupAttributes()
         {
-            var oldDef = Resources.Load<SkillDef>("skilldefs/titangoldbody/ChargeGoldLaser");
+            var oldDef = Resources.Load<SkillDef>("skilldefs/vulturebody/ChargeWindblade");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_SCEPTITANGOLD_MEGALASERNAME";
-            newDescToken = "ANCIENTSCEPTER_SCEPTITANGOLD_MEGALASERDESC";
+            var nametoken = "ANCIENTSCEPTER_SCEPVULTURE_WINDBLADENAME";
+            newDescToken = "ANCIENTSCEPTER_SCEPVULTURE_WINDBLADEDESC";
             oldDescToken = oldDef.skillDescriptionToken;
-            var namestr = "Piercing Eye Laser";
+            var namestr = "Severing Wind Blade";
             LanguageAPI.Add(nametoken, namestr);
 
             myDef.skillName = namestr;
@@ -44,35 +46,38 @@ namespace AncientScepter.ScepterSkillsMonster
 
         internal override void LoadBehavior()
         {
-            On.EntityStates.TitanMonster.FireMegaLaser.FireBullet += FireMegaLaser_FireBullet;
+            On.EntityStates.Vulture.Weapon.FireWindblade.OnEnter += FireWindblade_OnEnter;
         }
 
         internal override void UnloadBehavior()
         {
-            On.EntityStates.TitanMonster.FireMegaLaser.FireBullet -= FireMegaLaser_FireBullet;
+            On.EntityStates.Vulture.Weapon.FireWindblade.OnEnter -= FireWindblade_OnEnter;
         }
 
-        private void FireMegaLaser_FireBullet(On.EntityStates.TitanMonster.FireMegaLaser.orig_FireBullet orig, FireMegaLaser self, Transform modelTransform, Ray aimRay, string targetMuzzle, float maxDistance)
+        private void FireWindblade_OnEnter(On.EntityStates.Vulture.Weapon.FireWindblade.orig_OnEnter orig, EntityStates.Vulture.Weapon.FireWindblade self)
         {
-            if (self is FireGoldMegaLaser && AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
+            orig(self);
+            Util.PlaySound(FireWindblade.soundString, self.gameObject);
+            if (FireWindblade.muzzleEffectPrefab)
             {
-                if (self.isAuthority && self.lockedOnHurtBox && self.lockedOnHurtBox.healthComponent)
-                {
-                    var damageInfo = new DamageInfo
-                    {
-                        attacker = self.gameObject,
-                        crit = self.RollCrit(),
-                        damage = FireMegaLaser.damageCoefficient * self.damageStat / FireMegaLaser.fireFrequency * 0.35f,
-                        inflictor = self.gameObject,
-                        position = self.lockedOnHurtBox.transform.position,
-                        procCoefficient = 0f,
-                        procChainMask = default,
-                    };
-                    self.lockedOnHurtBox.healthComponent.TakeDamage(damageInfo);
-                }
+                EffectManager.SimpleMuzzleFlash(FireWindblade.muzzleEffectPrefab, self.gameObject, FireWindblade.muzzleString, false);
             }
-            orig(self, modelTransform, aimRay, targetMuzzle, maxDistance);
+            Ray aimRay = self.GetAimRay();
+            if (self.isAuthority)
+            {
+                Quaternion rhs = Util.QuaternionSafeLookRotation(aimRay.direction);
+                Quaternion lhs = Quaternion.AngleAxis(UnityEngine.Random.Range(0f, 360f), aimRay.direction);
+                ProjectileManager.instance.FireProjectile(FireWindblade.projectilePrefab, 
+                    aimRay.origin, 
+                    lhs * rhs, 
+                    self.gameObject, 
+                    self.damageStat * FireWindblade.damageCoefficient * 0.5f, 
+                    FireWindblade.force, 
+                    Util.CheckRoll(self.critStat, self.characterBody.master), 
+                    DamageColorIndex.Default, 
+                    null, 
+                    -1f);
+            }
         }
     }
-}
 }
