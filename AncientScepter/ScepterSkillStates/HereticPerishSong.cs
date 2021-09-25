@@ -20,16 +20,14 @@ namespace AncientScepter
         public int index = 0;
         public int count = 0;
         HurtBox[] hurtBoxes;
-        CharacterBody myBody;
 
         public override void OnEnter()
         {
             base.OnEnter();
             Util.PlaySound(this.soundName, base.gameObject);
-            myBody = outer.commonComponents.characterBody;
             // HackingMainState
-            CurseBody(myBody, myBody, soundName);
-            TeamMask enemyTeams = TeamMask.GetEnemyTeams(myBody.teamComponent.teamIndex);
+            CurseBody(characterBody, characterBody, soundName);
+            TeamMask enemyTeams = TeamMask.GetEnemyTeams(teamComponent.teamIndex);
             sphereSearch = new SphereSearch
             {
                 radius = 400f,
@@ -39,15 +37,8 @@ namespace AncientScepter
             }.RefreshCandidates().FilterCandidatesByHurtBoxTeam(enemyTeams).OrderCandidatesByDistance().FilterCandidatesByDistinctHurtBoxEntities();
 
             hurtBoxes = sphereSearch.GetHurtBoxes();
-            if (hurtBoxes.Length > 0)
-            {
-                index = 0;
-                count = hurtBoxes.Length;
-            } else
-            {
-                index = 0;
-                count = 0;
-            }
+            index = 0;
+            count = hurtBoxes.Length > 0 ? hurtBoxes.Length : 0;
         }
 
         public override void Update()
@@ -57,7 +48,7 @@ namespace AncientScepter
             {
                 if (hurtBoxes[index] && hurtBoxes[index].healthComponent && hurtBoxes[index].healthComponent.alive && hurtBoxes[index].healthComponent.body
                     && !hurtBoxes[index].healthComponent.body.HasBuff(RoR2Content.Buffs.Deafened))
-                    CurseBody(hurtBoxes[index].healthComponent.body, myBody, soundName);
+                    CurseBody(hurtBoxes[index].healthComponent.body, characterBody, soundName);
                 index++;
                 return;
             }
