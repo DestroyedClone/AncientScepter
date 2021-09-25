@@ -109,8 +109,6 @@ namespace AncientScepter
                             RoR2Content.Buffs.EnrageAncientWisp, //+40% movespeed
                             RoR2Content.Buffs.FullCrit, 
                             RoR2Content.Buffs.GoldEmpowered, //some damage multiplier
-                            RoR2Content.Buffs.Immune, 
-                            RoR2Content.Buffs.Intangible, //no hurtbox
                             RoR2Content.Buffs.LifeSteal, //20% heal of damage dealt
                             //RoR2Content.Buffs.LightningShield, //no effect
                             //RoR2Content.Buffs.LoaderOvercharged,

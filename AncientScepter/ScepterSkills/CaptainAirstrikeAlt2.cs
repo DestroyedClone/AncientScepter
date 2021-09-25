@@ -20,11 +20,15 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Launches a nuke for 100000% damage that blights everyone after 40 seconds.</color>";
+        public override string overrideStr => "\n<color=#d299ff>SCEPTER: 2x wait time, 2x blast radius, 100000% damage" +
+            "\nAfter the explosion, blights everything within sight of the blast.</color>";
 
         public override string targetBody => "CaptainBody";
         public override SkillSlot targetSlot => SkillSlot.Utility;
         public override int targetVariantIndex => 1;
+
+        public static float scepterAirstrikeDamageCoefficient = 1000f;
+        public static float blastSizeMultiplier = 2f;
 
         internal override void SetupAttributes()
         {
@@ -65,17 +69,38 @@ namespace AncientScepter
                 if ((int)objectScaleCurve.timeMax == 20)
                     objectScaleCurve.timeMax = newDuration;
             }*/
+            int laserCount = 6;
+            var angle = 360 / laserCount;
+            int i = 0;
+
             foreach (Transform child in areaIndicatorCenter)
             {
                 if (child.name == "LaserRotationalOffset")
                 {
-                    child.Find("LaserVerticalOffset/Laser").GetComponent<ObjectTransformCurve>().timeMax = newDuration;
+                    var verticalOffset = child.Find("LaserVerticalOffset");
+                    var laser = verticalOffset.Find("Laser");
+                    laser.GetComponent<ObjectTransformCurve>().timeMax = newDuration;
+
+                    var vector = new Vector3(child.transform.eulerAngles.x, i * angle, child.transform.eulerAngles.z);
+                    child.transform.eulerAngles = vector;
+                    verticalOffset.transform.eulerAngles = vector;
+                    laser.transform.eulerAngles = vector;
+
+                    i++;
+                    vector = new Vector3(child.transform.eulerAngles.x, i * angle, child.transform.eulerAngles.z);
+
+                    GameObject copy = UnityEngine.Object.Instantiate(child.gameObject, child.parent);
+                    copy.name = "LaserRotationOffsetExtra";
+                    copy.transform.eulerAngles = vector;
+                    copy.transform.Find("LaserVerticalOffset").transform.eulerAngles = vector;
+                    copy.transform.Find("LaserVerticalOffset/Laser").transform.eulerAngles = vector;
+                    i++;
                 }
             }
             var airstrikeOrientation = airstrikeGhostPrefab.transform.Find("AirstrikeOrientation");
-            airstrikeOrientation.localScale *= 0.1f;
+            airstrikeOrientation.localScale *= blastSizeMultiplier / 2;
             airstrikeOrientation.Find("FallingProjectile").GetComponent<ObjectTransformCurve>().timeMax = newDuration * 0.55f;
-            airstrikeGhostPrefab.transform.localScale *= 10f;
+            airstrikeGhostPrefab.transform.localScale *= blastSizeMultiplier;
 
             var syringeProjectile = Resources.Load<GameObject>("prefabs/projectiles/SyringeProjectile");
             var irradiateProjectile = PrefabAPI.InstantiateClone(syringeProjectile, "CaptainScepterNukeIrradiate", true);
@@ -87,7 +112,7 @@ namespace AncientScepter
 
             airstrikePrefab = Resources.Load<GameObject>("prefabs/projectiles/CaptainAirstrikeAltProjectile").InstantiateClone("ScepterCaptainAirstrikeAltProjectile", true);
             var projectileImpactExplosion = airstrikePrefab.GetComponent<RoR2.Projectile.ProjectileImpactExplosion>();
-            projectileImpactExplosion.blastRadius *= 100f;
+            projectileImpactExplosion.blastRadius *= blastSizeMultiplier;
             projectileImpactExplosion.fireChildren = true;
             projectileImpactExplosion.childrenCount = 1;
             projectileImpactExplosion.childrenProjectilePrefab = irradiateProjectile;
@@ -107,7 +132,7 @@ namespace AncientScepter
             On.EntityStates.Captain.Weapon.CallAirstrikeAlt.ModifyProjectile += CallAirstrikeAlt_ModifyProjectile;
 
             On.RoR2.GlobalEventManager.OnHitEnemy += GlobalEventManager_OnHitEnemy;
-            On.RoR2.Projectile.ProjectileExplosion.DetonateServer += ProjectileExplosion_DetonateServer;
+            //On.RoR2.Projectile.ProjectileExplosion.DetonateServer += ProjectileExplosion_DetonateServer;
         }
 
         public class ScepterAirstrikeMarker : MonoBehaviour
@@ -130,7 +155,6 @@ namespace AncientScepter
                         scale = self.blastRadius
                     }, true);
                 }
-                self.explosionEffect = null;
 
                 if (self.projectileDamage)
                 {
@@ -154,7 +178,6 @@ namespace AncientScepter
                         losType = BlastAttack.LoSType.NearestHit
                     }.Fire();
                 }
-                self.projectileDamage = null;
 
                 if (self.fireChildren)
                 {
@@ -163,6 +186,8 @@ namespace AncientScepter
                         self.FireChild();
                     }
                 }
+                self.explosionEffect = null;
+                self.projectileDamage = null;
                 self.fireChildren = false;
             }
             orig(self);
@@ -208,7 +233,7 @@ namespace AncientScepter
                 && self is EntityStates.Captain.Weapon.CallAirstrikeAlt;
             if (isScepter)
             {
-                self.damageCoefficient = 100000f;
+                self.damageCoefficient = scepterAirstrikeDamageCoefficient;
             }
         }
 
