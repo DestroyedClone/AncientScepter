@@ -23,8 +23,8 @@ namespace AncientScepter
             var oldDef = Resources.Load<SkillDef>("skilldefs/mercbody/MercBodyEvisProjectile");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_SCEPMERC_EVISPROJNAME";
-            newDescToken = "ANCIENTSCEPTER_SCEPMERC_EVISPROJDESC";
+            var nametoken = "ANCIENTSCEPTER_MERC_EVISPROJNAME";
+            newDescToken = "ANCIENTSCEPTER_MERC_EVISPROJDESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "Gale-Force";
             LanguageAPI.Add(nametoken, namestr);

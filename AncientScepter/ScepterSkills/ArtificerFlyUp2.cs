@@ -24,8 +24,8 @@ namespace AncientScepter
             var oldDef = Resources.Load<SkillDef>("skilldefs/magebody/MageBodyFlyUp");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_SCEPMAGE_FLYUPNAME";
-            newDescToken = "ANCIENTSCEPTER_SCEPMAGE_FLYUPDESC";
+            var nametoken = "ANCIENTSCEPTER_MAGE_FLYUPNAME";
+            newDescToken = "ANCIENTSCEPTER_MAGE_FLYUPDESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "Antimatter Surge";
             LanguageAPI.Add(nametoken, namestr);

@@ -42,7 +42,7 @@ namespace AncientScepter
 
             LoadoutAPI.AddSkillDef(myDef);
 
-            projReplacer = Resources.Load<GameObject>("prefabs/projectiles/LoaderZapCone").InstantiateClone("CIScepLoaderThundercrash");
+            projReplacer = Resources.Load<GameObject>("prefabs/projectiles/LoaderZapCone").InstantiateClone("AncientScepterLoaderThundercrash");
             var proxb = projReplacer.GetComponent<ProjectileProximityBeamController>();
             proxb.attackFireCount *= 3;
             proxb.maxAngleFilter = 180f;

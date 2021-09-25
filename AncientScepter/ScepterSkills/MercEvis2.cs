@@ -24,8 +24,8 @@ namespace AncientScepter
             var oldDef = Resources.Load<SkillDef>("skilldefs/mercbody/MercBodyEvis");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_SCEPMERC_EVISNAME";
-            newDescToken = "ANCIENTSCEPTER_SCEPMERC_EVISDESC";
+            var nametoken = "ANCIENTSCEPTER_MERC_EVISNAME";
+            newDescToken = "ANCIENTSCEPTER_MERC_EVISDESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "Massacre";
             LanguageAPI.Add(nametoken, namestr);

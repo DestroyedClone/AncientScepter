@@ -26,8 +26,8 @@ namespace AncientScepter
             var oldDef = Resources.Load<SkillDef>("skilldefs/commandobody/ThrowGrenade");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_SCEPCOMMANDO_GRENADENAME";
-            newDescToken = "ANCIENTSCEPTER_SCEPCOMMANDO_GRENADEDESC";
+            var nametoken = "ANCIENTSCEPTER_COMMANDO_GRENADENAME";
+            newDescToken = "ANCIENTSCEPTER_COMMANDO_GRENADEDESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "Carpet Bomb";
             LanguageAPI.Add(nametoken, namestr);

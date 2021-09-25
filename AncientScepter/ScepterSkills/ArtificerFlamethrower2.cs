@@ -28,8 +28,8 @@ namespace AncientScepter
             var oldDef = Resources.Load<SkillDef>("skilldefs/magebody/MageBodyFlamethrower");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_SCEPMAGE_FLAMETHROWERNAME";
-            newDescToken = "ANCIENTSCEPTER_SCEPMAGE_FLAMETHROWERDESC";
+            var nametoken = "ANCIENTSCEPTER_MAGE_FLAMETHROWERNAME";
+            newDescToken = "ANCIENTSCEPTER_MAGE_FLAMETHROWERDESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "Dragon's Breath";
             LanguageAPI.Add(nametoken, namestr);
@@ -41,7 +41,7 @@ namespace AncientScepter
 
             LoadoutAPI.AddSkillDef(myDef);
 
-            projCloud = Resources.Load<GameObject>("prefabs/projectiles/BeetleQueenAcid").InstantiateClone("CIScepMageFlamethrowerCloud");
+            projCloud = Resources.Load<GameObject>("prefabs/projectiles/BeetleQueenAcid").InstantiateClone("AncientScepterMageFlamethrowerCloud");
             var pdz = projCloud.GetComponent<ProjectileDotZone>();
             pdz.lifetime = 10f;
             pdz.impactEffect = null;

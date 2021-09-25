@@ -40,7 +40,7 @@ namespace AncientScepter
 
         internal override void LoadBehavior()
         {
-            On.RoR2.LunarDetonatorPassiveAttachment.DamageListener.OnDamageDealtServer += DamageListener_OnDamageDealtServer;
+            //On.RoR2.LunarDetonatorPassiveAttachment.DamageListener.OnDamageDealtServer += DamageListener_OnDamageDealtServer;
         }
 
         private void DamageListener_OnDamageDealtServer(On.RoR2.LunarDetonatorPassiveAttachment.DamageListener.orig_OnDamageDealtServer orig, MonoBehaviour self, DamageReport damageReport)

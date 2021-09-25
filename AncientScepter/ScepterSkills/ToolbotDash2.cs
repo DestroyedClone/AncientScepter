@@ -23,8 +23,8 @@ namespace AncientScepter
             var oldDef = Resources.Load<SkillDef>("skilldefs/toolbotbody/ToolbotBodyToolbotDash");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_SCEPTOOLBOT_DASHNAME";
-            newDescToken = "ANCIENTSCEPTER_SCEPTOOLBOT_DASHDESC";
+            var nametoken = "ANCIENTSCEPTER_TOOLBOT_DASHNAME";
+            newDescToken = "ANCIENTSCEPTER_TOOLBOT_DASHDESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "Breach Mode";
             LanguageAPI.Add(nametoken, namestr);

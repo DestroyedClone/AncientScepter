@@ -23,8 +23,8 @@ namespace AncientScepter
             var oldDef = Resources.Load<SkillDef>("skilldefs/bandit2body/ResetRevolver");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_SCEPBANDIT2_RESETREVOLVERNAME";
-            newDescToken = "ANCIENTSCEPTER_SCEPBANDIT2_RESETREVOLVERDESC";
+            var nametoken = "ANCIENTSCEPTER_BANDIT2_RESETREVOLVERNAME";
+            newDescToken = "ANCIENTSCEPTER_BANDIT2_RESETREVOLVERDESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "Assassinate";
             LanguageAPI.Add(nametoken, namestr);

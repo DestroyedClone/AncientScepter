@@ -28,8 +28,8 @@ namespace AncientScepter.ScepterSkillsMonster
             var oldDef = Resources.Load<SkillDef>("skilldefs/titangoldbody/ChargeGoldLaser");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_SCEPTITANGOLD_MEGALASERNAME";
-            newDescToken = "ANCIENTSCEPTER_SCEPTITANGOLD_MEGALASERDESC";
+            var nametoken = "ANCIENTSCEPTER_TITANGOLD_MEGALASERNAME";
+            newDescToken = "ANCIENTSCEPTER_TITANGOLD_MEGALASERDESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "Piercing Eye Laser";
             LanguageAPI.Add(nametoken, namestr);

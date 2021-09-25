@@ -24,8 +24,8 @@ namespace AncientScepter
             var oldDef = Resources.Load<SkillDef>("skilldefs/commandobody/CommandoBodyBarrage");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_SCEPCOMMANDO_BARRAGENAME";
-            newDescToken = "ANCIENTSCEPTER_SCEPCOMMANDO_BARRAGEDESC";
+            var nametoken = "ANCIENTSCEPTER_COMMANDO_BARRAGENAME";
+            newDescToken = "ANCIENTSCEPTER_COMMANDO_BARRAGEDESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "Death Blossom";
             LanguageAPI.Add(nametoken, namestr);
@@ -65,7 +65,11 @@ namespace AncientScepter
         {
             bool hasScep = AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0;
             var origAmp = FireBarrage.recoilAmplitude;
-            if (hasScep) FireBarrage.recoilAmplitude /= 2;
+            if (hasScep)
+            {
+                FireBarrage.recoilAmplitude /= 2;
+
+            }
             orig(self);
             FireBarrage.recoilAmplitude = origAmp;
         }

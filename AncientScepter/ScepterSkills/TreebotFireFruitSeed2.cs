@@ -27,8 +27,8 @@ namespace AncientScepter
             var oldDef = Resources.Load<SkillDef>("skilldefs/treebotbody/TreebotBodyFireFruitSeed");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_SCEPTREEBOT_FRUIT2NAME";
-            newDescToken = "ANCIENTSCEPTER_SCEPTREEBOT_FRUIT2DESC";
+            var nametoken = "ANCIENTSCEPTER_TREEBOT_FRUIT2NAME";
+            newDescToken = "ANCIENTSCEPTER_TREEBOT_FRUIT2DESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "COMMAND: REAP";
             LanguageAPI.Add(nametoken, namestr);

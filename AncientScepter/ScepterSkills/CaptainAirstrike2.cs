@@ -29,8 +29,8 @@ namespace AncientScepter
             var oldDef = Resources.Load<SkillDef>("skilldefs/captainbody/PrepAirstrike");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_SCEPCAPTAIN_AIRSTRIKENAME";
-            newDescToken = "ANCIENTSCEPTER_SCEPCAPTAIN_AIRSTRIKEDESC";
+            var nametoken = "ANCIENTSCEPTER_CAPTAIN_AIRSTRIKENAME";
+            newDescToken = "ANCIENTSCEPTER_CAPTAIN_AIRSTRIKEDESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "21-Probe Salute";
             LanguageAPI.Add(nametoken, namestr);

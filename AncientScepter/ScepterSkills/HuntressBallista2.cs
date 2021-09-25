@@ -27,8 +27,8 @@ namespace AncientScepter
             var oldDef = Resources.Load<SkillDef>("skilldefs/huntressbody/AimArrowSnipe");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_SCEPHUNTRESS_BALLISTANAME";
-            newDescToken = "ANCIENTSCEPTER_SCEPHUNTRESS_BALLISTADESC";
+            var nametoken = "ANCIENTSCEPTER_HUNTRESS_BALLISTANAME";
+            newDescToken = "ANCIENTSCEPTER_HUNTRESS_BALLISTADESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "Rabauld";
             LanguageAPI.Add(nametoken, namestr);

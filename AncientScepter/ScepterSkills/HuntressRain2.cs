@@ -26,8 +26,8 @@ namespace AncientScepter
             var oldDef = Resources.Load<SkillDef>("skilldefs/huntressbody/HuntressBodyArrowRain");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_SCEPHUNTRESS_RAINNAME";
-            newDescToken = "ANCIENTSCEPTER_SCEPHUNTRESS_RAINDESC";
+            var nametoken = "ANCIENTSCEPTER_HUNTRESS_RAINNAME";
+            newDescToken = "ANCIENTSCEPTER_HUNTRESS_RAINDESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "Burning Rain";
             LanguageAPI.Add(nametoken, namestr);
@@ -39,7 +39,7 @@ namespace AncientScepter
 
             LoadoutAPI.AddSkillDef(myDef);
 
-            projReplacer = Resources.Load<GameObject>("prefabs/projectiles/HuntressArrowRain").InstantiateClone("CIScepHuntressRain");
+            projReplacer = Resources.Load<GameObject>("prefabs/projectiles/HuntressArrowRain").InstantiateClone("AncientScepterHuntressRain");
             projReplacer.GetComponent<ProjectileDamage>().damageType |= DamageType.IgniteOnHit;
             projReplacer.GetComponent<ProjectileDotZone>().lifetime *= 1.5f;
             projReplacer.transform.localScale = new Vector3(22.5f, 15f, 22.5f);

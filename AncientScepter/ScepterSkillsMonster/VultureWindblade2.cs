@@ -30,8 +30,8 @@ namespace AncientScepter.ScepterSkillsMonster
             var oldDef = Resources.Load<SkillDef>("skilldefs/vulturebody/ChargeWindblade");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_SCEPVULTURE_WINDBLADENAME";
-            newDescToken = "ANCIENTSCEPTER_SCEPVULTURE_WINDBLADEDESC";
+            var nametoken = "ANCIENTSCEPTER_VULTURE_WINDBLADENAME";
+            newDescToken = "ANCIENTSCEPTER_VULTURE_WINDBLADEDESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "Severing Wind Blade";
             LanguageAPI.Add(nametoken, namestr);

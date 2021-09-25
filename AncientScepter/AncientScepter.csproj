@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Compile Remove="ScepterSkills\CaptainAirstrikeAlt2z.cs" />
+    <Compile Remove="ScepterSkills\HereticRuin2.cs" />
   </ItemGroup>
 
   <ItemGroup>

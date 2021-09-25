@@ -29,8 +29,8 @@ namespace AncientScepter
             var oldDef = Resources.Load<SkillDef>("skilldefs/crocobody/CrocoDisease");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_SCEPCROCO_DISEASENAME";
-            newDescToken = "ANCIENTSCEPTER_SCEPCROCO_DISEASEDESC";
+            var nametoken = "ANCIENTSCEPTER_CROCO_DISEASENAME";
+            newDescToken = "ANCIENTSCEPTER_CROCO_DISEASEDESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "Plague";
             LanguageAPI.Add(nametoken, namestr);
@@ -53,7 +53,7 @@ namespace AncientScepter
             var dw = dwPrefabPrefab.AddComponent<DiseaseWard>();
             dw.rangeIndicator = dwPrefabPrefab.GetComponent<MeshRenderer>().transform;
             dw.interval = 1f;
-            diseaseWardPrefab = dwPrefabPrefab.InstantiateClone("CIDiseaseWardAuraPrefab");
+            diseaseWardPrefab = dwPrefabPrefab.InstantiateClone("AncientScepterDiseaseWardAuraPrefab");
             UnityEngine.Object.Destroy(dwPrefabPrefab);
         }
 
