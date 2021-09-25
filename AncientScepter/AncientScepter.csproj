@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ScepterSkillStates\CommandoDeathBlossom.cs" />
     <Compile Remove="ScepterSkills\CaptainAirstrikeAlt2z.cs" />
     <Compile Remove="ScepterSkills\HereticRuin2.cs" />
   </ItemGroup>

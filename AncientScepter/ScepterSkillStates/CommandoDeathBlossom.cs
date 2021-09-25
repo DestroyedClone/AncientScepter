@@ -3,6 +3,7 @@ using RoR2;
 using UnityEngine;
 using EntityStates.Commando.CommandoWeapon;
 using EntityStates;
+using System.Collections.Generic;
 
 namespace AncientScepter
 {
@@ -11,12 +12,12 @@ namespace AncientScepter
 		public static GameObject effectPrefab;
 		public static GameObject hitEffectPrefab;
 		public static GameObject tracerEffectPrefab;
-		public static float damageCoefficient;
+		public static float damageCoefficient = FireBarrage.damageCoefficient;
 		public static float force;
 		public static float minSpread;
 		public static float maxSpread;
 		public static float baseDurationBetweenShots = 1f;
-		public static float totalDuration = 2f;
+		public float totalDuration = 2f;
 		public static float bulletRadius = 1.5f;
 		public static int baseBulletCount = 1;
 		public static string fireBarrageSoundString;
@@ -30,36 +31,63 @@ namespace AncientScepter
 		private float duration;
 		private float durationBetweenShots;
 
-		public SphereSearch sphereSearch;
-		public HurtBox[] hurtBoxes;
+		private List<HurtBox> targetHurtboxes = new List<HurtBox>();
+
+		public static string enterSound;
+		public static string muzzle;
+		public static string fireSoundString;
+		public static GameObject muzzleEffectPrefab;
+		public static float baseTotalDuration = 2f;
+		public static float baseFiringDuration;
+		public static float fieldOfView;
+		public static float maxDistance;
+		public static float procCoefficient;
+		public static int minimumFireCount;
+		public static GameObject impactEffectPrefab;
+		private int totalBulletsToFire;
+		private int targetHurtboxIndex;
+		private float timeBetweenBullets;
+		private float fireTimer;
+		private ChildLocator childLocator;
+		private int muzzleIndex;
+		private Transform muzzleTransform;
 
 		public override void OnEnter()
 		{
 			base.OnEnter();
 			base.characterBody.SetSpreadBloom(0.2f, false);
-			this.duration = FireBarrage.totalDuration;
 			this.durationBetweenShots = FireBarrage.baseDurationBetweenShots / this.attackSpeedStat;
 			this.bulletCount = (int)((float)FireBarrage.baseBulletCount * this.attackSpeedStat);
 			this.modelAnimator = base.GetModelAnimator();
 			this.modelTransform = base.GetModelTransform();
-			base.PlayCrossfade("Gesture, Additive", "FireBarrage", "FireBarrage.playbackRate", this.duration, 0.2f);
-			base.PlayCrossfade("Gesture, Override", "FireBarrage", "FireBarrage.playbackRate", this.duration, 0.2f);
+			base.PlayAnimation("Gesture, Additive", "FireSweepBarrage", "FireSweepBarrage.playbackRate", this.totalDuration);
+			base.PlayAnimation("Gesture, Override", "FireSweepBarrage", "FireSweepBarrage.playbackRate", this.totalDuration);
 			if (base.characterBody)
 			{
 				base.characterBody.SetAimTimer(2f);
 			}
 			this.FireBullet();
 
-
-			TeamMask enemyTeams = TeamMask.GetEnemyTeams(teamComponent.teamIndex);
-			sphereSearch = new SphereSearch
-			{
-				radius = 400f,
-				mask = LayerIndex.entityPrecise.mask,
-				origin = transform.position,
-				queryTriggerInteraction = QueryTriggerInteraction.UseGlobal
-			}.RefreshCandidates().FilterCandidatesByHurtBoxTeam(enemyTeams).OrderCandidatesByDistance().FilterCandidatesByDistinctHurtBoxEntities();
-
+			this.totalDuration = FireSweepBarrage.baseTotalDuration / this.attackSpeedStat;
+			this.firingDuration = FireSweepBarrage.baseFiringDuration / this.attackSpeedStat;
+			base.characterBody.SetAimTimer(3f);
+			Util.PlaySound(FireSweepBarrage.enterSound, base.gameObject);
+			Ray aimRay = base.GetAimRay();
+			BullseyeSearch bullseyeSearch = new BullseyeSearch();
+			bullseyeSearch.teamMaskFilter = TeamMask.GetEnemyTeams(base.GetTeam());
+			bullseyeSearch.maxAngleFilter = FireSweepBarrage.fieldOfView * 0.5f;
+			bullseyeSearch.maxDistanceFilter = FireSweepBarrage.maxDistance;
+			bullseyeSearch.searchOrigin = aimRay.origin;
+			bullseyeSearch.searchDirection = aimRay.direction;
+			bullseyeSearch.sortMode = BullseyeSearch.SortMode.DistanceAndAngle;
+			bullseyeSearch.filterByLoS = true;
+			bullseyeSearch.RefreshCandidates();
+			this.targetHurtboxes = bullseyeSearch.GetResults().Where(new Func<HurtBox, bool>(Util.IsValid)).Distinct(default(HurtBox.EntityEqualityComparer)).ToList<HurtBox>();
+			this.totalBulletsToFire = Mathf.Max(this.targetHurtboxes.Count, FireSweepBarrage.minimumFireCount);
+			this.timeBetweenBullets = this.firingDuration / (float)this.totalBulletsToFire;
+			this.childLocator = base.GetModelTransform().GetComponent<ChildLocator>();
+			this.muzzleIndex = this.childLocator.FindChildIndex(FireSweepBarrage.muzzle);
+			this.muzzleTransform = this.childLocator.FindChild(this.muzzleIndex);
 		}
 
 		private void FireBullet()
