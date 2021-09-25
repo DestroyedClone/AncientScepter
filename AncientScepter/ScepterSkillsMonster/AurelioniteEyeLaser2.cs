@@ -17,7 +17,7 @@ namespace AncientScepter.ScepterSkillsMonster
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: 35% additional damage pierces walls.</color>";
+        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Deals an extra 35% wall-piercing damage.</color>";
 
         public override string targetBody => "TitanGoldBody";
         public override SkillSlot targetSlot => SkillSlot.Special;

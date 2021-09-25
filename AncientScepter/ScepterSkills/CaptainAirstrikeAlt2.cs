@@ -21,7 +21,7 @@ namespace AncientScepter
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
         public override string overrideStr => "\n<color=#d299ff>SCEPTER: 2x wait time, 2x blast radius, 100000% damage" +
-            "\nAfter the explosion, blights everything within sight of the blast.</color>";
+            "\nBlights everything within sight.</color>";
 
         public override string targetBody => "CaptainBody";
         public override SkillSlot targetSlot => SkillSlot.Utility;

@@ -22,7 +22,7 @@ namespace AncientScepter.ScepterSkillsMonster
         public override string overrideStr => "\n<color=#d299ff>SCEPTER: 50% chance to fire an additional windblade for half damage.</color>";
 
         public override string targetBody => "VultureBody";
-        public override SkillSlot targetSlot => SkillSlot.Special;
+        public override SkillSlot targetSlot => SkillSlot.Primary;
         public override int targetVariantIndex => 0;
 
         internal override void SetupAttributes()
@@ -57,26 +57,24 @@ namespace AncientScepter.ScepterSkillsMonster
         private void FireWindblade_OnEnter(On.EntityStates.Vulture.Weapon.FireWindblade.orig_OnEnter orig, EntityStates.Vulture.Weapon.FireWindblade self)
         {
             orig(self);
-            Util.PlaySound(FireWindblade.soundString, self.gameObject);
-            if (FireWindblade.muzzleEffectPrefab)
+            if (self.isAuthority && AncientScepterItem.instance.GetCount(self.characterBody) > 0)
             {
-                EffectManager.SimpleMuzzleFlash(FireWindblade.muzzleEffectPrefab, self.gameObject, FireWindblade.muzzleString, false);
-            }
-            Ray aimRay = self.GetAimRay();
-            if (self.isAuthority)
-            {
-                Quaternion rhs = Util.QuaternionSafeLookRotation(aimRay.direction);
-                Quaternion lhs = Quaternion.AngleAxis(UnityEngine.Random.Range(0f, 360f), aimRay.direction);
-                ProjectileManager.instance.FireProjectile(FireWindblade.projectilePrefab, 
-                    aimRay.origin, 
-                    lhs * rhs, 
-                    self.gameObject, 
-                    self.damageStat * FireWindblade.damageCoefficient * 0.5f, 
-                    FireWindblade.force, 
-                    Util.CheckRoll(self.critStat, self.characterBody.master), 
-                    DamageColorIndex.Default, 
-                    null, 
-                    -1f);
+                if (Util.CheckRoll(50f, self.characterBody.master))
+                {
+                    Ray aimRay = self.GetAimRay();
+                    Quaternion rhs = Util.QuaternionSafeLookRotation(aimRay.direction);
+                    Quaternion lhs = Quaternion.AngleAxis(UnityEngine.Random.Range(0f, 360f), aimRay.direction);
+                    ProjectileManager.instance.FireProjectile(FireWindblade.projectilePrefab,
+                        aimRay.origin,
+                        lhs * rhs,
+                        self.gameObject,
+                        self.damageStat * FireWindblade.damageCoefficient * 0.5f,
+                        FireWindblade.force,
+                        Util.CheckRoll(self.critStat, self.characterBody.master),
+                        DamageColorIndex.Default,
+                        null,
+                        -1f);
+                }
             }
         }
     }
