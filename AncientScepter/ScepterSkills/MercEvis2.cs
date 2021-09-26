@@ -13,7 +13,8 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Double duration. Kills reset duration.</color>";
+        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Double duration. Kills reset duration." +
+            "\nHold down the special button to leave earlier.</color>";
 
         public override string targetBody => "MercBody";
         public override SkillSlot targetSlot => SkillSlot.Special;
@@ -55,7 +56,15 @@ namespace AncientScepter
             var attackerState = rep.attackerBody?.GetComponent<EntityStateMachine>()?.state;
             if (attackerState is Evis asEvis && AncientScepterItem.instance.GetCount(rep.attackerBody) > 0
                 && Vector3.Distance(rep.attackerBody.transform.position, rep.victim.transform.position) < Evis.maxRadius)
-                asEvis.stopwatch = 0f;
+            {
+                if (rep.attackerBody.inputBank.skill4.down == false)
+                {
+                    asEvis.stopwatch = 0f;
+                } else
+                {
+                    asEvis.stopwatch = 99f;
+                }
+            }
         }
 
         private void On_EvisFixedUpdate(On.EntityStates.Merc.Evis.orig_FixedUpdate orig, Evis self)
