@@ -41,11 +41,13 @@ namespace AncientScepter
 
         public static bool engiWalkerAdjustCooldown;
 
-        public static bool rerollExtras;
-
-        public static bool rerollScrap;
+        public static RerollMode rerollMode;
 
         public static bool artiFlamePerformanceMode;
+
+        public static bool enableMonsterSkills;
+
+        public static bool enableBrotherEffects;
 
         public static StridesInteractionMode stridesInteractionMode;
 
@@ -55,14 +57,22 @@ namespace AncientScepter
             StridesTakesPrecedence, ScepterTakesPrecedence, ScepterRerolls
         }
 
+        public enum RerollMode
+        {
+            Disabled, Random, Scrap
+        }
+
         public override string ItemName => "Ancient Scepter";
 
         public override string ItemLangTokenName => "ANCIENT_SCEPTER";
 
         public override string ItemPickupDesc => "Upgrades one of your skills.";
 
-        public override string ItemFullDescription => $"Upgrade one of your <style=cIsUtility>skills</style>. <style=cStack>(Unique per character)</style>"
-                        + $" <style=cStack>{(rerollExtras ? "Extra/Unusable" : "Unusable (but NOT extra)")} pickups will reroll into {(rerollScrap ? "red scrap" : "other legendary items.")}</style>";
+
+
+        public override string ItemFullDescription =>
+            $"Upgrade one of your <style=cIsUtility>skills</style>. <style=cStack>(Unique per character)</style>"
+                        + $" <style=cStack>{(rerollMode != RerollMode.Disabled ? "Extra/Unusable" : "Unusable (but NOT extra)")} pickups will reroll into {(rerollMode == RerollMode.Scrap ? "red scrap" : "other legendary items.")}</style>";
 
 
         public override string ItemLore => "Perfected energies. <He> holds it before us. The crystal of foreign elements is not attached physically, yet it does not falter from the staff's structure.\n\nOverwhelming strength. We watch as <His> might splits the ground asunder with a single strike.\n\nWondrous possibilities. <His> knowledge unlocks further pathways of development. We are enlightened by <Him>.\n\nExcellent results. From <His> hands, [Nanga] takes hold. It is as <He> said: The weak are culled.\n\nRisking everything. The crystal destabilizies. [Nanga] is gone, and <He> is forced to wield it once again.\n\nPower comes at a cost. <He> is willing to pay.";
@@ -94,10 +104,13 @@ namespace AncientScepter
         {
             engiTurretAdjustCooldown = config.Bind<bool>("Item: " + ItemName, "TR12-C Gauss Compact Faster Recharge", false, "If true, TR12-C Gauss Compact will recharge faster to match the additional stock.").Value;
             engiWalkerAdjustCooldown = config.Bind<bool>("Item: " + ItemName, "TR58-C Carbonizer Mini Faster Recharge", false, "If true, TR58-C Carbonizer Mini will recharge faster to match the additional stock.").Value;
-            rerollExtras = config.Bind<bool>("Item: " + ItemName, "Reroll on pickup for extra", true, "Requirement: Reroll on pickup for extra\nIf true, any stacks picked up past the first will reroll to other red items. If false, this behavior will only be used for characters which cannot benefit from the item at all.").Value;
-            rerollScrap = config.Bind("Item: " + ItemName, "Reroll on pickup for scrap", false, "If true, instead of rerolling stacks, it will give you a red scrap instead. Disabled by default to maintain original behaviour.").Value;
+            rerollMode = config.Bind("Item: " + ItemName, "Reroll on pickup mode", RerollMode.Random, "If \"Disabled\", this behavior will only be used for characters which cannot benefit from the item at all." +
+                "\nIf \"Random\", any stacks picked up past the first will reroll to other red items." +
+                "\nIf \"Scrap\", any stacks picked up past the first will reroll into red scrap.").Value;
             artiFlamePerformanceMode = config.Bind<bool>("Item: " + ItemName, "ArtiFlamePerformance", false, "If true, Dragon's Breath will use significantly lighter particle effects and no dynamic lighting.").Value;
             stridesInteractionMode = config.Bind<StridesInteractionMode>("Item: " + ItemName, "Scepter Rerolls", StridesInteractionMode.ScepterRerolls, "Changes what happens when a character whose Utility skill is affected by Ancient Scepter has both Ancient Scepter and Strides of Heresy at the same time.").Value; //defer until next stage
+            enableMonsterSkills = config.Bind("Item: " + ItemName, "Enable skills for monsters", true, "If true, certain monsters get the effects of the Ancient Scepter.").Value;
+            enableBrotherEffects = config.Bind("Item: " + ItemName, "Enable Mithrix Lines", true, "If true, Mithrix will have additional dialogue when acquiring the Ancient Scepter.").Value;
 
             var engiSkill = skills.First(x => x is EngiTurret2);
             engiSkill.myDef.baseRechargeInterval = EngiTurret2.oldDef.baseRechargeInterval * (engiTurretAdjustCooldown ? 2f / 3f : 1f);
@@ -424,6 +437,7 @@ localScale = new Vector3(0.2235F, 0.2235F, 0.2235F)
             orig(self);
             if (handlingInventory) return;
             handlingInventory = true;
+
             if (!HandleScepterSkill(self))
             {
                 if (GetCount(self) > 0)
@@ -431,7 +445,7 @@ localScale = new Vector3(0.2235F, 0.2235F, 0.2235F)
                     Reroll(self, GetCount(self));
                 }
             }
-            else if (GetCount(self) > 1 && rerollExtras)
+            else if (GetCount(self) > 1 && rerollMode != RerollMode.Disabled)
             {
                 Reroll(self, GetCount(self) - 1);
             }
@@ -441,20 +455,25 @@ localScale = new Vector3(0.2235F, 0.2235F, 0.2235F)
         private void Reroll(CharacterBody self, int count)
         {
             if (count <= 0) return;
-            if (rerollScrap)
+            switch (rerollMode)
             {
-                for (var i = 0; i < count; i++)
-                {
-                    self.inventory.RemoveItem(ItemDef, 1);
-                    self.inventory.GiveItem(RoR2Content.Items.ScrapRed);
-                }
-                return;
-            }
-            var list = Run.instance.availableTier3DropList.Except(new[] { PickupCatalog.FindPickupIndex(ItemDef.itemIndex) }).ToList(); //todo optimize
-            for (var i = 0; i < count; i++)
-            {
-                self.inventory.RemoveItem(ItemDef, 1);
-                self.inventory.GiveItem(PickupCatalog.GetPickupDef(list[UnityEngine.Random.Range(0, list.Count)]).itemIndex);
+                case RerollMode.Disabled:
+                    break;
+                case RerollMode.Random:
+                    var list = Run.instance.availableTier3DropList.Except(new[] { PickupCatalog.FindPickupIndex(ItemDef.itemIndex) }).ToList(); //todo optimize
+                    for (var i = 0; i < count; i++)
+                    {
+                        self.inventory.RemoveItem(ItemDef, 1);
+                        self.inventory.GiveItem(PickupCatalog.GetPickupDef(list[UnityEngine.Random.Range(0, list.Count)]).itemIndex);
+                    }
+                    break;
+                case RerollMode.Scrap:
+                    for (var i = 0; i < count; i++)
+                    {
+                        self.inventory.RemoveItem(ItemDef, 1);
+                        self.inventory.GiveItem(RoR2Content.Items.ScrapRed);
+                    }
+                    break;
             }
         }
 
