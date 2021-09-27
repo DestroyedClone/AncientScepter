@@ -44,7 +44,8 @@ namespace AncientScepter.ScepterSkillsMonster
 
         internal override void LoadBehavior()
         {
-            On.EntityStates.TitanMonster.FireMegaLaser.FireBullet += FireMegaLaser_FireBullet;
+            if (AncientScepterItem.enableMonsterSkills)
+                On.EntityStates.TitanMonster.FireMegaLaser.FireBullet += FireMegaLaser_FireBullet;
         }
 
         internal override void UnloadBehavior()

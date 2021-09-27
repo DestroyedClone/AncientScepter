@@ -46,7 +46,8 @@ namespace AncientScepter.ScepterSkillsMonster
 
         internal override void LoadBehavior()
         {
-            On.EntityStates.Vulture.Weapon.FireWindblade.OnEnter += FireWindblade_OnEnter;
+            if (AncientScepterItem.enableMonsterSkills)
+                On.EntityStates.Vulture.Weapon.FireWindblade.OnEnter += FireWindblade_OnEnter;
         }
 
         internal override void UnloadBehavior()
