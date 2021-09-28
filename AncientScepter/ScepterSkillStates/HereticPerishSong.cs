@@ -63,7 +63,7 @@ namespace AncientScepter
                 if (isAuthority)
                 {
                     victimBody.AddTimedBuff(AncientScepterMain.perishSongDebuff.BuffDef, 30f);
-                    victimBody.AddTimedBuff(RoR2Content.Buffs.DeathMark, 0.5f);
+                    //victimBody.AddTimedBuff(RoR2Content.Buffs.DeathMark, 0.5f);
 
                     var marker = victimBody.GetComponent<HereticNevermore2.ScepterPerishSongMarker>();
                     if (!marker) marker = victimBody.gameObject.AddComponent<HereticNevermore2.ScepterPerishSongMarker>();
