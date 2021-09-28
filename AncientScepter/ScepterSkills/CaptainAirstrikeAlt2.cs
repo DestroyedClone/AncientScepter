@@ -20,7 +20,7 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: 2x wait time, 2x blast radius, 100000% damage" +
+        public override string overrideStr => "\n<color=#d299ff>SCEPTER: 1.5x wait time, 2x blast radius, 100,000% damage" +
             "\nBlights everything within sight.</color>";
 
         public override string targetBody => "CaptainBody";
@@ -29,6 +29,7 @@ namespace AncientScepter
 
         public static float scepterAirstrikeDamageCoefficient = 1000f;
         public static float blastSizeMultiplier = 2f;
+        public static float airstrikeDuration = 30f;
 
         internal override void SetupAttributes()
         {
@@ -44,7 +45,7 @@ namespace AncientScepter
             myDef.skillName = namestr;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
-            myDef.baseRechargeInterval = 60f;
+            myDef.baseRechargeInterval = airstrikeDuration*2f;
             myDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texCapU2");
 
             LoadoutAPI.AddSkillDef(myDef);
@@ -58,12 +59,11 @@ namespace AncientScepter
 
             LoadoutAPI.AddSkillDef(myCallDef);
 
-            var newDuration = 40f;
 
             var oldGhost = Resources.Load<GameObject>("prefabs/projectileghosts/CaptainAirstrikeAltGhost");
             var airstrikeGhostPrefab = PrefabAPI.InstantiateClone(oldGhost, "ScepterCaptainAirstrikeAltGhost");
             var areaIndicatorCenter = airstrikeGhostPrefab.transform.Find("AreaIndicatorCenter");
-            areaIndicatorCenter.Find("IndicatorRing").GetComponent<ObjectScaleCurve>().timeMax = newDuration;
+            areaIndicatorCenter.Find("IndicatorRing").GetComponent<ObjectScaleCurve>().timeMax = airstrikeDuration;
             /*foreach (var objectScaleCurve in airstrikeGhostPrefab.GetComponentsInChildren<ObjectScaleCurve>())
             {
                 if ((int)objectScaleCurve.timeMax == 20)
@@ -79,7 +79,7 @@ namespace AncientScepter
                 {
                     var verticalOffset = child.Find("LaserVerticalOffset");
                     var laser = verticalOffset.Find("Laser");
-                    laser.GetComponent<ObjectTransformCurve>().timeMax = newDuration;
+                    laser.GetComponent<ObjectTransformCurve>().timeMax = airstrikeDuration;
 
                     var vector = new Vector3(child.transform.eulerAngles.x, i * angle, child.transform.eulerAngles.z);
                     child.transform.eulerAngles = vector;
@@ -99,7 +99,7 @@ namespace AncientScepter
             }
             var airstrikeOrientation = airstrikeGhostPrefab.transform.Find("AirstrikeOrientation");
             airstrikeOrientation.localScale *= blastSizeMultiplier / 2;
-            airstrikeOrientation.Find("FallingProjectile").GetComponent<ObjectTransformCurve>().timeMax = newDuration * 0.55f;
+            airstrikeOrientation.Find("FallingProjectile").GetComponent<ObjectTransformCurve>().timeMax = airstrikeDuration * 0.55f;
             airstrikeGhostPrefab.transform.localScale *= blastSizeMultiplier;
 
             var syringeProjectile = Resources.Load<GameObject>("prefabs/projectiles/SyringeProjectile");
@@ -116,7 +116,7 @@ namespace AncientScepter
             projectileImpactExplosion.fireChildren = true;
             projectileImpactExplosion.childrenCount = 1;
             projectileImpactExplosion.childrenProjectilePrefab = irradiateProjectile;
-            projectileImpactExplosion.lifetime = newDuration;
+            projectileImpactExplosion.lifetime = airstrikeDuration;
             airstrikePrefab.GetComponent<ProjectileController>().ghostPrefab = airstrikeGhostPrefab;
             airstrikePrefab.AddComponent<ScepterAirstrikeMarker>();
 
