@@ -157,8 +157,9 @@ namespace AncientScepter
                     self.outer.SetNextState(new FireBarrage());
                     return;
                 }
+                self.damageStat *= 0.5f;
                 self.timeBetweenBullets /= 2f;
-                self.totalBulletsToFire *= 2;
+                self.totalBulletsToFire *= 4;
             }
         }
 
