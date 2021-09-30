@@ -15,7 +15,7 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: 25% chance to ricochet on hit, +0.1% for each token, within 30 meters." +
+        public override string overrideStr => "\n<color=#d299ff>SCEPTER: 25% chance to ricochet on hit, +0.25% for each token, within 30 meters." +
             "\nDistance and damage decreases by 20% per bounce</color>";
 
         public override string targetBody => "Bandit2Body";
