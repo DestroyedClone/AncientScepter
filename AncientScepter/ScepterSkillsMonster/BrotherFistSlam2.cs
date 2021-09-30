@@ -31,7 +31,7 @@ namespace AncientScepter.ScepterSkillsMonster
 
         public static GameObject scepterBallProjectile;
 
-        public static RuntimeAnimatorController earlyPhaseMithrixBody;
+        //public static RuntimeAnimatorController earlyPhaseMithrixBody;
 
         public static BodyIndex brotherBodyIndex;
 
@@ -53,7 +53,7 @@ namespace AncientScepter.ScepterSkillsMonster
 
             LoadoutAPI.AddSkillDef(myDef);
 
-            earlyPhaseMithrixBody = Resources.Load<GameObject>("prefabs/characterbodies/BrotherBody").GetComponent<CharacterBody>().modelLocator.modelTransform.GetComponent<Animator>().runtimeAnimatorController;
+            //earlyPhaseMithrixBody = Resources.Load<GameObject>("prefabs/characterbodies/BrotherBody").GetComponent<CharacterBody>().modelLocator.modelTransform.gameObject.GetComponent<Animator>().runtimeAnimatorController;
 
             brotherBodyIndex = BodyCatalog.FindBodyIndex("BrotherBody");
 
@@ -86,7 +86,11 @@ namespace AncientScepter.ScepterSkillsMonster
         {
             if (self is FireLunarShardsHurt)
             {
-                if (!self.characterBody.GetComponent<RuntimeAnimatorChanger>()) self.characterBody.gameObject.AddComponent<RuntimeAnimatorChanger>();
+                if (!self.characterBody.GetComponent<RuntimeAnimatorChanger>())
+                {
+                    var a = self.characterBody.gameObject.AddComponent<RuntimeAnimatorChanger>();
+                    a.healthComponent = self.healthComponent;
+                }
             }
             orig(self);
         }
@@ -114,26 +118,25 @@ namespace AncientScepter.ScepterSkillsMonster
 
         public class RuntimeAnimatorChanger : MonoBehaviour
         {
-            public RuntimeAnimatorController runtimeAnimatorController;
+            //public RuntimeAnimatorController runtimeAnimatorController;
             public HealthComponent healthComponent;
-            private Animator animator;
+            //private Animator animator;
             private SfxLocator sfxLocator;
 
             public void OnEnter()
             {
-                animator = gameObject.GetComponent<CharacterBody>().modelLocator.modelTransform.GetComponent<Animator>();
-                runtimeAnimatorController = animator.runtimeAnimatorController;
-                animator.runtimeAnimatorController = earlyPhaseMithrixBody;
-                healthComponent = gameObject.GetComponent<HealthComponent>();
+                //animator = gameObject.GetComponent<CharacterBody>().modelLocator.modelTransform.GetComponent<Animator>();
+                //runtimeAnimatorController = animator.runtimeAnimatorController;
+                //animator.runtimeAnimatorController = earlyPhaseMithrixBody;
                 sfxLocator = healthComponent?.body?.sfxLocator ?? null;
                 Say("ANCIENTSCEPTER_SPEECH_BROTHER_SCEPTERGET_"+UnityEngine.Random.Range(0, 4));
             }
 
             public void FixedUpdate()
             {
-                if (healthComponent.combinedHealthFraction <= 0.5f)
+                if (healthComponent && healthComponent.combinedHealthFraction <= 0.5f)
                 {
-                    animator.runtimeAnimatorController = runtimeAnimatorController;
+                    //animator.runtimeAnimatorController = runtimeAnimatorController;
                     Say("ANCIENTSCEPTER_SPEECH_BROTHER_SCEPTERHURT_" + UnityEngine.Random.Range(0, 4));
                     enabled = false;
                 }
