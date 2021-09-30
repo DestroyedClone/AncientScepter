@@ -3,6 +3,9 @@ using RoR2;
 using RoR2.Skills;
 using UnityEngine;
 using static AncientScepter.SkillUtil;
+using System.Collections.Generic;
+using System.Linq;
+using RoR2.Orbs;
 
 namespace AncientScepter
 {
@@ -12,11 +15,17 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Deals 50% more damage if your enemy is targeting you, and .</color>";
+        public override string overrideStr => "\n<color=#d299ff>SCEPTER: 25% chance to ricochet on hit, +0.1% for each token, within 30 meters." +
+            "\nDistance and damage decreases by 20% per bounce</color>";
 
         public override string targetBody => "Bandit2Body";
         public override SkillSlot targetSlot => SkillSlot.Special;
         public override int targetVariantIndex => 1;
+
+        public static float ricochetChance = 25f;
+        public static float ricochetChanceStack = 0.1f;
+
+        public static GameObject bulletTracer = Resources.Load<GameObject>("Prefabs/Effects/Tracers/TracerCommandoDefault");
 
         internal override void SetupAttributes()
         {
@@ -35,11 +44,126 @@ namespace AncientScepter
             myDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texBanditR2");
 
             LoadoutAPI.AddSkillDef(myDef);
+
         }
 
         internal override void LoadBehavior()
         {
             On.RoR2.HealthComponent.TakeDamage += HealthComponent_TakeDamage;
+            On.RoR2.GlobalEventManager.OnHitEnemy += GlobalEventManager_OnHitEnemy;
+        }
+
+        private void GlobalEventManager_OnHitEnemy(On.RoR2.GlobalEventManager.orig_OnHitEnemy orig, GlobalEventManager self, DamageInfo damageInfo, GameObject victim)
+        {
+            orig(self, damageInfo, victim);
+            var attackerBody = damageInfo.attacker?.GetComponent<CharacterBody>();
+            if (AncientScepterItem.instance.GetCount(attackerBody ?? null) <= 0) return;
+            if ((damageInfo.damageType & DamageType.GiveSkullOnKill) == DamageType.GiveSkullOnKill)
+            {
+                if (!GetRicochetChance(attackerBody)) return;
+                BanditRicochetOrb banditRicochetOrb = new BanditRicochetOrb
+                {
+                    bouncesRemaining = 0,
+                    resetBouncedObjects = true,
+                    damageValue = damageInfo.damage,
+                    isCrit = victim.GetComponent<CharacterBody>() ? victim.GetComponent<CharacterBody>().RollCrit() : damageInfo.crit,
+                    teamIndex = TeamComponent.GetObjectTeam(damageInfo.attacker),
+                    attacker = damageInfo.attacker,
+                    attackerBody = attackerBody,
+                    procCoefficient = damageInfo.procCoefficient,
+                    duration = 0.1f,
+                    bouncedObjects = new List<HealthComponent>(),
+                    range = 30f,
+                    tracerEffectPrefab = bulletTracer,
+                    origin = damageInfo.position
+                };
+                banditRicochetOrb.bouncedObjects.Add(victim.GetComponent<HealthComponent>() ?? null);
+                banditRicochetOrb.damageType = damageInfo.damageType;
+                var nextTarget = banditRicochetOrb.PickNextTarget(banditRicochetOrb.origin);
+                if (nextTarget)
+                {
+                    banditRicochetOrb.target = nextTarget;
+                    OrbManager.instance.AddOrb(banditRicochetOrb);
+                }
+            }
+        }
+
+
+        public static bool GetRicochetChance(CharacterBody characterBody, float modifier = 1f)
+        {
+            if (!characterBody) return false;
+            var buffCount = characterBody.GetBuffCount(RoR2Content.Buffs.BanditSkull);
+            var chance = (ricochetChance + ricochetChanceStack * buffCount) * modifier;
+            return Util.CheckRoll(chance);
+        }
+
+        private void GlobalEventManager_onCharacterDeathGlobal(DamageReport damageReport)
+        {
+            if (AncientScepterItem.instance.GetCount(damageReport?.attackerBody) <= 0) return;
+            var damageInfo = damageReport.damageInfo;
+
+            if ((damageInfo.damageType & DamageType.GiveSkullOnKill) == DamageType.GiveSkullOnKill)
+            {
+                if (false) return;
+
+                var instancesList = CharacterBody.instancesList;
+                List<CharacterBody> bodies = new List<CharacterBody>();
+                BullseyeSearch bullseyeSearch = new BullseyeSearch()
+                {
+                    filterByDistinctEntity = true,
+                    filterByLoS = true,
+                    maxAngleFilter = 360f,
+                    searchOrigin = damageReport.victimBody.corePosition,
+                    sortMode = BullseyeSearch.SortMode.Distance,
+                    teamMaskFilter = TeamMask.GetEnemyTeams(damageReport.attackerBody.teamComponent.teamIndex),
+                    viewer = damageReport.attackerBody ? damageReport.attackerBody : null
+                };
+                bullseyeSearch.RefreshCandidates();
+
+                BulletAttack bulletAttack = new BulletAttack()
+                {
+                    bulletCount = 1U,
+                    damage = damageInfo.damage,
+                    damageColorIndex = damageInfo.damageColorIndex,
+                    damageType = damageInfo.damageType,
+                    isCrit = damageInfo.crit,
+                    procCoefficient = damageInfo.procCoefficient,
+                };
+
+
+                HurtBox hurtBox = bullseyeSearch.GetResults().FirstOrDefault<HurtBox>();
+                if (hurtBox)
+                {
+                    bulletAttack.aimVector = (damageReport.victimBody.corePosition - hurtBox.healthComponent.body.corePosition).normalized;
+                    bulletAttack.origin = hurtBox.healthComponent.body.corePosition;
+                } else
+                {
+                    bulletAttack.aimVector = damageReport.victimBody.inputBank ? 
+                        new Ray(damageReport.victimBody.inputBank.aimOrigin, damageReport.victimBody.inputBank.aimDirection).direction
+                        : new Ray(damageReport.victim.transform.position, damageReport.victim.transform.forward).direction;
+                    bulletAttack.origin = hurtBox.collider.transform.position;
+                }
+
+                foreach (var body in instancesList)
+                {
+                    if (body.healthComponent && body.healthComponent.alive)
+                    {
+                        if (FriendlyFireManager.friendlyFireMode == FriendlyFireManager.FriendlyFireMode.Off) //ff on
+                        {
+                            bodies.Add(body);
+                        } else if (body.teamComponent && body.teamComponent.teamIndex != damageReport.attackerTeamIndex)
+                        {
+                            bodies.Add(body);
+                        }
+                    }
+                }
+
+                foreach (var body in bodies)
+                {
+
+                }
+            }
+
         }
 
         private void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
