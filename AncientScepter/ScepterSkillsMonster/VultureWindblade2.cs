@@ -33,7 +33,7 @@ namespace AncientScepter.ScepterSkillsMonster
             var nametoken = "ANCIENTSCEPTER_VULTURE_WINDBLADENAME";
             newDescToken = "ANCIENTSCEPTER_VULTURE_WINDBLADEDESC";
             oldDescToken = oldDef.skillDescriptionToken;
-            var namestr = "Severing Wind Blade";
+            var namestr = "Repeated Windblade";
             LanguageAPI.Add(nametoken, namestr);
 
             myDef.skillName = namestr;

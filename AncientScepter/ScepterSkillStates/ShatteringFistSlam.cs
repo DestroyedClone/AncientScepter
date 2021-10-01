@@ -11,6 +11,7 @@ namespace AncientScepter
 {
     public class ShatteringFistSlam : FistSlam
     {
+		//shelved
         public override void FixedUpdate()
         {
 			base.FixedUpdate();

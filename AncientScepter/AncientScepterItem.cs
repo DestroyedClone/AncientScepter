@@ -308,7 +308,7 @@ localScale = new Vector3(0.2235F, 0.2235F, 0.2235F)
 
             // Monster
             skills.Add(new AurelioniteEyeLaser2());
-            skills.Add(new BrotherHurtShards());
+            skills.Add(new BrotherFistSlam2());
             skills.Add(new VultureWindblade2());
         }
 

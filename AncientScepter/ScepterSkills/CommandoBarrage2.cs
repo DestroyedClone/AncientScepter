@@ -38,6 +38,7 @@ namespace AncientScepter
             myDef.skillDescriptionToken = newDescToken;
             myDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texCommandoR1");
             myDef.activationState = new EntityStates.SerializableEntityStateType(typeof(FireSweepBarrage));
+            //myDef.activationState = new EntityStates.SerializableEntityStateType(typeof(FireDeathBlossom));
 
             LoadoutAPI.AddSkillDef(myDef);
         }
@@ -85,9 +86,14 @@ namespace AncientScepter
             {
                 if (self.totalBulletsFired < self.totalBulletsToFire)
                 {
-                    if (!string.IsNullOrEmpty(FireSweepBarrage.muzzle))
+                    string muzzleName = "MuzzleRight";
+                    if (self.GetModelAnimator())
                     {
-                        EffectManager.SimpleMuzzleFlash(FireSweepBarrage.muzzleEffectPrefab, self.gameObject, FireSweepBarrage.muzzle, false);
+                        if (FireBarrage.effectPrefab)
+                        {
+                            EffectManager.SimpleMuzzleFlash(FireBarrage.effectPrefab, self.gameObject, muzzleName, false);
+                        }
+                        self.PlayAnimation("Gesture Additive, Right", "FirePistol, Right");
                     }
                     Util.PlaySound(FireSweepBarrage.fireSoundString, self.gameObject);
                     self.PlayAnimation("Gesture Additive, Right", "FirePistol, Right");
@@ -118,7 +124,10 @@ namespace AncientScepter
                             self.targetHurtboxIndex = 0;
                         }
 
-                        if (self.inputBank.skill1.down)
+                        bool noTarget = false;
+
+                    NoTargetLabel:
+                        if (self.inputBank.skill1.down || noTarget)
                         {
                             bulletAttack.aimVector = aimRay.direction;
                         }
@@ -134,9 +143,12 @@ namespace AncientScepter
 
                                     Vector3 normalized = (hurtBox.transform.position - self.muzzleTransform.position).normalized;
                                     bulletAttack.aimVector = normalized;
+                                    goto RegionFireBullet;
                                 }
                             }
+                            goto NoTargetLabel;
                         }
+                    RegionFireBullet:
                         bulletAttack.Fire();
                         self.totalBulletsFired++;
                     }
@@ -157,9 +169,9 @@ namespace AncientScepter
                     self.outer.SetNextState(new FireBarrage());
                     return;
                 }
-                self.damageStat *= 0.5f;
-                self.timeBetweenBullets /= 2f;
-                self.totalBulletsToFire *= 4;
+                self.damageStat = FireBarrage.damageCoefficient;
+                self.timeBetweenBullets = (FireBarrage.baseDurationBetweenShots / self.attackSpeedStat) / 2f;
+                self.totalBulletsToFire = (int)((float)FireBarrage.baseBulletCount * self.attackSpeedStat);
             }
         }
 
@@ -186,7 +198,6 @@ namespace AncientScepter
             if (hasScep)
             {
                 FireBarrage.recoilAmplitude /= 2;
-
             }
             orig(self);
             FireBarrage.recoilAmplitude = origAmp;
