@@ -37,8 +37,8 @@ namespace AncientScepter
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
             myDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texCommandoR1");
-            myDef.activationState = new EntityStates.SerializableEntityStateType(typeof(FireSweepBarrage));
-            //myDef.activationState = new EntityStates.SerializableEntityStateType(typeof(FireDeathBlossom));
+            if (AncientScepterItem.enableCommandoAutoaim)
+                myDef.activationState = new EntityStates.SerializableEntityStateType(typeof(FireSweepBarrage));
 
             LoadoutAPI.AddSkillDef(myDef);
         }
@@ -48,8 +48,12 @@ namespace AncientScepter
             On.EntityStates.Commando.CommandoWeapon.FireBarrage.OnEnter += On_FireBarrage_Enter;
             On.EntityStates.Commando.CommandoWeapon.FireBarrage.FireBullet += On_FireBarrage_FireBullet;
 
-            On.EntityStates.Commando.CommandoWeapon.FireSweepBarrage.OnEnter += FireSweepBarrage_OnEnter;
-            On.EntityStates.Commando.CommandoWeapon.FireSweepBarrage.Fire += FireSweepBarrage_Fire;
+            /*
+            if (AncientScepterItem.enableCommandoAutoaim)
+            {
+                On.EntityStates.Commando.CommandoWeapon.FireSweepBarrage.OnEnter += FireSweepBarrage_OnEnter;
+                On.EntityStates.Commando.CommandoWeapon.FireSweepBarrage.Fire += FireSweepBarrage_Fire;
+            }*/
             //On.EntityStates.Commando.CommandoWeapon.FireSweepBarrage.FixedUpdate += FireSweepBarrage_FixedUpdate;
         }
 
