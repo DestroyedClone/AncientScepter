@@ -56,9 +56,9 @@ namespace AncientScepter
             base.OnArrival();
             if (this.target)
             {
-                Chat.AddMessage($"Bounces left: {bouncesRemaining} | Range {range}");
-                this.range *= 0.85f;
-                this.damageValue *= 0.85f;
+                //Chat.AddMessage($"Bounces left: {bouncesRemaining} | Range {range}");
+                this.range *= Bandit2SkullRevolver2.reductionPerBounceMultiplier;
+                this.damageValue *= Bandit2SkullRevolver2.reductionPerBounceMultiplier;
 
                 if (this.tracerEffectPrefab)
                 {

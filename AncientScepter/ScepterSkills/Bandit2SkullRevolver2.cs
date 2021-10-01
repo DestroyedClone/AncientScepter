@@ -16,7 +16,7 @@ namespace AncientScepter
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
         public override string overrideStr => $"\n<color=#d299ff>SCEPTER: {ricochetChance}% (+{ricochetChanceStack}% per token) chance to ricochet to another enemy on hit up to {ricochetMax} times within 30m." +
-            "\n-20% distance & damage per bounce. Unaffected by luck.</color>";
+            $"\n-10% distance & damage per bounce. Unaffected by luck.</color>";
 
         public override string targetBody => "Bandit2Body";
         public override SkillSlot targetSlot => SkillSlot.Special;
@@ -25,6 +25,7 @@ namespace AncientScepter
         public static float ricochetChance = 25f;
         public static float ricochetChanceStack = 0.35f;
         public static int ricochetMax = 8;
+        public static float reductionPerBounceMultiplier = 0.9f;
 
         public static GameObject bulletTracer = Resources.Load<GameObject>("Prefabs/Effects/Tracers/TracerCommandoDefault");
 
@@ -108,7 +109,6 @@ namespace AncientScepter
 
             if ((damageInfo.damageType & DamageType.GiveSkullOnKill) == DamageType.GiveSkullOnKill)
             {
-                if (false) return;
 
                 var instancesList = CharacterBody.instancesList;
                 List<CharacterBody> bodies = new List<CharacterBody>();

@@ -47,7 +47,7 @@ namespace AncientScepter
 
         public static bool enableMonsterSkills;
 
-        public static bool enableBrotherEffects;
+        //public static bool enableBrotherEffects;
 
         //public static bool enableCommandoAutoaim;
 
@@ -112,7 +112,7 @@ namespace AncientScepter
             artiFlamePerformanceMode = config.Bind<bool>("Item: " + ItemName, "ArtiFlamePerformance", false, "If true, Dragon's Breath will use significantly lighter particle effects and no dynamic lighting.").Value;
             stridesInteractionMode = config.Bind<StridesInteractionMode>("Item: " + ItemName, "Scepter Rerolls", StridesInteractionMode.ScepterRerolls, "Changes what happens when a character whose Utility skill is affected by Ancient Scepter has both Ancient Scepter and Strides of Heresy at the same time.").Value; //defer until next stage
             enableMonsterSkills = config.Bind("Item: " + ItemName, "Enable skills for monsters", true, "If true, certain monsters get the effects of the Ancient Scepter.").Value;
-            enableBrotherEffects = config.Bind("Item: " + ItemName, "Enable Mithrix Lines", true, "If true, Mithrix will have additional dialogue when acquiring the Ancient Scepter.").Value;
+            //enableBrotherEffects = config.Bind("Item: " + ItemName, "Enable Mithrix Lines", true, "If true, Mithrix will have additional dialogue when acquiring the Ancient Scepter.").Value;
             //enableCommandoAutoaim = config.Bind("Item: " + ItemName, "Enable Commando Autoaim", true, "This may break compatibiltiy with skills.").Value;
 
             var engiSkill = skills.First(x => x is EngiTurret2);
@@ -310,9 +310,11 @@ localScale = new Vector3(0.2235F, 0.2235F, 0.2235F)
             skills.Add(new TreebotFireFruitSeed2());
 
             // Monster
-            skills.Add(new AurelioniteEyeLaser2());
-            skills.Add(new BrotherFistSlam2());
-            skills.Add(new VultureWindblade2());
+            if (enableMonsterSkills)
+            {
+                skills.Add(new AurelioniteEyeLaser2());
+                skills.Add(new VultureWindblade2());
+            }
         }
 
         public void RegisterSkills()

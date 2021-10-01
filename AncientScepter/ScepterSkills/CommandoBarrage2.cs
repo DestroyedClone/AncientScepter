@@ -15,7 +15,7 @@ namespace AncientScepter
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
         public override string overrideStr => "\n<color=#d299ff>SCEPTER: Fires twice as many bullets, twice as fast, with twice the accuracy at every enemy within range." +
-            "\nHolding down your primary skill will disable autoaim.</color>";
+            "\nHolding down your primary skill will fire more accurately.</color>";
 
         public override string targetBody => "CommandoBody";
         public override SkillSlot targetSlot => SkillSlot.Special;
@@ -37,8 +37,8 @@ namespace AncientScepter
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
             myDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texCommandoR1");
-            if (AncientScepterItem.enableCommandoAutoaim)
-                myDef.activationState = new EntityStates.SerializableEntityStateType(typeof(FireSweepBarrage));
+            //if (AncientScepterItem.enableCommandoAutoaim)
+                //myDef.activationState = new EntityStates.SerializableEntityStateType(typeof(FireSweepBarrage));
 
             LoadoutAPI.AddSkillDef(myDef);
         }
@@ -199,12 +199,16 @@ namespace AncientScepter
         {
             bool hasScep = AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0;
             var origAmp = FireBarrage.recoilAmplitude;
+            var origRadius = FireBarrage.bulletRadius;
             if (hasScep)
             {
                 FireBarrage.recoilAmplitude /= 2;
+                if (!self.inputBank || (self.inputBank && !self.inputBank.skill1.down))
+                    FireBarrage.bulletRadius *= 2;
             }
             orig(self);
             FireBarrage.recoilAmplitude = origAmp;
+            FireBarrage.bulletRadius = origRadius;
         }
     }
 }
