@@ -13,8 +13,6 @@ namespace AncientScepter
     {
         public int bouncesRemaining;
 
-        public int actualBounces = 0;
-
         public bool resetBouncedObjects;
 
         public float damageValue;
@@ -37,7 +35,7 @@ namespace AncientScepter
 
         public DamageColorIndex damageColorIndex;
 
-        public float range = 20f;
+        public float range = 30f;
 
         public DamageType damageType;
 
@@ -58,8 +56,10 @@ namespace AncientScepter
             base.OnArrival();
             if (this.target)
             {
-                actualBounces++;
-                Chat.AddMessage($"Actual Bounces {actualBounces} | Range {range}");
+                Chat.AddMessage($"Bounces left: {bouncesRemaining} | Range {range}");
+                this.range *= 0.85f;
+                this.damageValue *= 0.85f;
+
                 if (this.tracerEffectPrefab)
                 {
                     EffectData effectData = new EffectData
@@ -76,7 +76,7 @@ namespace AncientScepter
                     {
                         DamageInfo damageInfo = new DamageInfo
                         {
-                            damage = this.damageValue * Mathf.Pow(0.8f, actualBounces),
+                            damage = this.damageValue,
                             attacker = this.attacker,
                             inflictor = this.inflictor,
                             force = Vector3.zero,
@@ -87,21 +87,19 @@ namespace AncientScepter
                             damageColorIndex = this.damageColorIndex,
                             damageType = this.damageType
                         };
+                        R2API.DamageAPI.AddModdedDamageType(damageInfo, CustomDamageTypes.ScepterBandit2SkullDT);
                         healthComponent.TakeDamage(damageInfo);
                         GlobalEventManager.instance.OnHitEnemy(damageInfo, healthComponent.gameObject);
                         GlobalEventManager.instance.OnHitAll(damageInfo, healthComponent.gameObject);
                     }
                 }
                 this.hitCallback?.Invoke(this);
-                if (this.bouncesRemaining == 0)
-                {
-                    if (Bandit2SkullRevolver2.GetRicochetChance(this.attackerBody))
-                    {
-                        this.bouncesRemaining++;
-                    }
-                }
                 if (this.bouncesRemaining > 0)
                 {
+                    if (!Bandit2SkullRevolver2.GetRicochetChance(this.attackerBody))
+                    {
+                        this.bouncesRemaining = 1;
+                    }
                     if (resetBouncedObjects)
                     {
                         this.bouncedObjects.Clear();
@@ -110,30 +108,31 @@ namespace AncientScepter
                     HurtBox hurtBox = this.PickNextTarget(this.target.transform.position);
                     if (hurtBox)
                     {
-                        BanditRicochetOrb BanditRicochetOrb = new BanditRicochetOrb();
-                        BanditRicochetOrb.search = this.search;
-                        BanditRicochetOrb.origin = this.target.transform.position;
-                        BanditRicochetOrb.target = hurtBox;
-                        BanditRicochetOrb.attacker = this.attacker;
-                        BanditRicochetOrb.attackerBody = this.attackerBody;
-                        BanditRicochetOrb.inflictor = this.inflictor;
-                        BanditRicochetOrb.teamIndex = this.teamIndex;
-                        BanditRicochetOrb.damageValue = this.damageValue;
-                        BanditRicochetOrb.isCrit = this.attackerBody.RollCrit();
-                        BanditRicochetOrb.bouncesRemaining = this.bouncesRemaining - 1;
-                        BanditRicochetOrb.bouncedObjects = this.bouncedObjects;
-                        BanditRicochetOrb.resetBouncedObjects = this.resetBouncedObjects;
-                        BanditRicochetOrb.procChainMask = this.procChainMask;
-                        BanditRicochetOrb.procCoefficient = this.procCoefficient;
-                        BanditRicochetOrb.damageColorIndex = this.damageColorIndex;
-                        BanditRicochetOrb.duration = this.duration;
-                        BanditRicochetOrb.range = this.range;
-                        BanditRicochetOrb.damageType = this.damageType;
-                        BanditRicochetOrb.tracerEffectPrefab = this.tracerEffectPrefab;
-                        BanditRicochetOrb.hitEffectPrefab = this.hitEffectPrefab;
-                        BanditRicochetOrb.hitSoundString = this.hitSoundString;
-                        BanditRicochetOrb.hitCallback = this.hitCallback;
-                        BanditRicochetOrb.actualBounces = this.actualBounces;
+                        BanditRicochetOrb BanditRicochetOrb = new BanditRicochetOrb
+                        {
+                            search = this.search,
+                            origin = this.target.transform.position,
+                            target = hurtBox,
+                            attacker = this.attacker,
+                            attackerBody = this.attackerBody,
+                            inflictor = this.inflictor,
+                            teamIndex = this.teamIndex,
+                            damageValue = this.damageValue,
+                            isCrit = this.attackerBody.RollCrit(),
+                            bouncesRemaining = this.bouncesRemaining - 1,
+                            bouncedObjects = this.bouncedObjects,
+                            resetBouncedObjects = this.resetBouncedObjects,
+                            procChainMask = this.procChainMask,
+                            procCoefficient = this.procCoefficient,
+                            damageColorIndex = this.damageColorIndex,
+                            duration = this.duration,
+                            range = this.range,
+                            damageType = this.damageType,
+                            tracerEffectPrefab = this.tracerEffectPrefab,
+                            hitEffectPrefab = this.hitEffectPrefab,
+                            hitSoundString = this.hitSoundString,
+                            hitCallback = this.hitCallback,
+                        };
                         OrbManager.instance.AddOrb(BanditRicochetOrb);
 
                         return;
@@ -155,7 +154,7 @@ namespace AncientScepter
             this.search.teamMaskFilter.RemoveTeam(this.teamIndex);
             this.search.filterByLoS = true;
             this.search.sortMode = BullseyeSearch.SortMode.Distance;
-            this.search.maxDistanceFilter = this.range * Mathf.Pow(0.8f, actualBounces);
+            this.search.maxDistanceFilter = this.range;
             this.search.RefreshCandidates();
             HurtBox hurtBox = (from v in this.search.GetResults()
                                where !this.bouncedObjects.Contains(v.healthComponent)

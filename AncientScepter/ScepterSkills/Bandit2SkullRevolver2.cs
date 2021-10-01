@@ -15,15 +15,16 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: 25% chance to ricochet on hit, +0.25% for each token, within 30 meters." +
-            "\nDistance and damage decreases by 20% per bounce</color>";
+        public override string overrideStr => $"\n<color=#d299ff>SCEPTER: {ricochetChance}% (+{ricochetChanceStack}% per token) chance to ricochet to another enemy on hit up to {ricochetMax} times within 30m." +
+            "\n-20% distance & damage per bounce. Unaffected by luck.</color>";
 
         public override string targetBody => "Bandit2Body";
         public override SkillSlot targetSlot => SkillSlot.Special;
         public override int targetVariantIndex => 1;
 
         public static float ricochetChance = 25f;
-        public static float ricochetChanceStack = 0.1f;
+        public static float ricochetChanceStack = 0.35f;
+        public static int ricochetMax = 8;
 
         public static GameObject bulletTracer = Resources.Load<GameObject>("Prefabs/Effects/Tracers/TracerCommandoDefault");
 
@@ -49,21 +50,24 @@ namespace AncientScepter
 
         internal override void LoadBehavior()
         {
-            On.RoR2.HealthComponent.TakeDamage += HealthComponent_TakeDamage;
+            //On.RoR2.HealthComponent.TakeDamage += HealthComponent_TakeDamage;
             On.RoR2.GlobalEventManager.OnHitEnemy += GlobalEventManager_OnHitEnemy;
         }
 
         private void GlobalEventManager_OnHitEnemy(On.RoR2.GlobalEventManager.orig_OnHitEnemy orig, GlobalEventManager self, DamageInfo damageInfo, GameObject victim)
         {
             orig(self, damageInfo, victim);
-            var attackerBody = damageInfo.attacker?.GetComponent<CharacterBody>();
-            if (AncientScepterItem.instance.GetCount(attackerBody ?? null) <= 0) return;
-            if ((damageInfo.damageType & DamageType.GiveSkullOnKill) == DamageType.GiveSkullOnKill)
+            if (damageInfo == null || !damageInfo.attacker) return;
+            var attackerBody = damageInfo.attacker.GetComponent<CharacterBody>();
+            if (!attackerBody) return;
+            if (AncientScepterItem.instance.GetCount(attackerBody) <= 0) return;
+
+            if ((damageInfo.damageType & DamageType.GiveSkullOnKill) == DamageType.GiveSkullOnKill && !damageInfo.HasModdedDamageType(CustomDamageTypes.ScepterBandit2SkullDT))
             {
                 if (!GetRicochetChance(attackerBody)) return;
                 BanditRicochetOrb banditRicochetOrb = new BanditRicochetOrb
                 {
-                    bouncesRemaining = 0,
+                    bouncesRemaining = ricochetMax - 1,
                     resetBouncedObjects = true,
                     damageValue = damageInfo.damage,
                     isCrit = victim.GetComponent<CharacterBody>() ? victim.GetComponent<CharacterBody>().RollCrit() : damageInfo.crit,
