@@ -17,7 +17,7 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Deals massive, fatal damage to you and nearby enemies after a short time.</color>";
+        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Deals 5000% fatal damage to you and nearby enemies after a short time.</color>";
 
         public override string targetBody => "HereticBody";
         public override SkillSlot targetSlot => SkillSlot.Special;
