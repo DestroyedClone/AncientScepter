@@ -71,7 +71,8 @@ namespace AncientScepter.ScepterSkillsMonster
 
         internal override void LoadBehavior()
         {
-            On.EntityStates.BrotherMonster.Weapon.FireLunarShards.OnEnter += FireLunarShards_OnEnter;
+            if (AncientScepterItem.enableBrotherEffects)
+                On.EntityStates.BrotherMonster.Weapon.FireLunarShards.OnEnter += FireLunarShards_OnEnter;
             On.EntityStates.BrotherMonster.FistSlam.FixedUpdate += FistSlam_FixedUpdate;
         }
 
