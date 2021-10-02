@@ -36,7 +36,7 @@ namespace AncientScepter
         public abstract Sprite ItemIcon { get; }
         public abstract GameObject ItemDisplay { get; }
 
-        public ItemDef ItemDef;
+        public ItemDef ItemDef { get; set; }
 
         public virtual bool CanRemove { get; } = true;
 
