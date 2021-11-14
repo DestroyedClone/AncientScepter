@@ -51,6 +51,8 @@ namespace AncientScepter
 
         //public static bool enableCommandoAutoaim;
 
+        public static bool turretBlacklist;
+
         public static StridesInteractionMode stridesInteractionMode;
 
         //TODO: test w/ stage changes
@@ -80,7 +82,7 @@ namespace AncientScepter
         public override string ItemLore => "Perfected energies. <He> holds it before us. The crystal of foreign elements is not attached physically, yet it does not falter from the staff's structure.\n\nOverwhelming strength. We watch as <His> might splits the ground asunder with a single strike.\n\nWondrous possibilities. <His> knowledge unlocks further pathways of development. We are enlightened by <Him>.\n\nExcellent results. From <His> hands, [Nanga] takes hold. It is as <He> said: The weak are culled.\n\nRisking everything. The crystal destabilizies. [Nanga] is gone, and <He> is forced to wield it once again.\n\nPower comes at a cost. <He> is willing to pay.";
 
         public override ItemTier Tier => ItemTier.Tier3;
-        public override ItemTag[] ItemTags => new ItemTag[] { ItemTag.Utility, ItemTag.AIBlacklist };
+        public override ItemTag[] ItemTags => EvaluateItemTags();
 
         public override GameObject ItemModel => Assets.mainAssetBundle.LoadAsset<GameObject>("mdlAncientScepterPickup");
         public override Sprite ItemIcon => Assets.mainAssetBundle.LoadAsset<Sprite>("texAncientScepterIcon");
@@ -102,6 +104,20 @@ namespace AncientScepter
             //InstallLanguage();
         }
 
+        private ItemTag[] EvaluateItemTags()
+        {
+            List<ItemTag> availableTags = new List<ItemTag>()
+            {
+                ItemTag.Utility,
+                ItemTag.AIBlacklist,
+            };
+            if (turretBlacklist)
+            {
+                availableTags.Add(ItemTag.CannotCopy);
+            }
+            return availableTags.ToArray();
+        }
+
         public override void CreateConfig(ConfigFile config)
         {
             engiTurretAdjustCooldown = config.Bind<bool>("Item: " + ItemName, "TR12-C Gauss Compact Faster Recharge", false, "If true, TR12-C Gauss Compact will recharge faster to match the additional stock.").Value;
@@ -114,6 +130,8 @@ namespace AncientScepter
             enableMonsterSkills = config.Bind("Item: " + ItemName, "Enable skills for monsters", true, "If true, certain monsters get the effects of the Ancient Scepter.").Value;
             //enableBrotherEffects = config.Bind("Item: " + ItemName, "Enable Mithrix Lines", true, "If true, Mithrix will have additional dialogue when acquiring the Ancient Scepter.").Value;
             //enableCommandoAutoaim = config.Bind("Item: " + ItemName, "Enable Commando Autoaim", true, "This may break compatibiltiy with skills.").Value;
+            turretBlacklist = config.Bind("Item: " + ItemName, "Blacklist Turrets", true, "If true, turrets will be blacklisted from getting the Ancient Scepter." +
+                "\nIf false, they will get the scepter and will get rerolled depending on the reroll mode.").Value;
 
             var engiSkill = skills.First(x => x is EngiTurret2);
             engiSkill.myDef.baseRechargeInterval = EngiTurret2.oldDef.baseRechargeInterval * (engiTurretAdjustCooldown ? 2f / 3f : 1f);
