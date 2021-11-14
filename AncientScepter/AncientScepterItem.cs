@@ -56,7 +56,7 @@ namespace AncientScepter
         //TODO: test w/ stage changes
         public enum StridesInteractionMode
         {
-            StridesTakesPrecedence, ScepterTakesPrecedence, ScepterRerolls
+            HeresyTakesPrecedence, ScepterTakesPrecedence, ScepterRerolls
         }
 
         public enum RerollMode
@@ -110,7 +110,7 @@ namespace AncientScepter
                 "\nIf \"Random\", any stacks picked up past the first will reroll to other red items." +
                 "\nIf \"Scrap\", any stacks picked up past the first will reroll into red scrap.").Value;
             artiFlamePerformanceMode = config.Bind<bool>("Item: " + ItemName, "ArtiFlamePerformance", false, "If true, Dragon's Breath will use significantly lighter particle effects and no dynamic lighting.").Value;
-            stridesInteractionMode = config.Bind<StridesInteractionMode>("Item: " + ItemName, "Scepter Rerolls", StridesInteractionMode.ScepterRerolls, "Changes what happens when a character whose Utility skill is affected by Ancient Scepter has both Ancient Scepter and Strides of Heresy at the same time.").Value; //defer until next stage
+            stridesInteractionMode = config.Bind<StridesInteractionMode>("Item: " + ItemName, "Scepter Rerolls", StridesInteractionMode.ScepterRerolls, "Changes what happens when a character whose skill is affected by Ancient Scepter has both Ancient Scepter and the corresponding heretic skill replacements (Visions/Hooks/Strides/Essence) at the same time.").Value; //defer until next stage
             enableMonsterSkills = config.Bind("Item: " + ItemName, "Enable skills for monsters", true, "If true, certain monsters get the effects of the Ancient Scepter.").Value;
             //enableBrotherEffects = config.Bind("Item: " + ItemName, "Enable Mithrix Lines", true, "If true, Mithrix will have additional dialogue when acquiring the Ancient Scepter.").Value;
             //enableCommandoAutoaim = config.Bind("Item: " + ItemName, "Enable Commando Autoaim", true, "This may break compatibiltiy with skills.").Value;
@@ -365,8 +365,17 @@ localScale = new Vector3(0.2235F, 0.2235F, 0.2235F)
 
         private void On_GSSetSkillOverride(On.RoR2.GenericSkill.orig_SetSkillOverride orig, GenericSkill self, object source, SkillDef skillDef, GenericSkill.SkillOverridePriority priority)
         {
+            bool skillDefIsNotHeresy()
+            {
+                var skillIndex = skillDef.skillIndex;
+                return (skillIndex != CharacterBody.CommonAssets.lunarPrimaryReplacementSkillDef.skillIndex
+                    || skillIndex != CharacterBody.CommonAssets.lunarSecondaryReplacementSkillDef.skillIndex
+                    || skillIndex != CharacterBody.CommonAssets.lunarUtilityReplacementSkillDef.skillIndex
+                    || skillIndex != CharacterBody.CommonAssets.lunarSpecialReplacementSkillDef.skillIndex);
+            }
+
             if (stridesInteractionMode != StridesInteractionMode.ScepterTakesPrecedence
-                || skillDef.skillIndex != CharacterBody.CommonAssets.lunarUtilityReplacementSkillDef.skillIndex
+                || skillDefIsNotHeresy()
                 || !(source is CharacterBody body)
                 || body.inventory.GetItemCount(ItemDef) < 1
                 || handlingOverride)
