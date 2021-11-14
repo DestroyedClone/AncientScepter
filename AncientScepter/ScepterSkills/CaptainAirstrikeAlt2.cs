@@ -61,7 +61,7 @@ namespace AncientScepter
 
 
             var oldGhost = Resources.Load<GameObject>("prefabs/projectileghosts/CaptainAirstrikeAltGhost");
-            var airstrikeGhostPrefab = PrefabAPI.InstantiateClone(oldGhost, "ScepterCaptainAirstrikeAltGhost");
+            var airstrikeGhostPrefab = PrefabAPI.InstantiateClone(oldGhost, "ScepterCaptainAirstrikeAltGhost", false);
             var areaIndicatorCenter = airstrikeGhostPrefab.transform.Find("AreaIndicatorCenter");
             areaIndicatorCenter.Find("IndicatorRing").GetComponent<ObjectScaleCurve>().timeMax = airstrikeDuration;
             /*foreach (var objectScaleCurve in airstrikeGhostPrefab.GetComponentsInChildren<ObjectScaleCurve>())
