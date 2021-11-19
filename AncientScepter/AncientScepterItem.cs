@@ -511,7 +511,21 @@ localScale = new Vector3(0.2235F, 0.2235F, 0.2235F)
 
         private bool HandleScepterSkill(CharacterBody self, bool forceOff = false)
         {
-            bool hasStrides = self.inventory.GetItemCount(RoR2Content.Items.LunarUtilityReplacement) > 0;
+            bool hasHeresyForSlot(SkillSlot skillSlot)
+            {
+                switch (skillSlot)
+                {
+                    case SkillSlot.Primary:
+                        return self.inventory.GetItemCount(RoR2Content.Items.LunarPrimaryReplacement) > 0;
+                    case SkillSlot.Secondary:
+                        return self.inventory.GetItemCount(RoR2Content.Items.LunarSecondaryReplacement) > 0;
+                    case SkillSlot.Utility:
+                        return self.inventory.GetItemCount(RoR2Content.Items.LunarUtilityReplacement) > 0;
+                    case SkillSlot.Special:
+                        return self.inventory.GetItemCount(RoR2Content.Items.LunarSpecialReplacement) > 0;
+                }
+                return false;
+            }
             if (self.skillLocator && self.master?.loadout != null)
             {
                 var bodyName = BodyCatalog.GetBodyName(self.bodyIndex);
@@ -520,7 +534,7 @@ localScale = new Vector3(0.2235F, 0.2235F, 0.2235F)
                 if (repl.Count > 0)
                 {
                     SkillSlot targetSlot = scepterSlots[bodyName];
-                    if (targetSlot == SkillSlot.Utility && stridesInteractionMode == StridesInteractionMode.ScepterRerolls && hasStrides) return false;
+                    if (targetSlot == SkillSlot.Utility && stridesInteractionMode == StridesInteractionMode.ScepterRerolls && hasHeresyForSlot(targetSlot)) return false;
                     var targetSkill = self.skillLocator.GetSkill(targetSlot);
                     if (!targetSkill) return false;
                     var targetSlotIndex = self.skillLocator.GetSkillSlotIndex(targetSkill);
@@ -529,7 +543,7 @@ localScale = new Vector3(0.2235F, 0.2235F, 0.2235F)
                     if (replVar == null) return false;
                     if (!forceOff && GetCount(self) > 0)
                     {
-                        if (stridesInteractionMode == StridesInteractionMode.ScepterTakesPrecedence && hasStrides)
+                        if (stridesInteractionMode == StridesInteractionMode.ScepterTakesPrecedence && hasHeresyForSlot(targetSlot))
                         {
                             self.skillLocator.utility.UnsetSkillOverride(self, CharacterBody.CommonAssets.lunarUtilityReplacementSkillDef, GenericSkill.SkillOverridePriority.Replacement);
                         }
@@ -538,7 +552,7 @@ localScale = new Vector3(0.2235F, 0.2235F, 0.2235F)
                     else
                     {
                         targetSkill.UnsetSkillOverride(self, replVar.replDef, GenericSkill.SkillOverridePriority.Upgrade);
-                        if (stridesInteractionMode == StridesInteractionMode.ScepterTakesPrecedence && hasStrides)
+                        if (stridesInteractionMode == StridesInteractionMode.ScepterTakesPrecedence && hasHeresyForSlot(targetSlot))
                         {
                             self.skillLocator.utility.SetSkillOverride(self, CharacterBody.CommonAssets.lunarUtilityReplacementSkillDef, GenericSkill.SkillOverridePriority.Replacement);
                         }
