@@ -130,7 +130,7 @@ namespace AncientScepter
             enableMonsterSkills = config.Bind("Item: " + ItemName, "Enable skills for monsters", true, "If true, certain monsters get the effects of the Ancient Scepter.").Value;
             //enableBrotherEffects = config.Bind("Item: " + ItemName, "Enable Mithrix Lines", true, "If true, Mithrix will have additional dialogue when acquiring the Ancient Scepter.").Value;
             //enableCommandoAutoaim = config.Bind("Item: " + ItemName, "Enable Commando Autoaim", true, "This may break compatibiltiy with skills.").Value;
-            turretBlacklist = config.Bind("Item: " + ItemName, "Blacklist Turrets", true, "If true, turrets will be blacklisted from getting the Ancient Scepter." +
+            turretBlacklist = config.Bind("Item: " + ItemName, "Blacklist Turrets", false, "If true, turrets will be blacklisted from getting the Ancient Scepter." +
                 "\nIf false, they will get the scepter and will get rerolled depending on the reroll mode.").Value;
 
             var engiSkill = skills.First(x => x is EngiTurret2);
