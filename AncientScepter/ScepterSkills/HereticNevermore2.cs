@@ -42,7 +42,7 @@ namespace AncientScepter
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
             myDef.baseRechargeInterval = 40f;
-            myDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texHereticR2");
+            myDef.icon = Assets.SpriteAssets.HereticNevermore2;
             myDef.activationState = new EntityStates.SerializableEntityStateType(typeof(HereticPerishSong));
 
             LoadoutAPI.AddSkillDef(myDef);

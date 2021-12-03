@@ -34,7 +34,7 @@ namespace AncientScepter
             myDef.skillName = namestr;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
-            myDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texRexR1");
+            myDef.icon = Assets.SpriteAssets.TreebotFlower2_2;
 
             LoadoutAPI.AddSkillDef(myDef);
         }

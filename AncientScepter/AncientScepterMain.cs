@@ -43,6 +43,7 @@ namespace AncientScepter
             CustomDamageTypes.SetupDamageTypes();
             SetupBuffs();
             Assets.PopulateAssets();
+            Assets.SpriteAssets.InitializeAssets();
 
             var ItemTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(ItemBase)));
             foreach (var itemType in ItemTypes)

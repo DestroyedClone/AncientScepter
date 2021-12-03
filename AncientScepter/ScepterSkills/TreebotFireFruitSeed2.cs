@@ -36,7 +36,7 @@ namespace AncientScepter
             myDef.skillName = namestr;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
-            myDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texRexR2");
+            myDef.icon = Assets.SpriteAssets.TreebotFireFruitSeed2;
 
             //var a = Resources.Load<GameObject>("prefabs/networkedobjects/HealPack");
 

@@ -38,7 +38,7 @@ namespace AncientScepter
             myDef.skillName = namestr;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
-            myDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texLoaderU2");
+            myDef.icon = Assets.SpriteAssets.LoaderChargeZapFist2;
 
             LoadoutAPI.AddSkillDef(myDef);
 

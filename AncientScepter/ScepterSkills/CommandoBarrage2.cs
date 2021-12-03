@@ -36,7 +36,7 @@ namespace AncientScepter
             myDef.skillName = namestr;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
-            myDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texCommandoR1");
+            myDef.icon = Assets.SpriteAssets.CommandoBarrage2;
             //if (AncientScepterItem.enableCommandoAutoaim)
                 //myDef.activationState = new EntityStates.SerializableEntityStateType(typeof(FireSweepBarrage));
 

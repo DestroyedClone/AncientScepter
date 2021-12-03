@@ -78,5 +78,55 @@ namespace AncientScepter
 
             return rendererInfos;
         }
+
+        public static class SpriteAssets
+        {
+            public static Sprite ArtificerFlameThrower2;
+            public static Sprite ArtificerFlyUp2;
+            public static Sprite Bandit2ResetRevolver2;
+            public static Sprite Bandit2SkullRevolver2;
+            public static Sprite CaptainAirstrike2;
+            public static Sprite CaptainAirstrikeAlt2;
+            public static Sprite CommandoBarrage2;
+            public static Sprite CommandoGrenade2;
+            public static Sprite CrocoDisease2;
+            public static Sprite EngiTurret2;
+            public static Sprite EngiWalker2;
+            public static Sprite HereticNevermore2;
+            public static Sprite HuntressBallista2;
+            public static Sprite HuntressRain2;
+            public static Sprite LoaderChargeFist2;
+            public static Sprite LoaderChargeZapFist2;
+            public static Sprite MercEvis2;
+            public static Sprite MercEvis2Projectile;
+            public static Sprite ToolbotDash2;
+            public static Sprite TreebotFireFruitSeed2;
+            public static Sprite TreebotFlower2_2;
+
+            public static void InitializeAssets()
+            {
+                ArtificerFlameThrower2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texArtiR1");
+                ArtificerFlyUp2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texArtiR2");
+                Bandit2ResetRevolver2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texBanditR1");
+                Bandit2SkullRevolver2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texBanditR2");
+                CaptainAirstrike2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texCapU1");
+                CaptainAirstrikeAlt2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texCapU2");
+                CommandoBarrage2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texCommandoR1");
+                CommandoGrenade2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texCommandoR2");
+                CrocoDisease2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texAcridR1");
+                EngiTurret2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texEngiR1");
+                EngiWalker2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texEngiR2"); ;
+                HereticNevermore2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texHereticR2");
+                HuntressBallista2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texHuntressR2");
+                HuntressRain2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texHuntressR1");
+                LoaderChargeFist2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texLoaderU1");
+                LoaderChargeZapFist2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texLoaderU2");
+                MercEvis2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texMercR1");
+                MercEvis2Projectile = Assets.mainAssetBundle.LoadAsset<Sprite>("texMercR2");
+                ToolbotDash2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texMultU1");
+                TreebotFireFruitSeed2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texRexR2");
+                TreebotFlower2_2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texRexR1");
+            }
+        }
     }
 }

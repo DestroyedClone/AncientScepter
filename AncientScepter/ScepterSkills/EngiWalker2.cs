@@ -34,7 +34,7 @@ namespace AncientScepter
             myDef.skillName = namestr;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
-            myDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texEngiR2");
+            myDef.icon = Assets.SpriteAssets.EngiWalker2;
             myDef.baseMaxStock += 2;
 
             LoadoutAPI.AddSkillDef(myDef);

@@ -46,7 +46,7 @@ namespace AncientScepter
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
             myDef.baseRechargeInterval = airstrikeDuration*2f;
-            myDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texCapU2");
+            myDef.icon = Assets.SpriteAssets.CaptainAirstrikeAlt2;
 
             LoadoutAPI.AddSkillDef(myDef);
 

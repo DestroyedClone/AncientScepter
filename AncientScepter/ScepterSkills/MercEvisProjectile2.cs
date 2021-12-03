@@ -32,7 +32,7 @@ namespace AncientScepter
             myDef.skillName = namestr;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
-            myDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texMercR2");
+            myDef.icon = Assets.SpriteAssets.MercEvis2Projectile;
             myDef.baseMaxStock *= 4;
             myDef.baseRechargeInterval /= 4f;
 
