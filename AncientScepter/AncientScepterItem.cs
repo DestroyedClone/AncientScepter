@@ -442,25 +442,11 @@ localScale = new Vector3(0.2235F, 0.2235F, 0.2235F)
                 AncientScepterMain._logger.LogError("Can't register a scepter skill to negative variant index");
                 return false;
             }
-            if (scepterReplacers.Exists(x => x.bodyName == targetBodyName && (x.slotIndex != targetSlot || x.variantIndex == targetVariant)))
+            ScepterReplacer firstMatch = scepterReplacers.FirstOrDefault(x => x.bodyName == targetBodyName && (x.slotIndex != targetSlot || x.variantIndex == targetVariant));
+            if (firstMatch != null)
             {
-                foreach (var a in scepterReplacers)
-                {
-                    if (a.bodyName == targetBodyName)
-                    {
-                        AncientScepterMain._logger.LogMessage(a.bodyName);
-                    }
-                    if (a.slotIndex != targetSlot)
-                    {
-                        AncientScepterMain._logger.LogMessage($"BB");
-                    }
-                    if (a.variantIndex == targetVariant)
-                    {
-                        AncientScepterMain._logger.LogMessage($"CC");
-                    }
-                }
-                AncientScepterMain._logger.LogError("A scepter skill already exists for this character; can't add multiple for different slots nor for the same variant");
-                return false;
+                AncientScepterMain._logger.LogMessage($"Replacing scepter skill for \"{targetBodyName}\" ({firstMatch.replDef.skillName})");
+                scepterReplacers.Remove(firstMatch);
             }
             scepterReplacers.Add(new ScepterReplacer { bodyName = targetBodyName, slotIndex = targetSlot, variantIndex = targetVariant, replDef = replacingDef });
             scepterSlots[targetBodyName] = targetSlot;
