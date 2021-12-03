@@ -55,6 +55,8 @@ namespace AncientScepter
 
         public static StridesInteractionMode stridesInteractionMode;
 
+        public static bool captainNukeFriendlyFire;
+
         //TODO: test w/ stage changes
         public enum StridesInteractionMode
         {
@@ -132,6 +134,7 @@ namespace AncientScepter
             //enableCommandoAutoaim = config.Bind("Item: " + ItemName, "Enable Commando Autoaim", true, "This may break compatibiltiy with skills.").Value;
             turretBlacklist = config.Bind("Item: " + ItemName, "Blacklist Turrets", false, "If true, turrets will be blacklisted from getting the Ancient Scepter." +
                 "\nIf false, they will get the scepter and will get rerolled depending on the reroll mode.").Value;
+            captainNukeFriendlyFire = config.Bind("Item: " + ItemName, "Captain Nuke Friendly Fire", false, "If true, then Captain's Scepter Nuke will also inflict blight on allies.").Value;
 
             var engiSkill = skills.First(x => x is EngiTurret2);
             engiSkill.myDef.baseRechargeInterval = EngiTurret2.oldDef.baseRechargeInterval * (engiTurretAdjustCooldown ? 2f / 3f : 1f);

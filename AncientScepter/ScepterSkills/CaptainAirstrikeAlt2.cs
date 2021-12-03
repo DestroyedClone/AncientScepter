@@ -286,7 +286,7 @@ namespace AncientScepter
                     falloffModel = BlastAttack.FalloffModel.None,
                     damageColorIndex = DamageColorIndex.Poison,
                     damageType = DamageType.Stun1s,
-                    attackerFiltering = AttackerFiltering.AlwaysHit,
+                    attackerFiltering = AncientScepterItem.captainNukeFriendlyFire ? AttackerFiltering.AlwaysHit : AttackerFiltering.NeverHit,
                     losType = BlastAttack.LoSType.NearestHit
                 };
                 blastAttack.AddModdedDamageType(CustomDamageTypes.ScepterCaptainNukeDT);
