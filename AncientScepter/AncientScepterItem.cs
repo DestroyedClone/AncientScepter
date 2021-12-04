@@ -37,25 +37,41 @@ namespace AncientScepter
 
     public class AncientScepterItem : ItemBase<AncientScepterItem>
     {
-        public static bool engiTurretAdjustCooldown;
-
-        public static bool engiWalkerAdjustCooldown;
-
         public static RerollMode rerollMode;
-
-        public static bool artiFlamePerformanceMode;
-
         public static bool enableMonsterSkills;
-
         //public static bool enableBrotherEffects;
-
-        //public static bool enableCommandoAutoaim;
-
-        public static bool turretBlacklist;
-
         public static StridesInteractionMode stridesInteractionMode;
 
+
+        // Artificer
+        public static bool artiFlamePerformanceMode;
+
+        // Bandit
+
+        // Captain
         public static bool captainNukeFriendlyFire;
+
+        // Commando
+        //public static bool enableCommandoAutoaim;
+
+        // Croco
+
+        // Engi
+        public static bool engiTurretAdjustCooldown;
+        public static bool engiWalkerAdjustCooldown;
+        public static bool turretBlacklist;
+
+        // Heretic
+
+        // Huntress
+
+        // Loader
+
+        // Merc
+
+        // Toolbot
+
+        // Treebot
 
         //TODO: test w/ stage changes
         public enum StridesInteractionMode
