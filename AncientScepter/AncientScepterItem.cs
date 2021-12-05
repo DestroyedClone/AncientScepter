@@ -110,6 +110,8 @@ namespace AncientScepter
         public override bool AIBlacklisted => true;
 
         public static GameObject ItemBodyModelPrefab;
+        public static GameObject ancientWispPrefab = Resources.Load<GameObject>("prefabs/characterbodies/AncientWispBody");
+        public static Material purpleFireMaterial = ancientWispPrefab.transform.Find("Model Base?/mdlAncientWisp/AncientWispArmature/chest/Fire, Main").GetComponent<ParticleSystemRenderer>().material;
 
         public override void Init(ConfigFile config)
         {
@@ -320,6 +322,10 @@ localScale = new Vector3(0.2235F, 0.2235F, 0.2235F)
         protected override void SetupMaterials(GameObject modelPrefab)
         {
             modelPrefab.GetComponentInChildren<Renderer>().material = Assets.CreateMaterial("matAncientScepter", 1, Color.white, 1);
+            foreach (var psr in modelPrefab.GetComponentsInChildren<ParticleSystemRenderer>())
+            {
+                psr.material = purpleFireMaterial;
+            }
         }
 
         internal List<ScepterSkill> skills = new List<ScepterSkill>();
