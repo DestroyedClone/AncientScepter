@@ -268,6 +268,15 @@ namespace AncientScepter
                 }
             }
 
+            private TeamIndex GetTeam()
+            {
+                if (projectileController.owner && projectileController.owner.GetComponent<CharacterBody>()?.teamComponent)
+                {
+                    return projectileController.owner.GetComponent<CharacterBody>().teamComponent.teamIndex;
+                }
+                return TeamIndex.None;
+            }
+
             public void Irradiate()
             {
                 var blastAttack = new BlastAttack
@@ -278,7 +287,7 @@ namespace AncientScepter
                     radius = Mathf.Infinity,
                     attacker = (this.projectileController.owner ? this.projectileController.owner.gameObject : null),
                     inflictor = base.gameObject,
-                    teamIndex = TeamIndex.None,
+                    teamIndex = AncientScepterItem.captainNukeFriendlyFire ? TeamIndex.None : GetTeam(),
                     crit = false,
                     procChainMask = default,
                     procCoefficient = 0f,
