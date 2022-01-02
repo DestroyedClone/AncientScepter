@@ -142,19 +142,19 @@ namespace AncientScepter
         {
             string configCategory = "Item: " + ItemName;
 
-            engiTurretAdjustCooldown = config.Bind<bool>(configCategory, "TR12-C Gauss Compact Faster Recharge", false, "If true, TR12-C Gauss Compact will recharge faster to match the additional stock.").Value;
-            engiWalkerAdjustCooldown = config.Bind<bool>(configCategory, "TR58-C Carbonizer Mini Faster Recharge", false, "If true, TR58-C Carbonizer Mini will recharge faster to match the additional stock.").Value;
+            engiTurretAdjustCooldown = config.Bind<bool>("Engineer", "TR12-C Gauss Compact Faster Recharge", false, "If true, TR12-C Gauss Compact will recharge faster to match the additional stock.").Value;
+            engiWalkerAdjustCooldown = config.Bind<bool>("Engineer", "TR58-C Carbonizer Mini Faster Recharge", false, "If true, TR58-C Carbonizer Mini will recharge faster to match the additional stock.").Value;
             rerollMode = config.Bind(configCategory, "Reroll on pickup mode", RerollMode.Random, "If \"Disabled\", this behavior will only be used for characters which cannot benefit from the item at all." +
                 "\nIf \"Random\", any stacks picked up past the first will reroll to other red items." +
                 "\nIf \"Scrap\", any stacks picked up past the first will reroll into red scrap.").Value;
-            artiFlamePerformanceMode = config.Bind<bool>(configCategory, "ArtiFlamePerformance", false, "If true, Dragon's Breath will use significantly lighter particle effects and no dynamic lighting.").Value;
+            artiFlamePerformanceMode = config.Bind<bool>("Artificer", "ArtiFlamePerformance", false, "If true, Dragon's Breath will use significantly lighter particle effects and no dynamic lighting.").Value;
             stridesInteractionMode = config.Bind<StridesInteractionMode>(configCategory, "Scepter Rerolls", StridesInteractionMode.ScepterRerolls, "Changes what happens when a character whose skill is affected by Ancient Scepter has both Ancient Scepter and the corresponding heretic skill replacements (Visions/Hooks/Strides/Essence) at the same time.").Value; //defer until next stage
             enableMonsterSkills = config.Bind(configCategory, "Enable skills for monsters", true, "If true, certain monsters get the effects of the Ancient Scepter.").Value;
             //enableBrotherEffects = config.Bind(configCategory, "Enable Mithrix Lines", true, "If true, Mithrix will have additional dialogue when acquiring the Ancient Scepter.").Value;
             //enableCommandoAutoaim = config.Bind(configCategory, "Enable Commando Autoaim", true, "This may break compatibiltiy with skills.").Value;
-            turretBlacklist = config.Bind(configCategory, "Blacklist Turrets", false, "If true, turrets will be blacklisted from getting the Ancient Scepter." +
+            turretBlacklist = config.Bind("Engineer", "Blacklist Turrets", false, "If true, turrets will be blacklisted from getting the Ancient Scepter." +
                 "\nIf false, they will get the scepter and will get rerolled depending on the reroll mode.").Value;
-            captainNukeFriendlyFire = config.Bind(configCategory, "Captain Nuke Friendly Fire", false, "If true, then Captain's Scepter Nuke will also inflict blight on allies.").Value;
+            captainNukeFriendlyFire = config.Bind("Captain", "Captain Nuke Friendly Fire", false, "If true, then Captain's Scepter Nuke will also inflict blight on allies.").Value;
 
             var engiSkill = skills.First(x => x is EngiTurret2);
             engiSkill.myDef.baseRechargeInterval = EngiTurret2.oldDef.baseRechargeInterval * (engiTurretAdjustCooldown ? 2f / 3f : 1f);
