@@ -31,6 +31,43 @@ namespace AncientScepter
             return renderInfos;
         }
 
+        #region AddingItemDisplays
+
+        public static ItemDisplayRuleSet.KeyAssetRuleGroup CreateGenericDisplayRuleGroup(UnityEngine.Object keyAsset_, GameObject itemPrefab, string childName, Vector3 position, Vector3 rotation, Vector3 scale)
+        {
+
+            ItemDisplayRule singleRule = CreateDisplayRule(itemPrefab, childName, position, rotation, scale);
+            return CreateDisplayRuleGroupWithRules(keyAsset_, singleRule);
+        }
+
+        public static ItemDisplayRule CreateDisplayRule(GameObject itemPrefab, string childName, Vector3 position, Vector3 rotation, Vector3 scale)
+        {
+            return new ItemDisplayRule
+            {
+                ruleType = ItemDisplayRuleType.ParentedPrefab,
+                childName = childName,
+                followerPrefab = itemPrefab,
+                limbMask = LimbFlags.None,
+                localPos = position,
+                localAngles = rotation,
+                localScale = scale
+            };
+        }
+
+        public static ItemDisplayRuleSet.KeyAssetRuleGroup CreateDisplayRuleGroupWithRules(UnityEngine.Object keyAsset_, params ItemDisplayRule[] rules)
+        {
+            return new ItemDisplayRuleSet.KeyAssetRuleGroup
+            {
+                keyAsset = keyAsset_,
+                displayRuleGroup = new DisplayRuleGroup
+                {
+                    rules = rules
+                }
+            };
+        }
+
+        #endregion AddingItemDisplays
+
         /// <summary>
         /// A complicated helper method that sets up strings entered into it to be formatted similar to Risk of Rain 1's manifest style.
         /// </summary>
