@@ -106,7 +106,11 @@ namespace AncientScepter
 
         public bool ValidateItem(ItemBase item, List<ItemBase> itemList)
         {
-            var aiBlacklist = Config.Bind<bool>("Item: " + item.ItemName, "Blacklist Item from AI Use?", false, "Should the AI not be able to obtain this item?").Value;
+            bool aiBlacklist = 
+                Config.Bind("Item: " + item.ItemName, 
+                            "Blacklist Item from AI Use?",
+                            false, 
+                            "Should the AI not be able to obtain this item?").Value;
 
             ItemStatusDictionary.Add(item, enabled);
 
