@@ -37,9 +37,6 @@
     <Reference Include="R2API">
       <HintPath>lib\R2API.dll</HintPath>
     </Reference>
-    <Reference Include="RoR2">
-      <HintPath>lib\RoR2.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

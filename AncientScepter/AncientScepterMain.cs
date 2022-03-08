@@ -18,12 +18,11 @@ namespace AncientScepter
 {
     [BepInPlugin(ModGuid, ModName, ModVer)]
     [BepInDependency(R2API.R2API.PluginGUID, R2API.R2API.PluginVersion)]
-    [R2APISubmoduleDependency(nameof(ItemAPI), nameof(ResourcesAPI), nameof(ProjectileAPI), nameof(LanguageAPI), nameof(LoadoutAPI), nameof(DamageAPI), nameof(PrefabAPI)
-        , nameof(BuffAPI))]
-    [BepInDependency(TILER2.TILER2Plugin.ModGuid, BepInDependency.DependencyFlags.SoftDependency)]
+    [R2APISubmoduleDependency(nameof(ItemAPI), nameof(ContentAddition), nameof(LanguageAPI), nameof(LoadoutAPI), nameof(DamageAPI), nameof(PrefabAPI))]
+    //[BepInDependency(TILER2.TILER2Plugin.ModGuid, BepInDependency.DependencyFlags.SoftDependency)]
     public class AncientScepterMain : BaseUnityPlugin
     {
-        public const string ModVer = "1.0.9";
+        public const string ModVer = "1.1.0";
         public const string ModName = "StandaloneAncientScepter";
         public const string ModGuid = "com.DestroyedClone.AncientScepter";
 
@@ -33,7 +32,7 @@ namespace AncientScepter
         public static Dictionary<ItemBase, bool> ItemStatusDictionary = new Dictionary<ItemBase, bool>();
         protected readonly List<LanguageAPI.LanguageOverlay> languageOverlays = new List<LanguageAPI.LanguageOverlay>();
 
-        public static CustomBuff perishSongDebuff;
+        public static BuffDef perishSongDebuff;
 
         public void Awake()
         {
@@ -60,8 +59,17 @@ namespace AncientScepter
 
         public static void SetupBuffs()
         {
-            perishSongDebuff = new CustomBuff("Perish Song", Resources.Load<Sprite>("textures/difficultyicons/texDifficultyHardIcon"), Color.red, false, true);
-            BuffAPI.Add(perishSongDebuff);
+            perishSongDebuff = ScriptableObject.CreateInstance<BuffDef>();
+            perishSongDebuff.name = "Perish Song";
+            perishSongDebuff.iconSprite = Resources.Load<Sprite>("textures/difficultyicons/texDifficultyHardIcon");
+            perishSongDebuff.buffColor = Color.red;
+            perishSongDebuff.canStack = true;
+            perishSongDebuff.isHidden = false;
+            perishSongDebuff.isDebuff = false;
+            if (!ContentAddition.AddBuffDef(perishSongDebuff))
+            {
+                _logger.LogWarning($"Buff '{nameof(perishSongDebuff)}' failed to be added.");
+            }
         }
 
         private void Language_onCurrentLanguageChanged()
