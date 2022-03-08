@@ -49,7 +49,7 @@ namespace AncientScepter
             ScepterTreebotFruitPackPrefab.transform.Find("VFX/PulseGlow").transform.localScale *= 2f;
             #endregion
 
-            LoadoutAPI.AddSkillDef(myDef);
+            ContentAddition.AddSkillDef(myDef);
         }
 
         internal override void LoadBehavior()

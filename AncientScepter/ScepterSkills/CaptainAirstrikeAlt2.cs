@@ -48,7 +48,7 @@ namespace AncientScepter
             myDef.baseRechargeInterval = airstrikeDuration*2f;
             myDef.icon = Assets.SpriteAssets.CaptainAirstrikeAlt2;
 
-            LoadoutAPI.AddSkillDef(myDef);
+            ContentAddition.AddSkillDef(myDef);
 
             var oldCallDef = Resources.Load<SkillDef>("skilldefs/captainbody/CallAirstrikeAlt");
             myCallDef = CloneSkillDef(oldCallDef);
@@ -57,7 +57,7 @@ namespace AncientScepter
             myCallDef.resetCooldownTimerOnUse = true;
             myCallDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texCapU2");
 
-            LoadoutAPI.AddSkillDef(myCallDef);
+            ContentAddition.AddSkillDef(myCallDef);
 
 
             var oldGhost = Resources.Load<GameObject>("prefabs/projectileghosts/CaptainAirstrikeAltGhost");
@@ -120,8 +120,8 @@ namespace AncientScepter
             airstrikePrefab.GetComponent<ProjectileController>().ghostPrefab = airstrikeGhostPrefab;
             airstrikePrefab.AddComponent<ScepterAirstrikeMarker>();
 
-            ProjectileAPI.Add(irradiateProjectile);
-            ProjectileAPI.Add(airstrikePrefab);
+            ContentAddition.AddProjectile(irradiateProjectile);
+            ContentAddition.AddProjectile(airstrikePrefab);
         }
 
         internal override void LoadBehavior()
