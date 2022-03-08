@@ -141,7 +141,7 @@ namespace AncientScepter
 
         public static GameObject ItemBodyModelPrefab;
         public static GameObject ancientWispPrefab = Resources.Load<GameObject>("prefabs/characterbodies/AncientWispBody");
-        public static Material purpleFireMaterial = ancientWispPrefab.transform.Find("Model Base?/mdlAncientWisp/AncientWispArmature/chest/Fire, Main").GetComponent<ParticleSystemRenderer>().material;
+        public static Material purpleFireMaterial;
 
         public override void Init(ConfigFile config)
         {
@@ -385,6 +385,7 @@ namespace AncientScepter
 
         protected override void SetupMaterials(GameObject modelPrefab)
         {
+            purpleFireMaterial = ancientWispPrefab.transform.Find("Model Base?/mdlAncientWisp/AncientWispArmature/chest/Fire, Main").GetComponent<ParticleSystemRenderer>().material;
             modelPrefab.GetComponentInChildren<Renderer>().material = Assets.CreateMaterial($"mat{assetName}", 1, Color.white, 1);
             foreach (var psr in modelPrefab.GetComponentsInChildren<ParticleSystemRenderer>())
             {
