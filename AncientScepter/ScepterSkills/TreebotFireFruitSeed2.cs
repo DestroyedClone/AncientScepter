@@ -105,15 +105,8 @@ namespace AncientScepter
                             RoR2Content.Buffs.ElephantArmorBoost, //+500
                             RoR2Content.Buffs.Energized, //+70% Attack Speed
                             RoR2Content.Buffs.EngiShield, //100% health as shield (additive)
-                            RoR2Content.Buffs.EngiTeamShield, //50% health as shield (additive)
-                            RoR2Content.Buffs.EnrageAncientWisp, //+40% movespeed
                             RoR2Content.Buffs.FullCrit, 
-                            RoR2Content.Buffs.GoldEmpowered, //some damage multiplier
                             RoR2Content.Buffs.LifeSteal, //20% heal of damage dealt
-                            //RoR2Content.Buffs.LightningShield, //no effect
-                            //RoR2Content.Buffs.LoaderOvercharged,
-                            //RoR2Content.Buffs.LoaderPylonPowered,
-                            RoR2Content.Buffs.MeatRegenBoost, //increases regen
                             RoR2Content.Buffs.NoCooldowns, //0.5s cooldown
                             RoR2Content.Buffs.PowerBuff, //damage multiplier
                             RoR2Content.Buffs.SmallArmorBoost, //+100
