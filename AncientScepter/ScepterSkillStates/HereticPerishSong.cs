@@ -46,8 +46,7 @@ namespace AncientScepter
             base.Update();
             if (index < count)
             {
-                if (hurtBoxes[index] && hurtBoxes[index].healthComponent && hurtBoxes[index].healthComponent.alive && hurtBoxes[index].healthComponent.body
-                    && !hurtBoxes[index].healthComponent.body.HasBuff(RoR2Content.Buffs.Deafened))
+                if (hurtBoxes[index] && hurtBoxes[index].healthComponent && hurtBoxes[index].healthComponent.alive && hurtBoxes[index].healthComponent.body)
                     CurseBody(hurtBoxes[index].healthComponent.body, characterBody, soundName);
                 index++;
                 return;
