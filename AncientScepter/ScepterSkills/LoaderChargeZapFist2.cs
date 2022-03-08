@@ -48,7 +48,7 @@ namespace AncientScepter
             proxb.maxAngleFilter = 180f;
             projReplacer.transform.Find("Effect").localScale *= 3f;
 
-            ProjectileAPI.Add(projReplacer);
+            ContentAddition.AddProjectile(projReplacer);
         }
 
         internal override void LoadBehavior()

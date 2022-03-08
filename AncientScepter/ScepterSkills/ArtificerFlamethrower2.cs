@@ -88,7 +88,7 @@ namespace AncientScepter
                 lightCpt.range = 5f;
             }
 
-            ProjectileAPI.Add(projCloud);
+            ContentAddition.AddProjectile(projCloud);
         }
 
         internal override void LoadBehavior()

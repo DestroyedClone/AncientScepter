@@ -44,7 +44,7 @@ namespace AncientScepter
             pie.blastDamageCoefficient *= 0.5f;
             pie.bonusBlastForce *= 0.5f;
 
-            ProjectileAPI.Add(projReplacer);
+            ContentAddition.AddProjectile(projReplacer);
         }
 
         internal override void LoadBehavior()

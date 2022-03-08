@@ -59,7 +59,7 @@ namespace AncientScepter
             flashlight.GetComponent<Light>().range = 15f;
             flashlight.gameObject.SetActive(true);
 
-            ProjectileAPI.Add(projReplacer);
+            ContentAddition.AddProjectile(projReplacer);
         }
 
         internal override void LoadBehavior()
