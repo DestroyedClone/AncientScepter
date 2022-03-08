@@ -61,10 +61,10 @@ namespace AncientScepter
 
         private void CharacterBody_UpdateBuffs(On.RoR2.CharacterBody.orig_UpdateBuffs orig, CharacterBody self, float deltaTime)
         {
-            var currentPerishSongStack = self.GetBuffCount(AncientScepterMain.perishSongDebuff.BuffDef);
+            var currentPerishSongStack = self.GetBuffCount(AncientScepterMain.perishSongDebuff);
             orig(self, deltaTime);
 
-            if (self.GetBuffCount(AncientScepterMain.perishSongDebuff.BuffDef) < currentPerishSongStack && self.healthComponent && self.healthComponent.body && self.healthComponent.alive)
+            if (self.GetBuffCount(AncientScepterMain.perishSongDebuff) < currentPerishSongStack && self.healthComponent && self.healthComponent.body && self.healthComponent.alive)
             {
                 var marker = self.GetComponent<ScepterPerishSongMarker>();
                 CharacterBody attacker = null;
