@@ -25,7 +25,7 @@ namespace AncientScepter
 
         internal override void SetupAttributes()
         {
-            var oldDef = Resources.Load<SkillDef>("skilldefs/magebody/MageBodyFlamethrower");
+            var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/MageBody/MageBodyFlamethrower");
             myDef = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_MAGE_FLAMETHROWERNAME";

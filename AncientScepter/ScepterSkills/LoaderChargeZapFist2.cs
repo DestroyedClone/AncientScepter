@@ -26,7 +26,7 @@ namespace AncientScepter
 
         internal override void SetupAttributes()
         {
-            var oldDef = Resources.Load<SkillDef>("skilldefs/loaderbody/ChargeZapFist");
+            var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/LoaderBody/ChargeZapFist");
             myDef = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_SCEPLOADER_CHARGEZAPFISTNAME";

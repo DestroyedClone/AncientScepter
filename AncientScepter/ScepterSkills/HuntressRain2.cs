@@ -23,7 +23,7 @@ namespace AncientScepter
 
         internal override void SetupAttributes()
         {
-            var oldDef = Resources.Load<SkillDef>("skilldefs/huntressbody/HuntressBodyArrowRain");
+            var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/HuntressBody/HuntressBodyArrowRain");
             myDef = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_HUNTRESS_RAINNAME";

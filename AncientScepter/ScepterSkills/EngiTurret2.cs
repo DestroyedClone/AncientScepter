@@ -22,7 +22,7 @@ namespace AncientScepter
 
         internal override void SetupAttributes()
         {
-            oldDef = Resources.Load<SkillDef>("skilldefs/engibody/EngiBodyPlaceTurret");
+            oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/EngiBody/EngiBodyPlaceTurret");
             myDef = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_ENGI_TURRETNAME";

@@ -22,7 +22,7 @@ namespace AncientScepter
 
         internal override void SetupAttributes()
         {
-            var oldDef = Resources.Load<SkillDef>("skilldefs/treebotbody/TreebotBodyFireFlower2");
+            var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/TreebotBody/TreebotBodyFireFlower2");
             myDef = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_TREEBOT_FLOWER2NAME";

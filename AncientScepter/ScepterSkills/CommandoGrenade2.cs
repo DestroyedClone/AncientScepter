@@ -23,7 +23,7 @@ namespace AncientScepter
 
         internal override void SetupAttributes()
         {
-            var oldDef = Resources.Load<SkillDef>("skilldefs/commandobody/ThrowGrenade");
+            var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/CommandoBody/ThrowGrenade");
             myDef = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_COMMANDO_GRENADENAME";

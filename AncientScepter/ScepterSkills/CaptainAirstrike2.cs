@@ -26,7 +26,7 @@ namespace AncientScepter
 
         internal override void SetupAttributes()
         {
-            var oldDef = Resources.Load<SkillDef>("skilldefs/captainbody/PrepAirstrike");
+            var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/CaptainBody/PrepAirstrike");
             myDef = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_CAPTAIN_AIRSTRIKENAME";

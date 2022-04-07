@@ -20,7 +20,7 @@ namespace AncientScepter
 
         internal override void SetupAttributes()
         {
-            var oldDef = Resources.Load<SkillDef>("skilldefs/bandit2body/ResetRevolver");
+            var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/Bandit2Body/ResetRevolver");
             myDef = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_BANDIT2_RESETREVOLVERNAME";

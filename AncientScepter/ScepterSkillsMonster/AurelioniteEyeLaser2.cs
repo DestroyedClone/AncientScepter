@@ -25,7 +25,7 @@ namespace AncientScepter.ScepterSkillsMonster
 
         internal override void SetupAttributes()
         {
-            var oldDef = Resources.Load<SkillDef>("skilldefs/titangoldbody/ChargeGoldLaser");
+            var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/TitanGoldBody/ChargeGoldLaser");
             myDef = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_TITANGOLD_MEGALASERNAME";

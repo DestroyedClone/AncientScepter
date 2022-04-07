@@ -27,7 +27,7 @@ namespace AncientScepter.ScepterSkillsMonster
 
         internal override void SetupAttributes()
         {
-            var oldDef = Resources.Load<SkillDef>("skilldefs/vulturebody/ChargeWindblade");
+            var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/VultureBody/ChargeWindblade");
             myDef = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_VULTURE_WINDBLADENAME";

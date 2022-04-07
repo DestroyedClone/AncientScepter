@@ -23,7 +23,7 @@ namespace AncientScepter
 
         internal override void SetupAttributes()
         {
-            var oldDef = Resources.Load<SkillDef>("skilldefs/commandobody/CommandoBodyBarrage");
+            var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/CommandoBody/CommandoBodyBarrage");
             myDef = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_COMMANDO_BARRAGENAME";

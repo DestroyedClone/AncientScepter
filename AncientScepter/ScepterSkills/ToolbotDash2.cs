@@ -20,7 +20,7 @@ namespace AncientScepter
 
         internal override void SetupAttributes()
         {
-            var oldDef = Resources.Load<SkillDef>("skilldefs/toolbotbody/ToolbotBodyToolbotDash");
+            var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/ToolbotBody/ToolbotBodyToolbotDash");
             myDef = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_TOOLBOT_DASHNAME";

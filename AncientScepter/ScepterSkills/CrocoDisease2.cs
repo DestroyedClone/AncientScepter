@@ -26,7 +26,7 @@ namespace AncientScepter
 
         internal override void SetupAttributes()
         {
-            var oldDef = Resources.Load<SkillDef>("skilldefs/crocobody/CrocoDisease");
+            var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/CrocoBody/CrocoDisease");
             myDef = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_CROCO_DISEASENAME";

@@ -50,7 +50,7 @@ namespace AncientScepter
 
             ContentAddition.AddSkillDef(myDef);
 
-            var oldCallDef = Resources.Load<SkillDef>("skilldefs/captainbody/CallAirstrikeAlt");
+            var oldCallDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/CaptainBody/CallAirstrikeAlt");
             myCallDef = CloneSkillDef(oldCallDef);
             myCallDef.baseMaxStock = 1;
             myCallDef.mustKeyPress = false;
