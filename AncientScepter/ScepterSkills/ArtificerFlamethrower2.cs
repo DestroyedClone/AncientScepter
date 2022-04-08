@@ -110,16 +110,14 @@ namespace AncientScepter
             if (ilFound)
             {
                 c.Emit(OpCodes.Ldarg_0);
-                c.EmitDelegate<Func<BulletAttack, EntityStates.Mage.Weapon.Flamethrower, BulletAttack>>((origAttack, state) =>
-                {
+                c.EmitDelegate<Func<BulletAttack, EntityStates.Mage.Weapon.Flamethrower, BulletAttack>>((origAttack, state) => {
                     if (AncientScepterItem.instance.GetCount(state.outer.commonComponents.characterBody) < 1) return origAttack;
-                    origAttack.hitCallback = delegate(BulletAttack _bulletAttack, ref BulletAttack.BulletHit h)
-                    {
+                    origAttack.hitCallback = (BulletAttack self, ref BulletAttack.BulletHit h) => {
                         ProjectileManager.instance.FireProjectile(new FireProjectileInfo
                         {
                             crit = false,
                             damage = origAttack.damage,
-                            damageColorIndex = DamageColorIndex.Default,
+                            damageColorIndex = default,
                             damageTypeOverride = DamageType.PercentIgniteOnHit,
                             force = 0f,
                             owner = origAttack.owner,
@@ -128,7 +126,7 @@ namespace AncientScepter
                             projectilePrefab = projCloud,
                             target = null
                         });
-                        return origAttack.hitCallback(origAttack, ref h);
+                        return BulletAttack.defaultHitCallback(origAttack, ref h);
                     };
                     return origAttack;
                 });
