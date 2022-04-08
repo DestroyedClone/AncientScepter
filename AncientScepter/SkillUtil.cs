@@ -251,6 +251,10 @@ namespace AncientScepter
         /// <returns>A clone of oldDef, shallow changes to which will not affect the original.</returns>
         public static SkillDef CloneSkillDef(SkillDef oldDef)
         {
+            if (!oldDef)
+            {
+                Debug.LogError($"CloneSkillDef: {oldDef} does not exist!");
+            }
             var newDef = ScriptableObject.CreateInstance<SkillDef>();
 
             newDef.skillName = oldDef.skillName;
