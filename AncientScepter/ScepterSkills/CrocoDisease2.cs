@@ -40,7 +40,7 @@ namespace AncientScepter
             myDef.skillDescriptionToken = newDescToken;
             myDef.icon = Assets.SpriteAssets.CrocoDisease2;
 
-            LoadoutAPI.AddSkillDef(myDef);
+            ContentAddition.AddSkillDef(myDef);
 
             var mshPrefab = Resources.Load<GameObject>("Prefabs/NetworkedObjects/MushroomWard");
 

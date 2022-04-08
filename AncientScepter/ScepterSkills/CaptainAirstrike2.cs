@@ -40,7 +40,7 @@ namespace AncientScepter
             myDef.skillDescriptionToken = newDescToken;
             myDef.icon = Assets.SpriteAssets.CaptainAirstrike2;
 
-            LoadoutAPI.AddSkillDef(myDef);
+            ContentAddition.AddSkillDef(myDef);
 
             var oldCallDef = Resources.Load<SkillDef>("skilldefs/captainbody/CallAirstrike");
             myCallDef = CloneSkillDef(oldCallDef);
@@ -50,7 +50,7 @@ namespace AncientScepter
             myCallDef.baseRechargeInterval = 0.07f;
             myCallDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texCapU1");
 
-            LoadoutAPI.AddSkillDef(myCallDef);
+            ContentAddition.AddSkillDef(myCallDef);
         }
 
         internal override void LoadBehavior()

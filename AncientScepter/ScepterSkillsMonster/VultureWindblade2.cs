@@ -41,7 +41,7 @@ namespace AncientScepter.ScepterSkillsMonster
             myDef.skillDescriptionToken = newDescToken;
             myDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texArtiR1");
 
-            LoadoutAPI.AddSkillDef(myDef);
+            ContentAddition.AddSkillDef(myDef);
         }
 
         internal override void LoadBehavior()

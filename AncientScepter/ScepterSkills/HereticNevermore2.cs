@@ -45,7 +45,7 @@ namespace AncientScepter
             myDef.icon = Assets.SpriteAssets.HereticNevermore2;
             myDef.activationState = new EntityStates.SerializableEntityStateType(typeof(HereticPerishSong));
 
-            LoadoutAPI.AddSkillDef(myDef);
+            ContentAddition.AddSkillDef(myDef);
 
 
         }

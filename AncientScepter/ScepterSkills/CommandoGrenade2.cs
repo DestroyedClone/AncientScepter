@@ -37,7 +37,7 @@ namespace AncientScepter
             myDef.skillDescriptionToken = newDescToken;
             myDef.icon = Assets.SpriteAssets.CommandoGrenade2;
 
-            LoadoutAPI.AddSkillDef(myDef);
+            ContentAddition.AddSkillDef(myDef);
 
             projReplacer = Resources.Load<GameObject>("prefabs/projectiles/CommandoGrenadeProjectile").InstantiateClone("CIScepCommandoGrenade");
             var pie = projReplacer.GetComponent<ProjectileImpactExplosion>();

@@ -37,7 +37,7 @@ namespace AncientScepter
             myDef.icon = Assets.SpriteAssets.EngiWalker2;
             myDef.baseMaxStock += 2;
 
-            LoadoutAPI.AddSkillDef(myDef);
+            ContentAddition.AddSkillDef(myDef);
         }
     }
 }

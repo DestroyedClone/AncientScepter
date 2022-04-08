@@ -38,9 +38,9 @@ namespace AncientScepter
             myDef.skillDescriptionToken = newDescToken;
             myDef.icon = Assets.SpriteAssets.CommandoBarrage2;
             //if (AncientScepterItem.enableCommandoAutoaim)
-                //myDef.activationState = new EntityStates.SerializableEntityStateType(typeof(FireSweepBarrage));
+            //myDef.activationState = new EntityStates.SerializableEntityStateType(typeof(FireSweepBarrage));
 
-            LoadoutAPI.AddSkillDef(myDef);
+            ContentAddition.AddSkillDef(myDef);
         }
 
         internal override void LoadBehavior()

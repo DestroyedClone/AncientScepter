@@ -39,9 +39,9 @@ namespace AncientScepter
             myDef.skillDescriptionToken = newDescToken;
             myDef.icon = Assets.SpriteAssets.ArtificerFlameThrower2;
 
-            LoadoutAPI.AddSkillDef(myDef);
+            ContentAddition.AddSkillDef(myDef);
 
-            projCloud = Resources.Load<GameObject>("prefabs/projectiles/BeetleQueenAcid").InstantiateClone("AncientScepterMageFlamethrowerCloud");
+            projCloud = LegacyResourcesAPI.Load<GameObject>("prefabs/projectiles/BeetleQueenAcid").InstantiateClone("AncientScepterMageFlamethrowerCloud");
             var pdz = projCloud.GetComponent<ProjectileDotZone>();
             pdz.lifetime = 10f;
             pdz.impactEffect = null;
@@ -51,7 +51,7 @@ namespace AncientScepter
             fxObj.Find("Decal").gameObject.SetActive(false);
             fxObj.Find("Gas").gameObject.SetActive(false);
             foreach (var x in fxObj.GetComponents<AnimateShaderAlpha>()) { x.enabled = false; }
-            var fxcloud = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("prefabs/FireTrail").GetComponent<DamageTrail>().segmentPrefab, fxObj.transform);
+            var fxcloud = UnityEngine.Object.Instantiate(LegacyResourcesAPI.Load<GameObject>("prefabs/FireTrail").GetComponent<DamageTrail>().segmentPrefab, fxObj.transform);
             var psmain = fxcloud.GetComponent<ParticleSystem>().main;
             psmain.duration = 10f;
             psmain.gravityModifier = -0.05f;

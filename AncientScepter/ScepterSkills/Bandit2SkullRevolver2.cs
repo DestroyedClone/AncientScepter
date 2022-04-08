@@ -31,7 +31,7 @@ namespace AncientScepter
 
         internal override void SetupAttributes()
         {
-            var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/Bandit2Bbody/SkullRevolver");
+            var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/Bandit2Body/SkullRevolver");
             myDef = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_BANDIT2_SKULLREVOLVERNAME";
@@ -45,7 +45,7 @@ namespace AncientScepter
             myDef.skillDescriptionToken = newDescToken;
             myDef.icon = Assets.SpriteAssets.Bandit2SkullRevolver2;
 
-            LoadoutAPI.AddSkillDef(myDef);
+            ContentAddition.AddSkillDef(myDef);
 
         }
 

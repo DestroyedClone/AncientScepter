@@ -36,7 +36,7 @@ namespace AncientScepter
             myDef.baseMaxStock *= 4;
             myDef.baseRechargeInterval /= 4f;
 
-            LoadoutAPI.AddSkillDef(myDef);
+            ContentAddition.AddSkillDef(myDef);
         }
 
         internal override void LoadBehavior()

@@ -38,7 +38,7 @@ namespace AncientScepter
             myDef.skillDescriptionToken = newDescToken;
             myDef.icon = Assets.SpriteAssets.HuntressBallista2;
 
-            LoadoutAPI.AddSkillDef(myDef);
+            ContentAddition.AddSkillDef(myDef);
 
             var oldCtxDef = Resources.Load<SkillDef>("skilldefs/huntressbody/FireArrowSnipe");
             myCtxDef = CloneSkillDef(oldCtxDef);
@@ -48,7 +48,7 @@ namespace AncientScepter
             myCtxDef.skillDescriptionToken = newDescToken;
             myCtxDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texHuntressR2");
 
-            LoadoutAPI.AddSkillDef(myCtxDef);
+            ContentAddition.AddSkillDef(myCtxDef);
         }
 
         internal override void LoadBehavior()

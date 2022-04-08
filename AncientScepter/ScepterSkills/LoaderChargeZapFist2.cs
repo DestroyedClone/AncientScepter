@@ -40,7 +40,7 @@ namespace AncientScepter
             myDef.skillDescriptionToken = newDescToken;
             myDef.icon = Assets.SpriteAssets.LoaderChargeZapFist2;
 
-            LoadoutAPI.AddSkillDef(myDef);
+            ContentAddition.AddSkillDef(myDef);
 
             projReplacer = Resources.Load<GameObject>("prefabs/projectiles/LoaderZapCone").InstantiateClone("AncientScepterLoaderThundercrash");
             var proxb = projReplacer.GetComponent<ProjectileProximityBeamController>();
