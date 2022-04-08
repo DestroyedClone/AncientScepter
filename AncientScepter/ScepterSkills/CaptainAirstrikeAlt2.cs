@@ -222,7 +222,7 @@ namespace AncientScepter
             orig(self, damageInfo, victim);
             if (damageInfo.HasModdedDamageType(CustomDamageTypes.ScepterCaptainNukeDT))
             {
-                AncientScepterMain.AddBuffAndDot(RoR2Content.Buffs.Blight, 30, 10, victim.GetComponent<CharacterBody>() ?? null);
+                AncientScepterMain.AddBuffAndDot(RoR2Content.Buffs.Blight, 20, 5, victim.GetComponent<CharacterBody>() ?? null);
             }
         }
 
