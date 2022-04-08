@@ -60,23 +60,25 @@ namespace AncientScepter
                 }
                 if (self.isAuthority)
                 {
-                    BulletAttack bulletAttack = new BulletAttack();
-                    bulletAttack.owner = self.gameObject;
-                    bulletAttack.weapon = self.gameObject;
-                    bulletAttack.origin = aimRay.origin;
-                    bulletAttack.aimVector = aimRay.direction;
-                    bulletAttack.minSpread = self.minSpread;
-                    bulletAttack.maxSpread = self.maxSpread;
-                    bulletAttack.bulletCount = 1U;
-                    bulletAttack.damage = self.damageCoefficient * self.damageStat;
-                    bulletAttack.force = self.force;
-                    bulletAttack.falloffModel = BulletAttack.FalloffModel.None;
-                    bulletAttack.tracerEffectPrefab = self.tracerEffectPrefab;
-                    bulletAttack.muzzleName = muzzleName;
-                    bulletAttack.hitEffectPrefab = self.hitEffectPrefab;
-                    bulletAttack.isCrit = self.RollCrit();
-                    bulletAttack.HitEffectNormal = false;
-                    bulletAttack.radius = self.bulletRadius;
+                    BulletAttack bulletAttack = new BulletAttack
+                    {
+                        owner = self.gameObject,
+                        weapon = self.gameObject,
+                        origin = aimRay.origin,
+                        aimVector = aimRay.direction,
+                        minSpread = self.minSpread,
+                        maxSpread = self.maxSpread,
+                        bulletCount = 1U,
+                        damage = self.damageCoefficient * self.damageStat,
+                        force = self.force,
+                        falloffModel = BulletAttack.FalloffModel.None,
+                        tracerEffectPrefab = self.tracerEffectPrefab,
+                        muzzleName = muzzleName,
+                        hitEffectPrefab = self.hitEffectPrefab,
+                        isCrit = self.RollCrit(),
+                        HitEffectNormal = false,
+                        radius = self.bulletRadius
+                    };
                     bulletAttack.damageType |= DamageType.BonusToLowHealth;
                     bulletAttack.smartCollision = true;
                     self.ModifyBullet(bulletAttack);

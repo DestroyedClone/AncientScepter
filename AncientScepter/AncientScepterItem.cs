@@ -109,13 +109,13 @@ namespace AncientScepter
         public override ItemTier Tier => ItemTier.Tier3;
         public override ItemTag[] ItemTags => EvaluateItemTags();
 
-        private string assetName => altModel ? "AghanimScepter" : "AncientScepter";
+        private string AssetName => altModel ? "AghanimScepter" : "AncientScepter";
 
         private GameObject itemModel;
         public override GameObject ItemModel {
             get {
                 if (itemModel == null) {
-                    itemModel = Assets.mainAssetBundle.LoadAsset<GameObject>($"mdl{assetName}Pickup");
+                    itemModel = Assets.mainAssetBundle.LoadAsset<GameObject>($"mdl{AssetName}Pickup");
                 }
                 return itemModel;
             }
@@ -128,13 +128,13 @@ namespace AncientScepter
             {
                 if (itemDisplay == null)
                 {
-                    itemDisplay = Assets.mainAssetBundle.LoadAsset<GameObject>($"mdl{assetName}Display");
+                    itemDisplay = Assets.mainAssetBundle.LoadAsset<GameObject>($"mdl{AssetName}Display");
                 }
                 return itemDisplay;
             }
         }
 
-        public override Sprite ItemIcon => Assets.mainAssetBundle.LoadAsset<Sprite>($"tex{assetName}Icon");
+        public override Sprite ItemIcon => Assets.mainAssetBundle.LoadAsset<Sprite>($"tex{AssetName}Icon");
         public override bool TILER2_MimicBlacklisted => true;
 
         public override bool AIBlacklisted => true;
@@ -152,6 +152,13 @@ namespace AncientScepter
             Hooks();
             Install();
             //InstallLanguage();
+            On.RoR2.UI.MainMenu.MainMenuController.Start += MainMenuController_Start;
+        }
+
+        private void MainMenuController_Start(On.RoR2.UI.MainMenu.MainMenuController.orig_Start orig, RoR2.UI.MainMenu.MainMenuController self)
+        {
+            orig(self);
+            On.RoR2.UI.MainMenu.MainMenuController.Start -= MainMenuController_Start;
         }
 
         private ItemTag[] EvaluateItemTags()
@@ -386,7 +393,7 @@ namespace AncientScepter
         protected override void SetupMaterials(GameObject modelPrefab)
         {
             purpleFireMaterial = ancientWispPrefab.transform.Find("Model Base?/mdlAncientWisp/AncientWispArmature/chest/Fire, Main").GetComponent<ParticleSystemRenderer>().material;
-            modelPrefab.GetComponentInChildren<Renderer>().material = Assets.CreateMaterial($"mat{assetName}", 1, Color.white, 1);
+            modelPrefab.GetComponentInChildren<Renderer>().material = Assets.CreateMaterial($"mat{AssetName}", 1, Color.white, 1);
             foreach (var psr in modelPrefab.GetComponentsInChildren<ParticleSystemRenderer>())
             {
                 psr.material = purpleFireMaterial;

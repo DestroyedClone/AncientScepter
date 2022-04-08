@@ -42,7 +42,7 @@ namespace AncientScepter
 
             #region Fruitpack
             ScepterTreebotFruitPackPrefab = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/NetworkedObjects/TreebotFruitPack"), "ScepterTreebotFruitPack");
-            var com = ScepterTreebotFruitPackPrefab.transform.Find("PickupTrigger").gameObject.AddComponent<FruitScepterMarker>();
+            ScepterTreebotFruitPackPrefab.transform.Find("PickupTrigger").gameObject.AddComponent<FruitScepterMarker>();
             //var healthPickup = ScepterTreebotFruitPackPrefab.transform.Find("PickupTrigger").gameObject.GetComponent<HealthPickup>();
 
             //ScepterTreebotFruitPackPrefab.transform.Find("VFX/PulseGlow").GetComponent<ParticleSystemRenderer>().material = a.transform.Find("HealthOrbEffect/VFX/PulseGlow").GetComponent<ParticleSystemRenderer>().material;

@@ -173,7 +173,7 @@ namespace AncientScepter
                         isCrit = false,
                         lightningType = LightningOrb.LightningType.CrocoDisease,
                         origin = transform.position,
-                        procChainMask = default(ProcChainMask),
+                        procChainMask = default,
                         procCoefficient = 1f,
                         target = tcpt.body.mainHurtBox,
                         teamIndex = teamFilter.teamIndex,
