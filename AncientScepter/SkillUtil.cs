@@ -68,7 +68,7 @@ namespace AncientScepter
                 AncientScepterMain._logger.LogError($"FindSkillFamilyFromBody: Couldn't find body with name {bodyName}");
                 return null;
             }
-            var allSlots = BodyCatalog.GetBodyPrefabSkillSlots(targetBodyIndex);
+            //var allSlots = BodyCatalog.GetBodyPrefabSkillSlots(targetBodyIndex);
             var skLoc = BodyCatalog.GetBodyPrefab(targetBodyIndex).GetComponentInChildren<SkillLocator>();
             if (!skLoc)
             {
@@ -289,6 +289,11 @@ namespace AncientScepter
             newDef.keywordTokens = oldDef.keywordTokens;
 
             return newDef;
+        }
+
+        public static RailgunSkillDef CloneRailgunSkillDef(RailgunSkillDef railgunSkillDef)
+        {
+            return null;
         }
     }
 }
