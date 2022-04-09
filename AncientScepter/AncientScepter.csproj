@@ -10,6 +10,8 @@
     <Compile Remove="ScepterSkillStates\ShatteringFistSlam.cs" />
     <Compile Remove="ScepterSkills\CaptainAirstrikeAlt2z.cs" />
     <Compile Remove="ScepterSkills\HereticRuin2.cs" />
+    <Compile Remove="ScepterSkills\RailgunnerCryo2.cs" />
+    <Compile Remove="ScepterSkills\RailgunnerSuper2.cs" />
   </ItemGroup>
 	
   <ItemGroup>
