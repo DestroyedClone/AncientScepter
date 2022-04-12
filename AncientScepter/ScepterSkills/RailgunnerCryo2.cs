@@ -17,8 +17,7 @@ namespace AncientScepter
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
 
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Hit enemies become slowed by 80% for 20 seconds." +
-            "\nThe cold surrounds you, blowing away fire.</color>";
+        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Hit enemies become slowed by 80% for 20 seconds.</color>";
 
         public override string targetBody => "RailgunnerBody";
 
@@ -48,7 +47,7 @@ namespace AncientScepter
         internal override void LoadBehavior()
         {
             On.EntityStates.Railgunner.Weapon.FireSnipeCryo.ModifyBullet += FireSnipeCryo_ModifyBullet;
-            On.EntityStates.Railgunner.Weapon.BaseFireSnipe.OnExit += BaseFireSnipe_OnExit;
+            //On.EntityStates.Railgunner.Weapon.BaseFireSnipe.OnExit += BaseFireSnipe_OnExit;
             On.RoR2.GlobalEventManager.OnHitEnemy += GlobalEventManager_OnHitEnemy;
         }
 
@@ -71,7 +70,7 @@ namespace AncientScepter
         private void BaseFireSnipe_OnExit(On.EntityStates.Railgunner.Weapon.BaseFireSnipe.orig_OnExit orig, EntityStates.Railgunner.Weapon.BaseFireSnipe self)
         {
             orig(self);
-            if (self is EntityStates.Railgunner.Weapon.FireSnipeCryo)
+            if (self is EntityStates.Railgunner.Weapon.FireSnipeCryo && AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
             {
                 var cb = self.outer.commonComponents.characterBody;
                 if (cb)
@@ -84,7 +83,8 @@ namespace AncientScepter
         private void FireSnipeCryo_ModifyBullet(On.EntityStates.Railgunner.Weapon.FireSnipeCryo.orig_ModifyBullet orig, EntityStates.Railgunner.Weapon.FireSnipeCryo self, BulletAttack bulletAttack)
         {
             orig(self, bulletAttack);
-            bulletAttack.AddModdedDamageType(CustomDamageTypes.ScepterSlow80For30DT);
+            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
+                bulletAttack.AddModdedDamageType(CustomDamageTypes.ScepterSlow80For30DT);
         }
 
         private void ClearFireDebuffs(CharacterBody characterBody)
