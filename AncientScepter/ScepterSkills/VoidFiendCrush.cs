@@ -35,7 +35,7 @@ namespace AncientScepter
 
         public override SkillSlot targetSlot => SkillSlot.Special;
 
-        public override int targetVariantIndex => 1;
+        public override int targetVariantIndex => 0;
 
         internal override void SetupAttributes()
         {
@@ -52,6 +52,7 @@ namespace AncientScepter
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
             myDef.icon = Assets.SpriteAssets.CommandoBarrage2;
+            ContentAddition.AddSkillDef(myDef);
 
             var oldCtxDef = Addressables.LoadAssetAsync<SkillDef>("RoR2/DLC1/VoidSurvivor/CrushHealth.asset").WaitForCompletion();
             myCtxDef = CloneSkillDef(oldCtxDef);
@@ -60,8 +61,8 @@ namespace AncientScepter
             myCtxDef.skillNameToken = nametoken;
             myCtxDef.skillDescriptionToken = newDescToken;
             myCtxDef.icon = oldCtxDef.icon;
+            ContentAddition.AddSkillDef(myCtxDef);
 
-            ContentAddition.AddSkillDef(myDef);
         }
 
         internal override void LoadBehavior()
