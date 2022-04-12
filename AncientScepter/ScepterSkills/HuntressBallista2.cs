@@ -40,7 +40,7 @@ namespace AncientScepter
 
             ContentAddition.AddSkillDef(myDef);
 
-            var oldCtxDef = Resources.Load<SkillDef>("skilldefs/huntressbody/FireArrowSnipe");
+            var oldCtxDef = LegacyResourcesAPI.Load<SkillDef>("skilldefs/huntressbody/FireArrowSnipe");
             myCtxDef = CloneSkillDef(oldCtxDef);
 
             myCtxDef.skillName = namestr;
