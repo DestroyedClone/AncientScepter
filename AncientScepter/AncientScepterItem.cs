@@ -243,7 +243,7 @@ namespace AncientScepter
                             "Changes the model as a reference to a certain other scepter that upgrades abilities.").Value;
             removeClassicItemsScepterFromPool =
                 config.Bind(configCategory,
-                            "CLASSICITEMS: Remove Classic Items' Ancient Scepter From Droplist If Installed",
+                            "CLASSICITEMS: Remove Classic Items Ancient Scepter From Droplist If Installed",
                             true,
                             "If true, then the Ancient Scepter from Classic Items will be removed from the drop pool to prevent complications.").Value;
 
@@ -479,8 +479,10 @@ namespace AncientScepter
             skills.Add(new TreebotFlower2_2());
             skills.Add(new TreebotFireFruitSeed2());
 
-            //skills.Add(new RailgunnerSuper2());
-            //skills.Add(new RailgunnerCryo2());
+            skills.Add(new RailgunnerSuper2());
+            skills.Add(new RailgunnerCryo2());
+
+            skills.Add(new VoidFiendCrush());
 
             // Monster
             if (enableMonsterSkills)

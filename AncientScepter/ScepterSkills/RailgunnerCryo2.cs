@@ -7,6 +7,7 @@ using RoR2.Skills;
 using System;
 using UnityEngine;
 using static AncientScepter.SkillUtil;
+using UnityEngine.AddressableAssets;
 
 namespace AncientScepter
 {
@@ -16,7 +17,7 @@ namespace AncientScepter
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
 
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Your shot also slows enemies by 50% for 10 seconds." +
+        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Hit enemies become slowed by 80% for 20 seconds." +
             "\nThe cold surrounds you, blowing away fire.</color>";
 
         public override string targetBody => "RailgunnerBody";
@@ -27,11 +28,11 @@ namespace AncientScepter
 
         internal override void SetupAttributes()
         {
-            var oldDef = LegacyResourcesAPI.Load<SkillDef>("RoR2/DLC1/Railgunner/RailgunnerBodyFireSnipeCryo");
+            var oldDef = Addressables.LoadAssetAsync<RailgunSkillDef>("RoR2/DLC1/Railgunner/RailgunnerBodyChargeSnipeCryo.asset").WaitForCompletion();
             myDef = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_RAILGUNNER_SNIPECRYONAME";
-            newDescToken = "ANCIENTSCEPTER_COMMANDO_SNIPECRYODESC";
+            newDescToken = "ANCIENTSCEPTER_RAILGUNNER_SNIPECRYODESC";
             oldDescToken = oldDef.skillDescriptionToken;
             var namestr = "Permafrosted Cryocharge";
             LanguageAPI.Add(nametoken, namestr);
@@ -46,31 +47,49 @@ namespace AncientScepter
 
         internal override void LoadBehavior()
         {
-            On.EntityStates.Railgunner.Weapon.FireSnipeCryo.InstantiateBackpackState += FireSnipeCryo_InstantiateBackpackState;
-            On.EntityStates.Railgunner.Weapon.BaseFireSnipe.ModifyBullet += BaseFireSnipe_ModifyBullet;
-            On.RoR2.GlobalEventManager.OnHitEnemy += GlobalEventManager_OnHitEnemy;
             On.EntityStates.Railgunner.Weapon.FireSnipeCryo.ModifyBullet += FireSnipeCryo_ModifyBullet;
+            On.EntityStates.Railgunner.Weapon.BaseFireSnipe.OnExit += BaseFireSnipe_OnExit;
+            On.RoR2.GlobalEventManager.OnHitEnemy += GlobalEventManager_OnHitEnemy;
+        }
+
+        private void GlobalEventManager_OnHitEnemy(On.RoR2.GlobalEventManager.orig_OnHitEnemy orig, GlobalEventManager self, DamageInfo damageInfo, GameObject victim)
+        {
+            orig(self, damageInfo, victim);
+            if (damageInfo.HasModdedDamageType(CustomDamageTypes.ScepterSlow80For30DT))
+            {
+                if (victim)
+                {
+                    var cb = victim.GetComponent<CharacterBody>();
+                    if (cb)
+                    {
+                        cb.AddTimedBuff(RoR2Content.Buffs.Slow80, 20);
+                    }
+                }
+            }
+        }
+
+        private void BaseFireSnipe_OnExit(On.EntityStates.Railgunner.Weapon.BaseFireSnipe.orig_OnExit orig, EntityStates.Railgunner.Weapon.BaseFireSnipe self)
+        {
+            orig(self);
+            if (self is EntityStates.Railgunner.Weapon.FireSnipeCryo)
+            {
+                var cb = self.outer.commonComponents.characterBody;
+                if (cb)
+                {
+                    ClearFireDebuffs(cb);
+                }
+            }
         }
 
         private void FireSnipeCryo_ModifyBullet(On.EntityStates.Railgunner.Weapon.FireSnipeCryo.orig_ModifyBullet orig, EntityStates.Railgunner.Weapon.FireSnipeCryo self, BulletAttack bulletAttack)
         {
             orig(self, bulletAttack);
-            bulletAttack.damageType |= DamageType.SlowOnHit;
-        }
-
-        private EntityStates.EntityState FireSnipeCryo_InstantiateBackpackState(On.EntityStates.Railgunner.Weapon.FireSnipeCryo.orig_InstantiateBackpackState orig, EntityStates.Railgunner.Weapon.FireSnipeCryo self)
-        {
-            var cb = self.outer.commonComponents.characterBody;
-            if (cb)
-            {
-                ClearFireDebuffs(cb);
-            }
-            return orig(self);
+            bulletAttack.AddModdedDamageType(CustomDamageTypes.ScepterSlow80For30DT);
         }
 
         private void ClearFireDebuffs(CharacterBody characterBody)
         {
-            if (characterBody.HasBuff(RoR2Content.Buffs.OnFire))
+            if (characterBody.HasBuff(RoR2Content.Buffs.OnFire) || characterBody.HasBuff(DLC1Content.Buffs.StrongerBurn))
             {
                 characterBody.ClearTimedBuffs(RoR2Content.Buffs.OnFire);
                 characterBody.ClearTimedBuffs(DLC1Content.Buffs.StrongerBurn);
@@ -101,40 +120,8 @@ namespace AncientScepter
             }
         }
 
-        private void GlobalEventManager_OnHitEnemy(On.RoR2.GlobalEventManager.orig_OnHitEnemy orig, GlobalEventManager self, DamageInfo damageInfo, GameObject victim)
-        {
-            orig(self, damageInfo, victim);
-            if (damageInfo.HasModdedDamageType(CustomDamageTypes.ScepterDestroy10ArmorDT) && victim)
-            {
-                var cb = victim.GetComponent<CharacterBody>();
-                if (cb)
-                {
-                    for (int i = 0; i < 5; i++)
-                    {
-                        cb.AddBuff(DLC1Content.Buffs.PermanentDebuff);
-                    }
-                    EffectManager.SpawnEffect(HealthComponent.AssetReferences.permanentDebuffEffectPrefab, new EffectData
-                    {
-                        origin = damageInfo.position,
-                        scale = 1
-                    }, true);
-                }
-            }
-        }
-
-        private void BaseFireSnipe_ModifyBullet(On.EntityStates.Railgunner.Weapon.BaseFireSnipe.orig_ModifyBullet orig, EntityStates.Railgunner.Weapon.BaseFireSnipe self, BulletAttack bulletAttack)
-        {
-            if (self is EntityStates.Railgunner.Weapon.FireSnipeSuper && AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
-            {
-                bulletAttack.AddModdedDamageType(CustomDamageTypes.ScepterDestroy10ArmorDT);
-            }
-            orig(self, bulletAttack);
-        }
-
         internal override void UnloadBehavior()
         {
-            On.EntityStates.Railgunner.Weapon.BaseFireSnipe.ModifyBullet -= BaseFireSnipe_ModifyBullet;
-            On.RoR2.GlobalEventManager.OnHitEnemy -= GlobalEventManager_OnHitEnemy;
         }
     }
 }

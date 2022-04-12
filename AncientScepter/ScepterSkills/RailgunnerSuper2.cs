@@ -7,6 +7,7 @@ using RoR2.Skills;
 using System;
 using UnityEngine;
 using static AncientScepter.SkillUtil;
+using UnityEngine.AddressableAssets;
 
 namespace AncientScepter
 {
@@ -26,13 +27,13 @@ namespace AncientScepter
 
         internal override void SetupAttributes()
         {
-            var oldDef = LegacyResourcesAPI.Load<SkillDef>("RoR2/DLC1/Railgunner/RailgunnerBodyFireSnipeSuper");
+            var oldDef = Addressables.LoadAssetAsync<RailgunSkillDef>("RoR2/DLC1/Railgunner/RailgunnerBodyChargeSnipeSuper.asset").WaitForCompletion();
             myDef = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_RAILGUNNER_SNIPESUPERNAME";
-            newDescToken = "ANCIENTSCEPTER_COMMANDO_SNIPESUPERDESC";
+            newDescToken = "ANCIENTSCEPTER_RAILGUNNER_SNIPESUPERDESC";
             oldDescToken = oldDef.skillDescriptionToken;
-            var namestr = "Supercharged Armor Shredder";
+            var namestr = "Hypercharge";
             LanguageAPI.Add(nametoken, namestr);
 
             myDef.skillName = namestr;
@@ -64,7 +65,7 @@ namespace AncientScepter
                     EffectManager.SpawnEffect(HealthComponent.AssetReferences.permanentDebuffEffectPrefab, new EffectData
                     {
                         origin = damageInfo.position,
-                        scale = 1
+                        scale = 10
                     }, true);
                 }
             }

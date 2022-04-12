@@ -10,7 +10,6 @@
     <Compile Remove="ScepterSkillStates\ShatteringFistSlam.cs" />
     <Compile Remove="ScepterSkills\CaptainAirstrikeAlt2z.cs" />
     <Compile Remove="ScepterSkills\HereticRuin2.cs" />
-    <Compile Remove="ScepterSkills\RailgunnerCryo2.cs" />
   </ItemGroup>
 	
   <ItemGroup>
@@ -43,6 +42,9 @@
     </Reference>
     <Reference Include="TILER2">
       <HintPath>lib\TILER2.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ResourceManager">
+      <HintPath>lib\Unity.ResourceManager.dll</HintPath>
     </Reference>
   </ItemGroup>
 
