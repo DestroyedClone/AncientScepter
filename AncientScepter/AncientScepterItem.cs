@@ -9,6 +9,7 @@ using static AncientScepter.ItemHelpers;
 using static AncientScepter.MiscUtil;
 using static AncientScepter.SkillUtil;
 using AncientScepter.ScepterSkillsMonster;
+using System.Runtime.CompilerServices;
 
 namespace AncientScepter
 {
@@ -43,7 +44,7 @@ namespace AncientScepter
         //public static bool enableBrotherEffects;
         public static StridesInteractionMode stridesInteractionMode;
         public static bool altModel;
-
+        public static bool removeClassicItemsScepterFromPool;
 
         // Artificer
         public static bool artiFlamePerformanceMode;
@@ -71,9 +72,13 @@ namespace AncientScepter
 
         // Merc
 
+        // Railgunner
+
         // Toolbot
 
         // Treebot
+
+        // Void Fiend
 
         //TODO: test w/ stage changes
         public enum StridesInteractionMode
@@ -236,6 +241,11 @@ namespace AncientScepter
                             "Alt Model",
                             false,
                             "Changes the model as a reference to a certain other scepter that upgrades abilities.").Value;
+            removeClassicItemsScepterFromPool =
+                config.Bind(configCategory,
+                            "CLASSICITEMS: Remove Classic Items' Ancient Scepter From Droplist If Installed",
+                            true,
+                            "If true, then the Ancient Scepter from Classic Items will be removed from the drop pool to prevent complications.").Value;
 
             var engiSkill = skills.First(x => x is EngiTurret2);
             engiSkill.myDef.baseRechargeInterval = EngiTurret2.oldDef.baseRechargeInterval * (engiTurretAdjustCooldown ? 2f / 3f : 1f);
@@ -244,6 +254,18 @@ namespace AncientScepter
             var engiSkill2 = skills.First(x => x is EngiWalker2);
             engiSkill2.myDef.baseRechargeInterval = EngiWalker2.oldDef.baseRechargeInterval / (engiWalkerAdjustCooldown ? 2f : 1f);
             GlobalUpdateSkillDef(engiSkill2.myDef);
+
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.ThinkInvisible.ClassicItems") && removeClassicItemsScepterFromPool)
+            {
+                Run.onRunStartGlobal += RemoveClassicItemsScepter;
+            }
+        }
+
+
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        private static void RemoveClassicItemsScepter(Run run)
+        {
+            Run.instance.DisableItemDrop(ThinkInvisible.ClassicItems.Scepter.instance.itemDef.itemIndex);
         }
 
         public override ItemDisplayRuleDict CreateDisplayRules()

@@ -11,7 +11,6 @@
     <Compile Remove="ScepterSkills\CaptainAirstrikeAlt2z.cs" />
     <Compile Remove="ScepterSkills\HereticRuin2.cs" />
     <Compile Remove="ScepterSkills\RailgunnerCryo2.cs" />
-    <Compile Remove="ScepterSkills\RailgunnerSuper2.cs" />
   </ItemGroup>
 	
   <ItemGroup>
@@ -38,6 +37,12 @@
     </Reference>
     <Reference Include="R2API">
       <HintPath>lib\R2API.dll</HintPath>
+    </Reference>
+    <Reference Include="ClassicItems">
+      <HintPath>lib\ClassicItems.dll</HintPath>
+    </Reference>
+    <Reference Include="TILER2">
+      <HintPath>lib\TILER2.dll</HintPath>
     </Reference>
   </ItemGroup>
 
