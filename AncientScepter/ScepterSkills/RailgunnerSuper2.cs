@@ -17,7 +17,7 @@ namespace AncientScepter
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
 
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Hits bore permanent holes through flesh, permanently removing 10 armor.</color>";
+        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Hits bore permanent holes through flesh, permanently removing 20 armor.</color>";
 
         public override string targetBody => "RailgunnerBody";
 
@@ -48,6 +48,18 @@ namespace AncientScepter
         {
             On.EntityStates.Railgunner.Weapon.BaseFireSnipe.ModifyBullet += BaseFireSnipe_ModifyBullet;
             On.RoR2.GlobalEventManager.OnHitEnemy += GlobalEventManager_OnHitEnemy;
+            //On.EntityStates.Railgunner.Backpack.Offline.OnEnter += Offline_OnEnter;
+        }
+
+        private void Offline_OnEnter(On.EntityStates.Railgunner.Backpack.Offline.orig_OnEnter orig, EntityStates.Railgunner.Backpack.Offline self)
+        {
+            var origDuration = self.baseDuration;
+            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
+            {
+                self.baseDuration = Mathf.Max(0, self.baseDuration - 1);
+            }
+            orig(self);
+            self.baseDuration = origDuration;
         }
 
         private void GlobalEventManager_OnHitEnemy(On.RoR2.GlobalEventManager.orig_OnHitEnemy orig, GlobalEventManager self, DamageInfo damageInfo, GameObject victim)
@@ -58,7 +70,7 @@ namespace AncientScepter
                 var cb = victim.GetComponent<CharacterBody>();
                 if (cb)
                 {
-                    for (int i = 0; i < 5; i++)
+                    for (int i = 0; i < 10; i++)
                     {
                         cb.AddBuff(DLC1Content.Buffs.PermanentDebuff);
                     }
