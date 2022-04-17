@@ -17,7 +17,8 @@ namespace AncientScepter
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
 
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Hit enemies become slowed by 80% for 20 seconds.</color>";
+        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Explodes on contact with a frost blast, dealing 500% damage to all enemies within 6m." +
+            " Hit enemies continue to be slowed by 80% for 20 seconds.</color>";
 
         public override string targetBody => "RailgunnerBody";
 
@@ -84,8 +85,50 @@ namespace AncientScepter
         {
             orig(self, bulletAttack);
             if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
+            {
                 bulletAttack.AddModdedDamageType(CustomDamageTypes.ScepterSlow80For30DT);
+
+                bulletAttack.hitCallback = delegate (BulletAttack _bulletAttack, ref BulletAttack.BulletHit info)
+                {
+                    bool flag = BulletAttack.defaultHitCallback(_bulletAttack, ref info);
+
+                    if (flag)
+                    {
+                        var hitPoint = info.point;
+                        FireIceBlast(self.outer.commonComponents.characterBody, hitPoint);
+                    }
+                    return flag;
+                };
+            }
         }
+
+        private void FireIceBlast(CharacterBody characterBody, Vector3 position)
+        {
+            BlastAttack blastAttack = new BlastAttack()
+            {
+                attacker = characterBody.gameObject,
+                attackerFiltering = AttackerFiltering.Default,
+                baseDamage = characterBody.damage * 5f,
+                baseForce = 0,
+                bonusForce = Vector3.zero,
+                canRejectForce = true,
+                crit = Util.CheckRoll(characterBody.crit, characterBody.master),
+                damageColorIndex = DamageColorIndex.Default,
+                damageType = DamageType.Freeze2s,
+                falloffModel = BlastAttack.FalloffModel.SweetSpot,
+                impactEffect = EffectCatalog.FindEffectIndexFromPrefab(LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/ImpactEffects/AffixWhiteExplosion")),
+                inflictor = characterBody.gameObject,
+                losType = BlastAttack.LoSType.NearestHit,
+                position = position,
+                procChainMask = default,
+                procCoefficient = 1f,
+                radius = 6,
+                teamIndex = characterBody.teamComponent.teamIndex
+            };
+            blastAttack.AddModdedDamageType(CustomDamageTypes.ScepterSlow80For30DT);
+            blastAttack.Fire();
+        }
+
 
         private void ClearFireDebuffs(CharacterBody characterBody)
         {
