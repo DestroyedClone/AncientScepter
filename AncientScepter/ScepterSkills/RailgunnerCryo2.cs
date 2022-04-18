@@ -116,7 +116,7 @@ namespace AncientScepter
                 damageColorIndex = DamageColorIndex.Default,
                 damageType = DamageType.Freeze2s,
                 falloffModel = BlastAttack.FalloffModel.SweetSpot,
-                impactEffect = EffectCatalog.FindEffectIndexFromPrefab(LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/ImpactEffects/AffixWhiteExplosion")),
+                //impactEffect = EffectCatalog.FindEffectIndexFromPrefab(LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/ImpactEffects/AffixWhiteExplosion")),
                 inflictor = characterBody.gameObject,
                 losType = BlastAttack.LoSType.NearestHit,
                 position = position,
@@ -125,6 +125,15 @@ namespace AncientScepter
                 radius = 6,
                 teamIndex = characterBody.teamComponent.teamIndex
             };
+            EffectData effectData = new EffectData
+            {
+                origin = blastAttack.position,
+                scale = blastAttack.radius,
+            };
+            EffectManager.SpawnEffect(
+                LegacyResourcesAPI.Load<GameObject>("Prefabs/Effects/ImpactEffects/AffixWhiteExplosion"), 
+                effectData, 
+                true);
             blastAttack.AddModdedDamageType(CustomDamageTypes.ScepterSlow80For30DT);
             blastAttack.Fire();
         }
