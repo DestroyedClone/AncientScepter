@@ -412,6 +412,7 @@ namespace AncientScepter
             rules.Add("mdlVoidSurvivor", new ItemDisplayRule
             {
                 childName = "Hand",
+                followerPrefab = displayPrefab,
                 localPos = new Vector3(-0.02335F, 0.11837F, 0.11306F),
                 localAngles = new Vector3(55.42191F, 299.1461F, 266.1845F),
                 localScale = new Vector3(0.56092F, 0.56276F, 0.56092F)
@@ -420,6 +421,7 @@ namespace AncientScepter
             rules.Add("mdlRailGunner", new ItemDisplayRule
             {
                 childName = "ThighR",
+                followerPrefab = displayPrefab,
                 localPos = new Vector3(-0.11836F, 0.17205F, 0.0282F),
                 localAngles = new Vector3(353.4687F, 184.4017F, 177.4758F),
                 localScale = new Vector3(0.2235F, 0.2235F, 0.2235F)
@@ -428,6 +430,7 @@ namespace AncientScepter
             rules.Add("mdlHeretic", new ItemDisplayRule
             {
                 childName = "ThighL",
+                followerPrefab = displayPrefab,
                 localPos = new Vector3(0.49264F, -0.16267F, -0.14486F),
                 localAngles = new Vector3(9.97009F, 351.3801F, 100.2498F),
                 localScale = new Vector3(0.5F, 0.5F, 0.5F)
@@ -436,6 +439,7 @@ namespace AncientScepter
             rules.Add("mdlBrother", new ItemDisplayRule
             {
                 childName = "HandL",
+                followerPrefab = displayPrefab,
                 localPos = new Vector3(-0.05066F, 0.13436F, 0.0282F),
                 localAngles = new Vector3(79.95749F, 180F, 230.595F),
                 localScale = new Vector3(0.4F, 0.4F, 0.4F)
