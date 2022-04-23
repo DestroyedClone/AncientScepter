@@ -16,10 +16,12 @@ using UnityEngine.Networking;
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 #pragma warning restore CS0618 // Type or member is obsolete
 
+[assembly: HG.Reflection.SearchableAttribute.OptIn]
 namespace AncientScepter
 {
     [BepInPlugin(ModGuid, ModName, ModVer)]
     [BepInDependency(R2API.R2API.PluginGUID, R2API.R2API.PluginVersion)]
+    [BepInDependency("com.xoxfaby.BetterUI", BepInDependency.DependencyFlags.SoftDependency)]
     [R2APISubmoduleDependency(nameof(ItemAPI), nameof(ContentAddition), nameof(LanguageAPI), nameof(LoadoutAPI), nameof(DamageAPI), nameof(PrefabAPI))]
     //[BepInDependency(TILER2.TILER2Plugin.ModGuid, BepInDependency.DependencyFlags.SoftDependency)]
     public class AncientScepterMain : BaseUnityPlugin
@@ -39,6 +41,7 @@ namespace AncientScepter
         public void Awake()
         {
             _logger = Logger;
+            ModCompat.Init();
             CustomDamageTypes.SetupDamageTypes();
             SetupBuffs();
             Assets.PopulateAssets();
@@ -68,9 +71,18 @@ namespace AncientScepter
             perishSongDebuff.canStack = true;
             perishSongDebuff.isHidden = false;
             perishSongDebuff.isDebuff = false;
+            perishSongDebuff.isCooldown = false;
             if (!ContentAddition.AddBuffDef(perishSongDebuff))
             {
                 _logger.LogWarning($"Buff '{nameof(perishSongDebuff)}' failed to be added.");
+            }
+            if (ModCompat.compatBetterUI)
+            {
+                BetterUI.Buffs.RegisterBuffInfo(AncientScepterMain.perishSongDebuff,
+                    "STANDALONEANCIENTSCEPTER_BUFF_PERISHSONG_NAME",
+                    "STANDALONEANCIENTSCEPTER_BUFF_PERISHSONG_DESC");
+                LanguageAPI.Add("STANDALONEANCIENTSCEPTER_BUFF_PERISHSONG_NAME", "Perish Song");
+                LanguageAPI.Add("STANDALONEANCIENTSCEPTER_BUFF_PERISHSONG_DESC", "After 30 seconds, take 5000% damage from the Heretic that inflicted you.");
             }
         }
 
