@@ -22,6 +22,7 @@ namespace AncientScepter
 
         public static void BetterUICompatInit()
         {
+            compatBetterUI = true;
             //See the skills for the skillDef.
         }
     }
