@@ -37,10 +37,15 @@ namespace AncientScepter
 
         public override int targetVariantIndex => 0;
 
+        public static BodyIndex targetBodyIndex;
+        public static VoidSurvivorSkillDef cleanSkillDef;
+        public static SkillDef dirtySkillDef;
+
         internal override void SetupAttributes()
         {
             var oldDef = Addressables.LoadAssetAsync<VoidSurvivorSkillDef>("RoR2/DLC1/VoidSurvivor/CrushCorruption.asset").WaitForCompletion();
             myDef = CloneSkillDef(oldDef);
+            cleanSkillDef = oldDef;
 
             var nametoken = "ANCIENTSCEPTER_VOIDSURVIVOR_CRUSHCORRUPTIONNAME";
             newDescToken = "ANCIENTSCEPTER_VOIDSURVIVOR_CRUSHCORRUPTIONDESC";
@@ -56,6 +61,7 @@ namespace AncientScepter
             ContentAddition.AddSkillDef(myDef);
 
             var oldCtxDef = Addressables.LoadAssetAsync<SkillDef>("RoR2/DLC1/VoidSurvivor/CrushHealth.asset").WaitForCompletion();
+            dirtySkillDef = oldCtxDef;
             myCtxDef = CloneSkillDef(oldCtxDef);
 
             myCtxDef.skillName = $"{oldCtxDef.skillName}Scepter";
@@ -72,6 +78,8 @@ namespace AncientScepter
                 BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CrushCorruption"));
                 BetterUI.ProcCoefficientCatalog.AddSkill(myCtxDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CrushHealth"));
             }
+
+            targetBodyIndex = BodyCatalog.FindBodyIndex(targetBody);
         }
 
         internal override void LoadBehavior()
@@ -82,12 +90,14 @@ namespace AncientScepter
             On.EntityStates.VoidSurvivor.CorruptMode.CorruptMode.OnExit += CorruptMode_OnExit;
         }
 
+
         private void CorruptMode_OnExit(On.EntityStates.VoidSurvivor.CorruptMode.CorruptMode.orig_OnExit orig, EntityStates.VoidSurvivor.CorruptMode.CorruptMode self)
         {
             var cachedSkillDef = self.specialOverrideSkillDef;
             if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
             {
                 self.specialOverrideSkillDef = myCtxDef;
+                self.characterBody.skillLocator.special.UnsetSkillOverride(self, cachedSkillDef, GenericSkill.SkillOverridePriority.Upgrade);
             }
             orig(self);
             self.specialOverrideSkillDef = cachedSkillDef;
@@ -99,6 +109,7 @@ namespace AncientScepter
             if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
             {
                 self.specialOverrideSkillDef = myCtxDef;
+                self.characterBody.skillLocator.special.UnsetSkillOverride(self, cachedSkillDef, GenericSkill.SkillOverridePriority.Upgrade);
             }
             orig(self);
             self.specialOverrideSkillDef = cachedSkillDef;
