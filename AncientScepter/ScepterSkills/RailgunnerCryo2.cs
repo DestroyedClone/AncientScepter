@@ -14,10 +14,11 @@ namespace AncientScepter
     public class RailgunnerCryo2 : ScepterSkill
     {
         public override SkillDef myDef { get; protected set; }
+        public static SkillDef myFireDef { get; protected set; }
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
 
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Explodes on contact with a frost blast, dealing 500% damage to all enemies within 6m." +
+        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Explodes on contact with a frost blast, dealing 200% damage to all enemies within 6m." +
             " Hit enemies continue to be slowed by 80% for 20 seconds.</color>";
 
         public override string targetBody => "RailgunnerBody";
@@ -40,9 +41,24 @@ namespace AncientScepter
             myDef.skillName = namestr;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
-            myDef.icon = Assets.SpriteAssets.CommandoBarrage2;
+            myDef.icon = Assets.SpriteAssets.RailgunnerCryocharge2;
 
             ContentAddition.AddSkillDef(myDef);
+
+            var oldCallDef = Addressables.LoadAssetAsync<RailgunSkillDef>("RoR2/DLC1/Railgunner/RailgunnerBodyFireSnipeCryo.asset").WaitForCompletion();
+            myFireDef = CloneSkillDef(oldCallDef);
+            myFireDef.skillName = "ScepterFireSnipeCryo";
+            myFireDef.skillNameToken = "ANCIENTSCEPTER_RAILGUNNER_FIRESNIPECRYONAME";
+            LanguageAPI.Add("ANCIENTSCEPTER_RAILGUNNER_FIRESNIPECRYONAME", "Permafrosted Railgun");
+            myFireDef.icon = Assets.SpriteAssets.RailgunnerFireCryocharge2;
+
+            ContentAddition.AddSkillDef(myFireDef);
+
+            if (ModCompat.compatBetterUI)
+            {
+                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("RailgunnerBodyChargeSnipeCryo"));
+                BetterUI.ProcCoefficientCatalog.AddSkill(myFireDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("RailgunnerBodyFireSnipeCryo"));
+            }
         }
 
         internal override void LoadBehavior()
@@ -91,7 +107,6 @@ namespace AncientScepter
                 bulletAttack.hitCallback = delegate (BulletAttack _bulletAttack, ref BulletAttack.BulletHit info)
                 {
                     bool flag = BulletAttack.defaultHitCallback(_bulletAttack, ref info);
-
                     if (flag)
                     {
                         var hitPoint = info.point;
@@ -108,7 +123,7 @@ namespace AncientScepter
             {
                 attacker = characterBody.gameObject,
                 attackerFiltering = AttackerFiltering.Default,
-                baseDamage = characterBody.damage * 5f,
+                baseDamage = characterBody.damage * 2f,
                 baseForce = 0,
                 bonusForce = Vector3.zero,
                 canRejectForce = true,
