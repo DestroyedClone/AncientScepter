@@ -38,7 +38,8 @@ namespace AncientScepter
             var namestr = "Permafrosted Cryocharge";
             LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = namestr;
+            myDef.skillName = $"{oldDef.skillName}Scepter";
+            (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
             myDef.icon = Assets.SpriteAssets.RailgunnerCryocharge2;
@@ -47,7 +48,8 @@ namespace AncientScepter
 
             var oldCallDef = Addressables.LoadAssetAsync<RailgunSkillDef>("RoR2/DLC1/Railgunner/RailgunnerBodyFireSnipeCryo.asset").WaitForCompletion();
             myFireDef = CloneSkillDef(oldCallDef);
-            myFireDef.skillName = "ScepterFireSnipeCryo";
+            myFireDef.skillName = $"{oldCallDef.skillName}Scepter";
+            (myFireDef as ScriptableObject).name = myFireDef.skillName;
             myFireDef.skillNameToken = "ANCIENTSCEPTER_RAILGUNNER_FIRESNIPECRYONAME";
             LanguageAPI.Add("ANCIENTSCEPTER_RAILGUNNER_FIRESNIPECRYONAME", "Permafrosted Railgun");
             myFireDef.icon = Assets.SpriteAssets.RailgunnerFireCryocharge2;

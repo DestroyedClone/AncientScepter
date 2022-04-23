@@ -35,7 +35,8 @@ namespace AncientScepter
             var namestr = "21-Probe Salute";
             LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = namestr;
+            myDef.skillName = $"{oldDef.skillName}Scepter";
+            (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
             myDef.icon = Assets.SpriteAssets.CaptainAirstrike2;
@@ -44,6 +45,9 @@ namespace AncientScepter
 
             var oldCallDef = LegacyResourcesAPI.Load<SkillDef>("skilldefs/captainbody/CallAirstrike");
             myCallDef = CloneSkillDef(oldCallDef);
+
+            myCallDef.skillName = $"{oldCallDef.skillName}Scepter";
+            (myCallDef as ScriptableObject).name = myCallDef.skillName;
             myCallDef.baseMaxStock = 21;
             myCallDef.mustKeyPress = false;
             myCallDef.resetCooldownTimerOnUse = true;

@@ -33,7 +33,8 @@ namespace AncientScepter
             var namestr = "Rabauld";
             LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = namestr;
+            myDef.skillName = $"{oldDef.skillName}Scepter";
+            (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
             myDef.icon = Assets.SpriteAssets.HuntressBallista2;
@@ -43,7 +44,8 @@ namespace AncientScepter
             var oldCtxDef = LegacyResourcesAPI.Load<SkillDef>("skilldefs/huntressbody/FireArrowSnipe");
             myCtxDef = CloneSkillDef(oldCtxDef);
 
-            myCtxDef.skillName = namestr;
+            myCtxDef.skillName = $"{oldCtxDef.skillName}Scepter";
+            (myCtxDef as ScriptableObject).name = myCtxDef.skillName;
             myCtxDef.skillNameToken = nametoken;
             myCtxDef.skillDescriptionToken = newDescToken;
             myCtxDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texHuntressR2");

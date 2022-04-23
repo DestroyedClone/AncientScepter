@@ -32,7 +32,8 @@ namespace AncientScepter
             var namestr = "Burning Rain";
             LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = namestr;
+            myDef.skillName = $"{oldDef.skillName}Scepter";
+            (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
             myDef.icon = Assets.SpriteAssets.HuntressRain2;

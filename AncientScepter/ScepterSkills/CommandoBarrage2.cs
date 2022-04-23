@@ -33,7 +33,8 @@ namespace AncientScepter
             LanguageAPI.Add(nametoken, namestr);
             //TODO: fire auto-aim bullets at every enemy in range
 
-            myDef.skillName = namestr;
+            myDef.skillName = $"{oldDef.skillName}Scepter";
+            (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
             myDef.icon = Assets.SpriteAssets.CommandoBarrage2;

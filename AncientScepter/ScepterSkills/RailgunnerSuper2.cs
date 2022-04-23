@@ -37,7 +37,8 @@ namespace AncientScepter
             var namestr = "Hypercharge";
             LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = namestr;
+            myDef.skillName = $"{oldDef.skillName}Scepter";
+            (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
             myDef.icon = Assets.SpriteAssets.RailgunnerSupercharge2;
@@ -47,6 +48,8 @@ namespace AncientScepter
 
             var oldCallDef = Addressables.LoadAssetAsync<RailgunSkillDef>("RoR2/DLC1/Railgunner/RailgunnerBodyFireSnipeSuper.asset").WaitForCompletion();
             myFireDef = CloneSkillDef(oldCallDef);
+            myFireDef.skillName = $"{oldCallDef.skillName}Scepter";
+            (myFireDef as ScriptableObject).name = myFireDef.skillName;
             myFireDef.skillName = "ScepterFireSnipeSuper";
             myFireDef.skillNameToken = "ANCIENTSCEPTER_RAILGUNNER_FIRESNIPESUPERNAME";
             //myFireDef.skillDescriptionToken = "ANCIENTSCEPTER_RAILGUNNER_FIRESNIPESUPERDESC";
@@ -141,14 +144,14 @@ namespace AncientScepter
 
         private void BaseFireSnipe_ModifyBullet(On.EntityStates.Railgunner.Weapon.BaseFireSnipe.orig_ModifyBullet orig, EntityStates.Railgunner.Weapon.BaseFireSnipe self, BulletAttack bulletAttack)
         {
-            var cachedCritMultiplier = self.critDamageMultiplier;
+            //var cachedProcCoefficient = bulletAttack.procCoefficient;
             if (self is EntityStates.Railgunner.Weapon.FireSnipeSuper && AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
             {
                 bulletAttack.AddModdedDamageType(CustomDamageTypes.ScepterDestroy10ArmorDT);
                 bulletAttack.procCoefficient += 0.5f;
             }
             orig(self, bulletAttack);
-            self.critDamageMultiplier = cachedCritMultiplier;
+            //bulletAttack.procCoefficient = cachedProcCoefficient;
         }
 
         internal override void UnloadBehavior()

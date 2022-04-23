@@ -42,7 +42,8 @@ namespace AncientScepter
             var namestr = "PHN-8300 'Lilith' Strike";
             LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = namestr;
+            myDef.skillName = $"{oldDef.skillName}Scepter";
+            (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
             myDef.baseRechargeInterval = airstrikeDuration*2f;
@@ -52,6 +53,8 @@ namespace AncientScepter
 
             var oldCallDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/CaptainBody/CallAirstrikeAlt");
             myCallDef = CloneSkillDef(oldCallDef);
+            myCallDef.skillName = $"{oldDef.skillName}Scepter";
+            (myCallDef as ScriptableObject).name = myCallDef.skillName;
             myCallDef.baseMaxStock = 1;
             myCallDef.mustKeyPress = false;
             myCallDef.resetCooldownTimerOnUse = true;

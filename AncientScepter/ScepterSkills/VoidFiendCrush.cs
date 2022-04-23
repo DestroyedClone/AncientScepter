@@ -48,7 +48,8 @@ namespace AncientScepter
             var namestr = "Reclaimed Suppress";
             LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = namestr;
+            myDef.skillName = $"{oldDef.skillName}Scepter";
+            (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
             myDef.icon = Assets.SpriteAssets.VoidFiendSuppress2;
@@ -57,9 +58,9 @@ namespace AncientScepter
             var oldCtxDef = Addressables.LoadAssetAsync<SkillDef>("RoR2/DLC1/VoidSurvivor/CrushHealth.asset").WaitForCompletion();
             myCtxDef = CloneSkillDef(oldCtxDef);
 
-            myCtxDef.skillName = "CorruptedSuppress";
+            myCtxDef.skillName = $"{oldCtxDef.skillName}Scepter";
+            (myCtxDef as ScriptableObject).name = myCtxDef.skillName;
             var corruptedNameToken = "ANCIENTSCEPTER_VOIDSURVIVOR_CORRUPTEDCRUSHCORRUPTIONNAME";
-            myCtxDef.skillNameToken = corruptedNameToken;
             LanguageAPI.Add(corruptedNameToken, "Forfeited Suppress");
             myCtxDef.skillDescriptionToken = newDescToken;
             myCtxDef.baseMaxStock += 2;

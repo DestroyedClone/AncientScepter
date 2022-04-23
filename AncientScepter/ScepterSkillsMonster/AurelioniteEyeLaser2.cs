@@ -34,7 +34,8 @@ namespace AncientScepter.ScepterSkillsMonster
             var namestr = "Piercing Eye Laser";
             LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = namestr;
+            myDef.skillName = $"{oldDef.skillName}Scepter";
+            (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
             myDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texArtiR1");
