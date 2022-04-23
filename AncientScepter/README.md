@@ -34,17 +34,21 @@
     - Captain: Orbital Probe > 21-Probe Salute (1/3 damage, 7x shots, hold primary to fire continuously)
 	    - -OR-  OGM-72 'DIABLO' Strike > PHN-8300 'Lilith' Strike (30s, 2x blast radius, 100,000% damage, blights everyone in line of sight)
     - Heretic: Nevermore (Special) > Perish Song (After 30 seconds, deals 5000% fatal damage to you and nearby enemies.)
+	- Railgunner: Supercharge (Special) > Hypercharge (-20 armor on hit, +0.5 proc coefficient)
+	    - -OR-  Cryocharge > Permafrosted Cryocharge (Explodes on contact with a frost blast, dealing 200% damage to all enemies within 6m. Slows on hit by 80% for 20 seconds.)
+	- Void Fiend: Crush/Corrupted Crush -> Reclaimed Crush/Forfeited Crush (Also affects nearby enemies or allies within 25m. Corrupted Supress has +2 charges.)
 
     - Alloy Vulture: Windblade > Repeated Windblade (50% chance to fire twice)
     - Aurelionite: Eye Laser > Piercing Eye Laser (Additional 35% of damage dealt pierces walls)
 
-## To-Do
+## To-Do/Issues
 * Mithrix Scepter
 * CaptainBustedAirstrike support:
 	* Currently it uses the reduced cooldown from the standard alt airstrike.
 * Alternate Replacement for Diablo Strike
 * Further improvements to scepters(?)
 * Railgunner, Void Fiend
+* Fix Void Fiend's Scepter desyncing overrides if the Scepter is lost in corrupt mode
 
 ## For Devs
 - Adding a ScepterReplacer to a character that already has an existing ScepterReplacer for that slot and variant will replace it.
@@ -60,15 +64,25 @@
 * **QandQuestion** - Lore
 * **Moffein** - Consultation
 * **Mico27** - Orb creation help
-* **TheTimeSweeper** - UnusedMode, Alternate Item Model, Item Displays
-* **/vm/** - Etc
+* **TheTimeSweeper** - UnusedMode, Alternate Item Model, Item Displays, Other help
+* **/vm/** - Idea for Captain's Lilith Strike
 
 
 ## Changelog
 `1.1.0`
 - 🛠️Updated for SOTV
 	- Flamethrower: Copied updated IL code from ClassicItems
+- ➕New Config:
+	- "Remove Classic Items' Ancient Scepter From Droplist": Enabled by default.
 - ➕Added Item Displays for Heretic, Railgunner, and Void FIend
+- ➕New Scepters (WIP)
+	- Railgunner:
+		- Supercharge -> Hypercharge: Permanently removes 10 armor, +0.5 proc coeff
+		- Cryocharge -> Permafrosted Cryocharge: Slows on hit, ice explosion
+	- Void Fiend
+		- Crush -> Reclaimed Crush: Heals nearby allies within 25m
+		- Corrupted Crush -> Reclaimed Crush (Corrupted): Damages nearby enemies within 25m. +2 stocks
+- BetterUI Compat
 - 🛠️Captain: PHN-8300 'Lilith' Strike
 	- Reduced blight duration (30s -> 20s) and stacks (10 -> 5)
 
