@@ -42,7 +42,7 @@ namespace AncientScepter
 
             ContentAddition.AddSkillDef(myDef);
 
-            var oldCallDef = Resources.Load<SkillDef>("skilldefs/captainbody/CallAirstrike");
+            var oldCallDef = LegacyResourcesAPI.Load<SkillDef>("skilldefs/captainbody/CallAirstrike");
             myCallDef = CloneSkillDef(oldCallDef);
             myCallDef.baseMaxStock = 21;
             myCallDef.mustKeyPress = false;
@@ -51,6 +51,11 @@ namespace AncientScepter
             myCallDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texCapU1");
 
             ContentAddition.AddSkillDef(myCallDef);
+
+            if (ModCompat.compatBetterUI)
+            {
+                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("Airstrike"));
+            }
         }
 
         internal override void LoadBehavior()

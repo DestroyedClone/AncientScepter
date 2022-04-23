@@ -47,6 +47,10 @@ namespace AncientScepter
 
             ContentAddition.AddSkillDef(myDef);
 
+            if (ModCompat.compatBetterUI)
+            {
+                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("SkullRevolver"));
+            }
         }
 
         internal override void LoadBehavior()

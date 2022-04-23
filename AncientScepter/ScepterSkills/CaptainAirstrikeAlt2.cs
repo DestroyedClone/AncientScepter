@@ -122,6 +122,11 @@ namespace AncientScepter
 
             ContentAddition.AddProjectile(irradiateProjectile);
             ContentAddition.AddProjectile(airstrikePrefab);
+
+            if (ModCompat.compatBetterUI)
+            {
+                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("AirstrikeAlt"));
+            }
         }
 
         internal override void LoadBehavior()

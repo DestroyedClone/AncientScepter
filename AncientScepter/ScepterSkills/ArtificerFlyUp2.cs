@@ -36,6 +36,11 @@ namespace AncientScepter
             myDef.icon = Assets.SpriteAssets.ArtificerFlyUp2;
 
             ContentAddition.AddSkillDef(myDef);
+
+            if (ModCompat.compatBetterUI)
+            {
+                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("MageBodyFlyUp"));
+            }
         }
 
         internal override void LoadBehavior()

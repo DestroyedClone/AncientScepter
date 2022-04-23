@@ -37,6 +37,11 @@ namespace AncientScepter
             myDef.icon = Assets.SpriteAssets.LoaderChargeFist2;
 
             ContentAddition.AddSkillDef(myDef);
+
+            if (ModCompat.compatBetterUI)
+            {
+                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("BigPunch"));
+            }
         }
 
         internal override void LoadBehavior()

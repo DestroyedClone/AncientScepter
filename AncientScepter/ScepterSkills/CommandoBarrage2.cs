@@ -41,6 +41,11 @@ namespace AncientScepter
             //myDef.activationState = new EntityStates.SerializableEntityStateType(typeof(FireSweepBarrage));
 
             ContentAddition.AddSkillDef(myDef);
+
+            if (ModCompat.compatBetterUI)
+            {
+                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CommandoBodyBarrage"));
+            }
         }
 
         internal override void LoadBehavior()

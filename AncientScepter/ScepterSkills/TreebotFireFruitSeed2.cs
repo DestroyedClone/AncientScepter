@@ -50,6 +50,11 @@ namespace AncientScepter
             #endregion
 
             ContentAddition.AddSkillDef(myDef);
+
+            if (ModCompat.compatBetterUI)
+            {
+                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("TreebotFireFruitSeed"));
+            }
         }
 
         internal override void LoadBehavior()

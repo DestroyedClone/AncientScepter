@@ -45,6 +45,11 @@ namespace AncientScepter
             pie.bonusBlastForce *= 0.5f;
 
             ContentAddition.AddProjectile(projReplacer);
+
+            if (ModCompat.compatBetterUI)
+            {
+                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("ThrowGrenade"));
+            }
         }
 
         internal override void LoadBehavior()

@@ -38,6 +38,11 @@ namespace AncientScepter
             myDef.baseMaxStock += 2;
 
             ContentAddition.AddSkillDef(myDef);
+
+            if (ModCompat.compatBetterUI)
+            {
+                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("EngiBodyPlaceWalkerTurret"));
+            }
         }
     }
 }

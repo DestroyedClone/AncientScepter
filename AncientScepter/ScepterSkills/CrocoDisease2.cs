@@ -55,6 +55,11 @@ namespace AncientScepter
             dw.interval = 1f;
             diseaseWardPrefab = dwPrefabPrefab.InstantiateClone("AncientScepterDiseaseWardAuraPrefab");
             UnityEngine.Object.Destroy(dwPrefabPrefab);
+
+            if (ModCompat.compatBetterUI)
+            {
+                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CrocoDisease"));
+            }
         }
 
         internal override void LoadBehavior()

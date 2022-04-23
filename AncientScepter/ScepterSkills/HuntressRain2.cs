@@ -60,6 +60,11 @@ namespace AncientScepter
             flashlight.gameObject.SetActive(true);
 
             ContentAddition.AddProjectile(projReplacer);
+
+            if (ModCompat.compatBetterUI)
+            {
+                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("HuntressBodyArrowRain"));
+            }
         }
 
         internal override void LoadBehavior()

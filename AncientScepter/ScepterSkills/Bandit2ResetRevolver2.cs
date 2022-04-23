@@ -35,6 +35,11 @@ namespace AncientScepter
             myDef.icon = Assets.SpriteAssets.Bandit2ResetRevolver2;
 
             ContentAddition.AddSkillDef(myDef);
+
+            if (ModCompat.compatBetterUI)
+            {
+                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("ResetRevolver"));
+            }
         }
 
         internal override void LoadBehavior()

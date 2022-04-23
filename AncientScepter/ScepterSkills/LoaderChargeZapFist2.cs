@@ -49,6 +49,11 @@ namespace AncientScepter
             projReplacer.transform.Find("Effect").localScale *= 3f;
 
             ContentAddition.AddProjectile(projReplacer);
+
+            if (ModCompat.compatBetterUI)
+            {
+                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("ChargeZapFist"));
+            }
         }
 
         internal override void LoadBehavior()
