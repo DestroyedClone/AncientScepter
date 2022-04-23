@@ -29,7 +29,7 @@ namespace AncientScepter
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
 
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Suppresses nearby enemies or allies within 25m.</color>";
+        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Suppresses nearby enemies or allies within 25m. Corrupted Supress has +2 charges.</color>";
 
         public override string targetBody => "VoidSurvivorBody";
 
@@ -45,30 +45,62 @@ namespace AncientScepter
             var nametoken = "ANCIENTSCEPTER_VOIDSURVIVOR_CRUSHCORRUPTIONNAME";
             newDescToken = "ANCIENTSCEPTER_VOIDSURVIVOR_CRUSHCORRUPTIONDESC";
             oldDescToken = oldDef.skillDescriptionToken;
-            var namestr = "Reclaimed Crush";
+            var namestr = "Reclaimed Suppress";
             LanguageAPI.Add(nametoken, namestr);
 
             myDef.skillName = namestr;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
-            myDef.icon = Assets.SpriteAssets.CommandoBarrage2;
+            myDef.icon = Assets.SpriteAssets.VoidFiendSuppress2;
             ContentAddition.AddSkillDef(myDef);
 
             var oldCtxDef = Addressables.LoadAssetAsync<SkillDef>("RoR2/DLC1/VoidSurvivor/CrushHealth.asset").WaitForCompletion();
             myCtxDef = CloneSkillDef(oldCtxDef);
 
-            myCtxDef.skillName = namestr;
-            myCtxDef.skillNameToken = nametoken;
+            myCtxDef.skillName = "CorruptedSuppress";
+            var corruptedNameToken = "ANCIENTSCEPTER_VOIDSURVIVOR_CORRUPTEDCRUSHCORRUPTIONNAME";
+            myCtxDef.skillNameToken = corruptedNameToken;
+            LanguageAPI.Add(corruptedNameToken, "Forfeited Suppress");
             myCtxDef.skillDescriptionToken = newDescToken;
-            myCtxDef.icon = oldCtxDef.icon;
+            myCtxDef.baseMaxStock += 2;
+            myCtxDef.icon = Assets.SpriteAssets.VoidFiendCorruptedSuppress2;
             ContentAddition.AddSkillDef(myCtxDef);
 
+            if (ModCompat.compatBetterUI)
+            {
+                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CrushCorruption"));
+                BetterUI.ProcCoefficientCatalog.AddSkill(myCtxDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CrushHealth"));
+            }
         }
 
         internal override void LoadBehavior()
         {
             HealthComponent.onCharacterHealServer += HealNearby;
             On.RoR2.HealthComponent.TakeDamage += DamageNearby;
+            On.EntityStates.VoidSurvivor.CorruptMode.CorruptMode.OnEnter += CorruptMode_OnEnter;
+            On.EntityStates.VoidSurvivor.CorruptMode.CorruptMode.OnExit += CorruptMode_OnExit;
+        }
+
+        private void CorruptMode_OnExit(On.EntityStates.VoidSurvivor.CorruptMode.CorruptMode.orig_OnExit orig, EntityStates.VoidSurvivor.CorruptMode.CorruptMode self)
+        {
+            var cachedSkillDef = self.specialOverrideSkillDef;
+            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
+            {
+                self.specialOverrideSkillDef = myCtxDef;
+            }
+            orig(self);
+            self.specialOverrideSkillDef = cachedSkillDef;
+        }
+
+        private void CorruptMode_OnEnter(On.EntityStates.VoidSurvivor.CorruptMode.CorruptMode.orig_OnEnter orig, EntityStates.VoidSurvivor.CorruptMode.CorruptMode self)
+        {
+            var cachedSkillDef = self.specialOverrideSkillDef;
+            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
+            {
+                self.specialOverrideSkillDef = myCtxDef;
+            }
+            orig(self);
+            self.specialOverrideSkillDef = cachedSkillDef;
         }
 
         private void DamageNearby(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent healthComponent, DamageInfo damageInfo)
@@ -76,24 +108,26 @@ namespace AncientScepter
             orig(healthComponent, damageInfo);
             if (damageInfo.procChainMask.HasProc(ProcType.VoidSurvivorCrush))
             {
-                DamageInfo damageInfoToDeal = new DamageInfo
+                if (AncientScepterItem.instance.GetCount(healthComponent.body) > 0)
                 {
-                    damage = damageInfo.damage,
-                    force = Vector3.zero,
-                    damageColorIndex = DamageColorIndex.Default,
-                    crit = false,
-                    attacker = healthComponent.gameObject,
-                    inflictor = healthComponent.gameObject,
-                    damageType = DamageType.Generic,
-                    procCoefficient = 0f,
-                    procChainMask = default
-                };
-                float radiusSqr = 25 * 25;
-                for (TeamIndex teamIndex = TeamIndex.Neutral; teamIndex < TeamIndex.Count; teamIndex += 1)
-                {
-                    DamageTeam(TeamComponent.GetTeamMembers(teamIndex), radiusSqr, healthComponent.body.corePosition, damageInfoToDeal, healthComponent.body.teamComponent.teamIndex);
+                    DamageInfo damageInfoToDeal = new DamageInfo
+                    {
+                        damage = damageInfo.damage,
+                        force = Vector3.zero,
+                        damageColorIndex = DamageColorIndex.Default,
+                        crit = false,
+                        attacker = healthComponent.gameObject,
+                        inflictor = healthComponent.gameObject,
+                        damageType = DamageType.Generic,
+                        procCoefficient = 0f,
+                        procChainMask = default
+                    };
+                    float radiusSqr = 25 * 25;
+                    for (TeamIndex teamIndex = TeamIndex.Neutral; teamIndex < TeamIndex.Count; teamIndex += 1)
+                    {
+                        DamageTeam(TeamComponent.GetTeamMembers(teamIndex), radiusSqr, healthComponent.body.corePosition, damageInfoToDeal, healthComponent.body.teamComponent.teamIndex);
+                    }
                 }
-                return;
             }
         }
 
@@ -125,7 +159,7 @@ namespace AncientScepter
         //From HealingWard.cs
         private void HealNearby(HealthComponent healthComponent, float healAmount, ProcChainMask procChainMask)
         {
-            if (procChainMask.HasProc(ProcType.VoidSurvivorCrush))
+            if (procChainMask.HasProc(ProcType.VoidSurvivorCrush) && AncientScepterItem.instance.GetCount(healthComponent.body) > 0)
             {
                 ReadOnlyCollection<TeamComponent> teamMembers = TeamComponent.GetTeamMembers(healthComponent.body.teamComponent.teamIndex);
                 float num = 25 * 25;
