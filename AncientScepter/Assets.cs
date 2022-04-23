@@ -102,6 +102,12 @@ namespace AncientScepter
             public static Sprite ToolbotDash2;
             public static Sprite TreebotFireFruitSeed2;
             public static Sprite TreebotFlower2_2;
+            public static Sprite RailgunnerSupercharge2;
+            public static Sprite RailgunnerFireSupercharge2;
+            public static Sprite RailgunnerCryocharge2;
+            public static Sprite RailgunnerFireCryocharge2;
+            public static Sprite VoidFiendSuppress2;
+            public static Sprite VoidFiendCorruptedSuppress2;
 
             public static void InitializeAssets()
             {
@@ -126,6 +132,12 @@ namespace AncientScepter
                 ToolbotDash2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texMultU1");
                 TreebotFireFruitSeed2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texRexR2");
                 TreebotFlower2_2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texRexR1");
+                RailgunnerSupercharge2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texRailgunnerR1");
+                RailgunnerFireSupercharge2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texRailgunnerP1");
+                RailgunnerCryocharge2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texRailgunnerR2");
+                RailgunnerFireCryocharge2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texRailgunnerP2");
+                VoidFiendSuppress2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texVoidFiendR1");
+                VoidFiendCorruptedSuppress2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texVoidFiendR1C");
             }
         }
     }
