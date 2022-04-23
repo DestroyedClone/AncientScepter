@@ -145,11 +145,12 @@ namespace AncientScepter
         public override bool AIBlacklisted => true;
 
         public static GameObject ItemBodyModelPrefab;
-        public static GameObject ancientWispPrefab = Resources.Load<GameObject>("prefabs/characterbodies/AncientWispBody");
+        public static GameObject ancientWispPrefab;
         public static Material purpleFireMaterial;
 
         public override void Init(ConfigFile config)
         {
+            ancientWispPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/characterbodies/AncientWispBody");
             RegisterSkills();
             CreateConfig(config);
             CreateLang();
@@ -503,10 +504,6 @@ namespace AncientScepter
                 skill.SetupAttributes();
                 RegisterScepterSkill(skill.myDef, skill.targetBody, skill.targetSlot, skill.targetVariantIndex);
             }
-        }
-
-        public override void Hooks()
-        {
         }
 
         public void Install()
