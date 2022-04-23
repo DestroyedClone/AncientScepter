@@ -40,7 +40,7 @@ namespace AncientScepter
             if (ModCompat.compatBetterUI)
             {
                 BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("ToolbotBodyToolbotDash"));
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, "Explosion", 1f);
+                BetterUI.ProcCoefficientCatalog.AddToSkill(myDef.skillName, "Explosion", 1f);
             }
         }
 

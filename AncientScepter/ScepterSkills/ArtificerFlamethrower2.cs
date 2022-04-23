@@ -94,7 +94,7 @@ namespace AncientScepter
             if (ModCompat.compatBetterUI)
             {
                 BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("MageBodyFlamethrower"));
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, "Fire Cloud", 0);
+                BetterUI.ProcCoefficientCatalog.AddToSkill(myDef.skillName, "Fire Cloud", 0);
             }
         }
 
