@@ -14,10 +14,11 @@ namespace AncientScepter
     public class RailgunnerSuper2 : ScepterSkill
     {
         public override SkillDef myDef { get; protected set; }
+        public static SkillDef myFireDef { get; protected set; }
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
 
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Hits bore permanent holes through flesh, permanently removing 20 armor.</color>";
+        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Hits bore permanent holes through flesh, permanently removing 20 armor. Proc Coefficient increased by +0.5.</color>";
 
         public override string targetBody => "RailgunnerBody";
 
@@ -39,16 +40,71 @@ namespace AncientScepter
             myDef.skillName = namestr;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
-            myDef.icon = Assets.SpriteAssets.CommandoBarrage2;
+            myDef.icon = Assets.SpriteAssets.RailgunnerSupercharge2;
 
             ContentAddition.AddSkillDef(myDef);
+
+
+            var oldCallDef = Addressables.LoadAssetAsync<RailgunSkillDef>("RoR2/DLC1/Railgunner/RailgunnerBodyFireSnipeSuper.asset").WaitForCompletion();
+            myFireDef = CloneSkillDef(oldCallDef);
+            myFireDef.skillName = "ScepterFireSnipeSuper";
+            myFireDef.skillNameToken = "ANCIENTSCEPTER_RAILGUNNER_FIRESNIPESUPERNAME";
+            //myFireDef.skillDescriptionToken = "ANCIENTSCEPTER_RAILGUNNER_FIRESNIPESUPERDESC";
+            LanguageAPI.Add("ANCIENTSCEPTER_RAILGUNNER_FIRESNIPESUPERNAME", "Hypercharged Railgun");
+            myFireDef.icon = Assets.SpriteAssets.RailgunnerFireSupercharge2;
+
+            ContentAddition.AddSkillDef(myFireDef);
+
+            if (ModCompat.compatBetterUI)
+            {
+                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("RailgunnerBodyChargeSnipeSuper"));
+                BetterUI.ProcCoefficientCatalog.AddSkill(myFireDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("RailgunnerBodyFireSnipeSuper"));
+            }
         }
 
         internal override void LoadBehavior()
         {
             On.EntityStates.Railgunner.Weapon.BaseFireSnipe.ModifyBullet += BaseFireSnipe_ModifyBullet;
             On.RoR2.GlobalEventManager.OnHitEnemy += GlobalEventManager_OnHitEnemy;
+            On.EntityStates.Railgunner.Backpack.BaseCharged.OnExit += BaseCharged_OnExit;
+            On.EntityStates.Railgunner.Backpack.BaseCharged.OnEnter += BaseCharged_OnEnter;
             //On.EntityStates.Railgunner.Backpack.Offline.OnEnter += Offline_OnEnter;
+        }
+
+        private void BaseCharged_OnEnter(On.EntityStates.Railgunner.Backpack.BaseCharged.orig_OnEnter orig, EntityStates.Railgunner.Backpack.BaseCharged self)
+        {
+            var cachedOverride = self.primaryOverride;
+            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
+            {
+                if (self is EntityStates.Railgunner.Backpack.ChargedSuper)
+                {
+                    self.primaryOverride = RailgunnerSuper2.myFireDef;
+                }
+                else if (self is EntityStates.Railgunner.Backpack.ChargedCryo)
+                {
+                    self.primaryOverride = RailgunnerCryo2.myFireDef;
+                }
+            }
+            orig(self);
+            self.primaryOverride = cachedOverride;
+        }
+
+        private void BaseCharged_OnExit(On.EntityStates.Railgunner.Backpack.BaseCharged.orig_OnExit orig, EntityStates.Railgunner.Backpack.BaseCharged self)
+        {
+            var cachedOverride = self.primaryOverride;
+            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
+            {
+                if (self is EntityStates.Railgunner.Backpack.ChargedSuper)
+                {
+                    self.primaryOverride = RailgunnerSuper2.myFireDef;
+                } else if (self is EntityStates.Railgunner.Backpack.ChargedCryo)
+                {
+                    self.primaryOverride = RailgunnerCryo2.myFireDef;
+                }
+            }
+            orig(self);
+            self.primaryOverride = cachedOverride;
+
         }
 
         private void Offline_OnEnter(On.EntityStates.Railgunner.Backpack.Offline.orig_OnEnter orig, EntityStates.Railgunner.Backpack.Offline self)
@@ -85,12 +141,14 @@ namespace AncientScepter
 
         private void BaseFireSnipe_ModifyBullet(On.EntityStates.Railgunner.Weapon.BaseFireSnipe.orig_ModifyBullet orig, EntityStates.Railgunner.Weapon.BaseFireSnipe self, BulletAttack bulletAttack)
         {
+            var cachedCritMultiplier = self.critDamageMultiplier;
             if (self is EntityStates.Railgunner.Weapon.FireSnipeSuper && AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
             {
                 bulletAttack.AddModdedDamageType(CustomDamageTypes.ScepterDestroy10ArmorDT);
+                bulletAttack.procCoefficient += 0.5f;
             }
             orig(self, bulletAttack);
-
+            self.critDamageMultiplier = cachedCritMultiplier;
         }
 
         internal override void UnloadBehavior()
