@@ -48,9 +48,8 @@ namespace AncientScepter
 
             var oldCallDef = Addressables.LoadAssetAsync<RailgunSkillDef>("RoR2/DLC1/Railgunner/RailgunnerBodyFireSnipeSuper.asset").WaitForCompletion();
             myFireDef = CloneSkillDef(oldCallDef);
-            myFireDef.skillName = $"{oldCallDef.skillName}Scepter";
+            myFireDef.skillName = $"RailgunnerBodyFireSnipeSuperScepter";
             (myFireDef as ScriptableObject).name = myFireDef.skillName;
-            myFireDef.skillName = "ScepterFireSnipeSuper";
             myFireDef.skillNameToken = "ANCIENTSCEPTER_RAILGUNNER_FIRESNIPESUPERNAME";
             //myFireDef.skillDescriptionToken = "ANCIENTSCEPTER_RAILGUNNER_FIRESNIPESUPERDESC";
             LanguageAPI.Add("ANCIENTSCEPTER_RAILGUNNER_FIRESNIPESUPERNAME", "Hypercharged Railgun");

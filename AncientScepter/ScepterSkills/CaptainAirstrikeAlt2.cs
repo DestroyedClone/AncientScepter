@@ -128,8 +128,10 @@ namespace AncientScepter
 
             if (ModCompat.compatBetterUI)
             {
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("AirstrikeAlt"));
-                BetterUI.ProcCoefficientCatalog.AddSkill(myCallDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("AirstrikeAlt"));
+                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CallAirstrikeAlt"));
+                BetterUI.ProcCoefficientCatalog.AddToSkill(myDef.skillName, "Irradiate", 0);
+                BetterUI.ProcCoefficientCatalog.AddSkill(myCallDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CallAirstrikeAlt"));
+                BetterUI.ProcCoefficientCatalog.AddToSkill(myCallDef.skillName, "Irradiate", 0);
             }
         }
 
