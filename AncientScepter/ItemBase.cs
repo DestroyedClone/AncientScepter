@@ -92,7 +92,8 @@ namespace AncientScepter
             ItemDef.hidden = false;
             ItemDef.tags = ItemTags;
             ItemDef.canRemove = CanRemove;
-            ItemDef.tier = Tier;
+            //ItemDef.tier = Tier;
+            ItemDef.deprecatedTier = Tier;
             if (ItemTags.Length > 0) { ItemDef.tags = ItemTags; }
             /*
             if (TILER2_MimicBlacklisted)
