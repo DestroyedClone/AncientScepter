@@ -56,11 +56,12 @@ namespace AncientScepter
 
             ContentAddition.AddSkillDef(myCallDef);
 
-            if (ModCompat.compatBetterUI)
-            {
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CallAirstrike"));
-                BetterUI.ProcCoefficientCatalog.AddSkill(myCallDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CallAirstrike"));
-            }
+        }
+
+        internal override void RunBetterUICompat()
+        {
+            ModCompat.BetterUI_AddSkill(myDef.skillName, ModCompat.BetterUI_GetProcCoefficientInfo("CallAirstrike"));
+            ModCompat.BetterUI_AddSkill(myCallDef.skillName, ModCompat.BetterUI_GetProcCoefficientInfo("CallAirstrike"));
         }
 
         internal override void LoadBehavior()

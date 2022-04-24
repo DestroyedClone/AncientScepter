@@ -39,10 +39,11 @@ namespace AncientScepter
 
             ContentAddition.AddSkillDef(myDef);
 
-            if (ModCompat.compatBetterUI)
-            {
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("TreebotBodyFireFlower2"));
-            }
+        }
+
+        internal override void RunBetterUICompat()
+        {
+            ModCompat.BetterUI_AddSkill(myDef.skillName, ModCompat.BetterUI_GetProcCoefficientInfo("TreebotBodyFireFlower2"));
         }
 
         internal override void LoadBehavior()

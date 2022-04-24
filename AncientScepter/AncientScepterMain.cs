@@ -78,7 +78,7 @@ namespace AncientScepter
             }
             if (ModCompat.compatBetterUI)
             {
-                BetterUI.Buffs.RegisterBuffInfo(AncientScepterMain.perishSongDebuff,
+                ModCompat.BetterUI_RegisterBuffInfo(AncientScepterMain.perishSongDebuff,
                     "STANDALONEANCIENTSCEPTER_BUFF_PERISHSONG_NAME",
                     "STANDALONEANCIENTSCEPTER_BUFF_PERISHSONG_DESC");
                 LanguageAPI.Add("STANDALONEANCIENTSCEPTER_BUFF_PERISHSONG_NAME", "Perish Song");

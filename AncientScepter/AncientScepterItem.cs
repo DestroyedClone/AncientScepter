@@ -31,6 +31,12 @@ namespace AncientScepter
         {
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        internal virtual void RunBetterUICompat()
+        {
+
+        }
+
         public abstract string targetBody { get; }
         public abstract SkillSlot targetSlot { get; }
         public abstract int targetVariantIndex { get; }
@@ -502,9 +508,12 @@ namespace AncientScepter
             foreach (var skill in skills)
             {
                 skill.SetupAttributes();
+                if (ModCompat.compatBetterUI)
+                    ModCompat.BetterUI_ActivateScepterSkill(skill);
                 RegisterScepterSkill(skill.myDef, skill.targetBody, skill.targetSlot, skill.targetVariantIndex);
             }
         }
+
 
         public void Install()
         {

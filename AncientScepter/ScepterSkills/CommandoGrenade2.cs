@@ -47,10 +47,12 @@ namespace AncientScepter
 
             ContentAddition.AddProjectile(projReplacer);
 
-            if (ModCompat.compatBetterUI)
-            {
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("ThrowGrenade"));
-            }
+        }
+
+
+        internal override void RunBetterUICompat()
+        {
+            ModCompat.BetterUI_AddSkill(myDef.skillName, ModCompat.BetterUI_GetProcCoefficientInfo("ThrowGrenade"));
         }
 
         internal override void LoadBehavior()

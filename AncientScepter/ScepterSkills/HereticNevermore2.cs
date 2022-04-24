@@ -48,12 +48,13 @@ namespace AncientScepter
 
             ContentAddition.AddSkillDef(myDef);
 
-            if (ModCompat.compatBetterUI)
-            {
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, "Sing", 0);
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, "Perish Song Activation", 0);
-            }
 
+        }
+
+        internal override void RunBetterUICompat()
+        {
+            ModCompat.BetterUI_AddSkill(myDef.skillName, "Sing", 0);
+            ModCompat.BetterUI_AddSkill(myDef.skillName, "Perish Song Activation", 0);
         }
         public static float GetEstimatedDamageForPerishSong()
         {

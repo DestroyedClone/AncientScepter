@@ -90,12 +90,12 @@ namespace AncientScepter
             }
 
             ContentAddition.AddProjectile(projCloud);
+        }
 
-            if (ModCompat.compatBetterUI)
-            {
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("MageBodyFlamethrower"));
-                BetterUI.ProcCoefficientCatalog.AddToSkill(myDef.skillName, "Fire Cloud", 0);
-            }
+        internal override void RunBetterUICompat()
+        {
+            ModCompat.BetterUI_AddSkill(myDef.skillName, ModCompat.BetterUI_GetProcCoefficientInfo("MageBodyFlamethrower"));
+            ModCompat.BetterUI_AddToSkill(myDef.skillName, "Fire Cloud", 0);
         }
 
         internal override void LoadBehavior()

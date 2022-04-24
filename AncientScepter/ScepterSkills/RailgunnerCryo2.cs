@@ -56,11 +56,12 @@ namespace AncientScepter
 
             ContentAddition.AddSkillDef(myFireDef);
 
-            if (ModCompat.compatBetterUI)
-            {
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("RailgunnerBodyChargeSnipeCryo"));
-                BetterUI.ProcCoefficientCatalog.AddSkill(myFireDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("RailgunnerBodyFireSnipeCryo"));
-            }
+        }
+
+        internal override void RunBetterUICompat()
+        {
+            ModCompat.BetterUI_AddSkill(myDef.skillName, ModCompat.BetterUI_GetProcCoefficientInfo("RailgunnerBodyChargeSnipeCryo"));
+            ModCompat.BetterUI_AddSkill(myFireDef.skillName, ModCompat.BetterUI_GetProcCoefficientInfo("RailgunnerBodyFireSnipeCryo"));
         }
 
         internal override void LoadBehavior()

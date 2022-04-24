@@ -126,13 +126,14 @@ namespace AncientScepter
             ContentAddition.AddProjectile(irradiateProjectile);
             ContentAddition.AddProjectile(airstrikePrefab);
 
-            if (ModCompat.compatBetterUI)
-            {
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CallAirstrikeAlt"));
-                BetterUI.ProcCoefficientCatalog.AddToSkill(myDef.skillName, "Irradiate", 0);
-                BetterUI.ProcCoefficientCatalog.AddSkill(myCallDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CallAirstrikeAlt"));
-                BetterUI.ProcCoefficientCatalog.AddToSkill(myCallDef.skillName, "Irradiate", 0);
-            }
+        }
+
+        internal override void RunBetterUICompat()
+        {
+            ModCompat.BetterUI_AddSkill(myDef.skillName, ModCompat.BetterUI_GetProcCoefficientInfo("CallAirstrikeAlt"));
+            ModCompat.BetterUI_AddToSkill(myDef.skillName, "Irradiate", 0);
+            ModCompat.BetterUI_AddSkill(myCallDef.skillName, ModCompat.BetterUI_GetProcCoefficientInfo("CallAirstrikeAlt"));
+            ModCompat.BetterUI_AddToSkill(myCallDef.skillName, "Irradiate", 0);
         }
 
         internal override void LoadBehavior()
