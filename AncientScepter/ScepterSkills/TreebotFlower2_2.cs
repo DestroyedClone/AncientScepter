@@ -41,10 +41,15 @@ namespace AncientScepter
 
             if (ModCompat.compatBetterUI)
             {
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("TreebotBodyFireFlower2"));
+                doBetterUI();
             }
         }
 
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
+        internal void doBetterUI()
+        {
+                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("TreebotBodyFireFlower2"));
+        } 
         internal override void LoadBehavior()
         {
             On.EntityStates.Treebot.TreebotFlower.TreebotFlower2Projectile.RootPulse += On_TreebotFlower2RootPulse;

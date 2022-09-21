@@ -50,11 +50,17 @@ namespace AncientScepter
 
             if (ModCompat.compatBetterUI)
             {
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, "Sing", 0);
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, "Perish Song Activation", 0);
+                doBetterUI();
             }
 
         }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
+        internal void doBetterUI()
+        {
+                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, "Sing", 0);
+                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, "Perish Song Activation", 0);
+        } 
         public static float GetEstimatedDamageForPerishSong()
         {
             return 18 + 3.6f * TeamManager.instance.GetTeamLevel(TeamIndex.Player);

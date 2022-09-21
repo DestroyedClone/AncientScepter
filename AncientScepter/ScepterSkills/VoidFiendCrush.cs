@@ -75,13 +75,18 @@ namespace AncientScepter
 
             if (ModCompat.compatBetterUI)
             {
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CrushCorruption"));
-                BetterUI.ProcCoefficientCatalog.AddSkill(myCtxDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CrushHealth"));
+                doBetterUI();
             }
 
             targetBodyIndex = BodyCatalog.FindBodyIndex(targetBody);
         }
 
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
+        internal void doBetterUI()
+        {
+                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CrushCorruption"));
+                BetterUI.ProcCoefficientCatalog.AddSkill(myCtxDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CrushHealth"));
+        } 
         internal override void LoadBehavior()
         {
             HealthComponent.onCharacterHealServer += HealNearby;
