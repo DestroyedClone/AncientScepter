@@ -123,7 +123,7 @@ namespace AncientScepter
             {
                 c.Emit(OpCodes.Ldarg_0);
                 c.EmitDelegate<Func<BulletAttack, EntityStates.Mage.Weapon.Flamethrower, BulletAttack>>((origAttack, state) => {
-                    if (AncientScepterItem.instance.GetCount(state.outer.commonComponents.characterBody) < 1) return origAttack;
+                    if (state.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef != myDef) return origAttack;
                     origAttack.hitCallback = (BulletAttack self, ref BulletAttack.BulletHit h) => {
                         ProjectileManager.instance.FireProjectile(new FireProjectileInfo
                         {

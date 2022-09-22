@@ -226,7 +226,7 @@ namespace AncientScepter
         private void CallAirstrikeAlt_ModifyProjectile(On.EntityStates.Captain.Weapon.CallAirstrikeAlt.orig_ModifyProjectile orig, CallAirstrikeAlt self, ref FireProjectileInfo fireProjectileInfo)
         {
             orig(self, ref fireProjectileInfo);
-            bool isScepter = AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0;
+            bool isScepter = self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef == myDef;
             if (isScepter)
             {
                 fireProjectileInfo.projectilePrefab = airstrikePrefab;
@@ -245,7 +245,7 @@ namespace AncientScepter
         private void On_CallAirstrikeBaseEnter(On.EntityStates.Captain.Weapon.CallAirstrikeBase.orig_OnEnter orig, CallAirstrikeBase self)
         {
             orig(self);
-            bool isScepter = AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0
+            bool isScepter = self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef == myDef
                 && self is EntityStates.Captain.Weapon.CallAirstrikeAlt;
             if (isScepter)
             {
@@ -256,7 +256,7 @@ namespace AncientScepter
         private void On_SetupAirstrikeStateEnter(On.EntityStates.Captain.Weapon.SetupAirstrike.orig_OnEnter orig, EntityStates.Captain.Weapon.SetupAirstrike self) //exc
         {
             var origOverride = SetupAirstrike.primarySkillDef;
-            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef == myDef)
             {
                 SetupAirstrike.primarySkillDef = myCallDef;
             }

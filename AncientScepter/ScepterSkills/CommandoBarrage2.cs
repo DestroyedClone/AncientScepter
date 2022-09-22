@@ -71,7 +71,7 @@ namespace AncientScepter
 
         private void FireSweepBarrage_FixedUpdate(On.EntityStates.Commando.CommandoWeapon.FireSweepBarrage.orig_FixedUpdate orig, FireSweepBarrage self)
         {
-            if (AncientScepterItem.instance.GetCount(self.characterBody) > 0)
+            if (self.characterBody.skillLocator.GetSkill(targetSlot).skillDef == myDef)
             {
                 self.FixedUpdate();
                 self.fireTimer -= Time.fixedDeltaTime;
@@ -98,7 +98,7 @@ namespace AncientScepter
 
         private void FireSweepBarrage_Fire(On.EntityStates.Commando.CommandoWeapon.FireSweepBarrage.orig_Fire orig, FireSweepBarrage self)
         {
-            if (AncientScepterItem.instance.GetCount(self.characterBody) > 0)
+            if (self.characterBody.skillLocator.GetSkill(targetSlot).skillDef == myDef)
             {
                 if (self.totalBulletsFired < self.totalBulletsToFire)
                 {
@@ -178,7 +178,7 @@ namespace AncientScepter
         private void FireSweepBarrage_OnEnter(On.EntityStates.Commando.CommandoWeapon.FireSweepBarrage.orig_OnEnter orig, FireSweepBarrage self)
         {
             orig(self);
-            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef == myDef)
             {
                 if (self.targetHurtboxes.Count == 0)
                 {
@@ -200,7 +200,7 @@ namespace AncientScepter
         private void On_FireBarrage_Enter(On.EntityStates.Commando.CommandoWeapon.FireBarrage.orig_OnEnter orig, FireBarrage self)
         {
             orig(self);
-            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef == myDef)
             {
                 self.durationBetweenShots /= 2f;
                 self.bulletCount *= 2;
@@ -209,7 +209,7 @@ namespace AncientScepter
 
         private void On_FireBarrage_FireBullet(On.EntityStates.Commando.CommandoWeapon.FireBarrage.orig_FireBullet orig, FireBarrage self)
         {
-            bool hasScep = AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0;
+            bool hasScep = self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef == myDef;
             var origAmp = FireBarrage.recoilAmplitude;
             var origRadius = FireBarrage.bulletRadius;
             if (hasScep)

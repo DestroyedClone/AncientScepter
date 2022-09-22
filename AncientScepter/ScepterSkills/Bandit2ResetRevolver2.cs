@@ -57,7 +57,7 @@ namespace AncientScepter
         {
             orig(self);
             bool isScepter = self is EntityStates.Bandit2.Weapon.FireSidearmResetRevolver
-               && AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0;
+               && self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef == myDef;
             if (isScepter)
             {
                 Ray aimRay = self.GetAimRay();

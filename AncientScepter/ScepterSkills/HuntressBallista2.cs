@@ -82,7 +82,7 @@ namespace AncientScepter
         private void On_FireArrowSnipeFire(On.EntityStates.Huntress.Weapon.FireArrowSnipe.orig_FireBullet orig, FireArrowSnipe self, Ray aimRay)
         {
             orig(self, aimRay);
-            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) < 1) return;
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef != myDef) return;
 
             for (var i = 1; i < 6; i++)
             {
@@ -105,7 +105,7 @@ namespace AncientScepter
             orig(self);
             var sloc = self.outer.commonComponents.skillLocator;
             if (!sloc || !sloc.primary) return;
-            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef == myDef)
             {
                 sloc.primary.UnsetSkillOverride(self, AimArrowSnipe.primarySkillDef, GenericSkill.SkillOverridePriority.Contextual);
                 sloc.primary.SetSkillOverride(self, myCtxDef, GenericSkill.SkillOverridePriority.Contextual);
@@ -117,7 +117,7 @@ namespace AncientScepter
             orig(self);
             var sloc = self.outer.commonComponents.skillLocator;
             if (!sloc || !sloc.primary) return;
-            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef == myDef)
                 sloc.primary.UnsetSkillOverride(self, myCtxDef, GenericSkill.SkillOverridePriority.Contextual);
         }
     }

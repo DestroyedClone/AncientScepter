@@ -63,7 +63,7 @@ namespace AncientScepter
         {
             var origRadius = FlyUpState.blastAttackRadius;
             var origDamage = FlyUpState.blastAttackDamageCoefficient;
-            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef == myDef)
             {
                 FlyUpState.blastAttackRadius *= 4f;
                 FlyUpState.blastAttackDamageCoefficient *= 2f;
