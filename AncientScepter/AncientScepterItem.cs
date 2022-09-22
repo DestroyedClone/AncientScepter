@@ -427,7 +427,16 @@ namespace AncientScepter
                 localAngles = new Vector3(353.4687F, 184.4017F, 177.4758F),
                 localScale = new Vector3(0.2235F, 0.2235F, 0.2235F)
             });
-
+            
+            rules.Add("mdlNemmando", new ItemDisplayRule
+            {
+                childName = "Sword",
+                followerPrefab = displayPrefab,
+                localPos = new Vector3(-0.00005576489F, 0.001674413F, -0.00002617424F),
+                localAngles = new Vector3(1.114511F, 204.2958F, 177.8329F),
+                localScale = new Vector3(0.0026F, 0.0026F, 0.0026F)
+            });
+            
             rules.Add("mdlHeretic", new ItemDisplayRule
             {
                 childName = "ThighL",
