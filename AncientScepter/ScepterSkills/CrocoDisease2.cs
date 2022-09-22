@@ -81,7 +81,7 @@ namespace AncientScepter
         private void On_LightningOrbArrival(On.RoR2.Orbs.LightningOrb.orig_OnArrival orig, LightningOrb self)
         {
             orig(self);
-            if (self.lightningType != LightningOrb.LightningType.CrocoDisease || AncientScepterItem.instance.GetCount(self.attacker?.GetComponent<CharacterBody>()) < 1) return;
+            if (self.lightningType != LightningOrb.LightningType.CrocoDisease || self.attacker?.GetComponent<CharacterBody>().skillLocator.GetSkill(targetSlot).skillDef != myDef) return;
             if (!self.target || !self.target.healthComponent) return;
 
             var cpt = self.target.healthComponent.gameObject.GetComponentInChildren<DiseaseWard>()?.gameObject;

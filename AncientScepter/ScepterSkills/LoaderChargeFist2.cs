@@ -66,7 +66,7 @@ namespace AncientScepter
         {
             orig(self);
             if (!(self is SwingChargedFist)) return;
-            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) > 0)
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef == myDef)
             {
                 self.minPunchForce *= 7f;
                 self.maxPunchForce *= 7f;
@@ -78,7 +78,7 @@ namespace AncientScepter
 
         private void BaseSwingChargedFist_OnMeleeHitAuthority(On.EntityStates.Loader.BaseSwingChargedFist.orig_OnMeleeHitAuthority orig, BaseSwingChargedFist self)
         {
-            if (AncientScepterItem.instance.GetCount(self.outer.commonComponents.characterBody) < 1) return;
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef != myDef) return;
             var mTsf = self.outer.commonComponents.modelLocator?.modelTransform?.GetComponent<ChildLocator>()?.FindChild(self.swingEffectMuzzleString);
             EffectManager.SpawnEffect(Resources.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFXCommandoGrenade"),
                 new EffectData

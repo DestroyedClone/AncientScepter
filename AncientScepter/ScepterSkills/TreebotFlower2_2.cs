@@ -66,14 +66,14 @@ namespace AncientScepter
         {
             var owner = self.outer.GetComponent<ProjectileController>()?.owner;
             var origRadius = TreebotFlower2Projectile.radius;
-            if (AncientScepterItem.instance.GetCount(owner.GetComponent<CharacterBody>()) > 0) TreebotFlower2Projectile.radius *= 2f;
+            if (owner.GetComponent<CharacterBody>().skillLocator.GetSkill(targetSlot).skillDef == myDef) TreebotFlower2Projectile.radius *= 2f;
             orig(self);
             TreebotFlower2Projectile.radius = origRadius;
         }
 
         private void On_TreebotFlower2RootPulse(On.EntityStates.Treebot.TreebotFlower.TreebotFlower2Projectile.orig_RootPulse orig, TreebotFlower2Projectile self)
         {
-            var isBoosted = AncientScepterItem.instance.GetCount(self.owner?.GetComponent<CharacterBody>()) > 0;
+            var isBoosted = self.owner?.GetComponent<CharacterBody>().skillLocator.GetSkill(targetSlot).skillDef == myDef;
             var origRadius = TreebotFlower2Projectile.radius;
             if (isBoosted) TreebotFlower2Projectile.radius *= 2f;
             orig(self);
