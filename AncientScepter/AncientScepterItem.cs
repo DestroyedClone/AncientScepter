@@ -511,6 +511,7 @@ namespace AncientScepter
             On.RoR2.CharacterBody.OnInventoryChanged += On_CBOnInventoryChanged;
             On.RoR2.CharacterMaster.GetDeployableSameSlotLimit += On_CMGetDeployableSameSlotLimit;
             On.RoR2.GenericSkill.SetSkillOverride += On_GSSetSkillOverride;
+            RoR2.Run.onRunStartGlobal += On_RunStartGlobal;
 
             foreach (var skill in skills)
             {
@@ -583,11 +584,11 @@ namespace AncientScepter
             public SkillSlot slotIndex;
             public int variantIndex;
             public SkillDef replDef;
+            public SkillDef trgtDef;
         }
 
         private readonly List<ScepterReplacer> scepterReplacers = new List<ScepterReplacer>();
-        private readonly Dictionary<string, SkillSlot> scepterSlots = new Dictionary<string, SkillSlot>();
-
+        private readonly Dictionary<SkillSlot,SkillDef> heresyDefs = new Dictionary<SkillSlot,SkillDef>();
         public bool RegisterScepterSkill(SkillDef replacingDef, string targetBodyName, SkillSlot targetSlot, int targetVariant)
         {
             if (targetVariant < 0)
@@ -595,15 +596,41 @@ namespace AncientScepter
                 AncientScepterMain._logger.LogError("Can't register a scepter skill to negative variant index");
                 return false;
             }
-            ScepterReplacer firstMatch = scepterReplacers.FirstOrDefault(x => x.bodyName == targetBodyName && (x.slotIndex != targetSlot || x.variantIndex == targetVariant));
+            ScepterReplacer firstMatch = scepterReplacers.FirstOrDefault(x => x.bodyName == targetBodyName && (x.slotIndex == targetSlot && x.variantIndex == targetVariant));
             if (firstMatch != null)
             {
                 AncientScepterMain._logger.LogMessage($"Replacing scepter skill for \"{targetBodyName}\" ({firstMatch.replDef.skillName}) with ({replacingDef.skillName})");
                 scepterReplacers.Remove(firstMatch);
             }
             scepterReplacers.Add(new ScepterReplacer { bodyName = targetBodyName, slotIndex = targetSlot, variantIndex = targetVariant, replDef = replacingDef });
-            scepterSlots[targetBodyName] = targetSlot;
             return true;
+        }
+
+        public bool RegisterScepterSkill(SkillDef replacingDef, string targetBodyName, SkillDef targetDef)
+        {
+            ScepterReplacer firstMatch = scepterReplacers.FirstOrDefault(x => x.bodyName == targetBodyName && (x.trgtDef == targetDef));
+            if (firstMatch != null)
+            {
+                AncientScepterMain._logger.LogMessage($"Replacing scepter skill for \"{targetBodyName}\" ({firstMatch.replDef.skillName}) with ({replacingDef.skillName})");
+                scepterReplacers.Remove(firstMatch);
+            }
+            scepterReplacers.Add(new ScepterReplacer { bodyName = targetBodyName, slotIndex = SkillSlot.None, variantIndex = -1, replDef = replacingDef,trgtDef = targetDef });
+            return true;
+        }
+
+        private void On_RunStartGlobal(Run run){
+            heresyDefs.Add(SkillSlot.Primary,CharacterBody.CommonAssets.lunarPrimaryReplacementSkillDef);
+            heresyDefs.Add(SkillSlot.Secondary,CharacterBody.CommonAssets.lunarSecondaryReplacementSkillDef);
+            heresyDefs.Add(SkillSlot.Utility,CharacterBody.CommonAssets.lunarUtilityReplacementSkillDef);
+            heresyDefs.Add(SkillSlot.Special,CharacterBody.CommonAssets.lunarSpecialReplacementSkillDef);
+            foreach(ScepterReplacer repdef in scepterReplacers.Where(x => x.trgtDef == null)){
+                var prefab = BodyCatalog.FindBodyPrefab(repdef.bodyName);
+                var locator = prefab.GetComponent<SkillLocator>();
+                if(locator && repdef.slotIndex != SkillSlot.None && repdef.variantIndex >= 0){
+                  repdef.trgtDef = locator.GetSkill(repdef.slotIndex).skillFamily.variants[repdef.variantIndex].skillDef;
+                }
+            }
+            Run.onRunStartGlobal -= On_RunStartGlobal;
         }
 
         private bool handlingInventory = false;
@@ -691,19 +718,22 @@ namespace AncientScepter
                 var repl = scepterReplacers.FindAll(x => x.bodyName == bodyName);
                 if (repl.Count > 0)
                 {
-                    SkillSlot targetSlot = scepterSlots[bodyName];
-                    if (targetSlot == SkillSlot.Utility && stridesInteractionMode == StridesInteractionMode.ScepterRerolls && hasHeresyForSlot(targetSlot)) return false;
-                    var targetSkill = self.skillLocator.GetSkill(targetSlot);
+                    var curSkills = self.skillLocator.allSkills.Select((skill) => skill.baseSkill);
+                    curSkills = curSkills.Concat(self.skillLocator.allSkills.Select((skill) => skill.skillDef)).Distinct();
+                    ScepterReplacer replVar = repl.Find((x) => curSkills.Contains(x.trgtDef));
+                    if(replVar == null) return false;
+                    GenericSkill targetSkill = self.skillLocator.FindSkillByDef(replVar.trgtDef);
+                    if(!targetSkill){
+                      targetSkill = System.Array.Find(self.skillLocator.allSkills,(s) => s.baseSkill == replVar.trgtDef);
+                    }
+                    SkillSlot targetSlot = (replVar.slotIndex == SkillSlot.None)? self.skillLocator.FindSkillSlot(targetSkill) : replVar.slotIndex;
                     if (!targetSkill) return false;
-                    var targetSlotIndex = self.skillLocator.GetSkillSlotIndex(targetSkill);
-                    var targetVariant = self.master.loadout.bodyLoadoutManager.GetSkillVariant(self.bodyIndex, targetSlotIndex);
-                    var replVar = repl.Find(x => x.variantIndex == targetVariant);
-                    if (replVar == null) return false;
+                    if (stridesInteractionMode == StridesInteractionMode.ScepterRerolls && hasHeresyForSlot(targetSlot) && replVar.trgtDef != heresyDefs[targetSlot]) return false;
                     if (!forceOff && GetCount(self) > 0)
                     {
                         if (stridesInteractionMode == StridesInteractionMode.ScepterTakesPrecedence && hasHeresyForSlot(targetSlot))
                         {
-                            self.skillLocator.utility.UnsetSkillOverride(self, CharacterBody.CommonAssets.lunarUtilityReplacementSkillDef, GenericSkill.SkillOverridePriority.Replacement);
+                            self.skillLocator.GetSkill(targetSlot).UnsetSkillOverride(self, heresyDefs[targetSlot], GenericSkill.SkillOverridePriority.Replacement);
                         }
                         targetSkill.SetSkillOverride(self, replVar.replDef, GenericSkill.SkillOverridePriority.Upgrade);
                     }
@@ -712,7 +742,7 @@ namespace AncientScepter
                         targetSkill.UnsetSkillOverride(self, replVar.replDef, GenericSkill.SkillOverridePriority.Upgrade);
                         if (stridesInteractionMode == StridesInteractionMode.ScepterTakesPrecedence && hasHeresyForSlot(targetSlot))
                         {
-                            self.skillLocator.utility.SetSkillOverride(self, CharacterBody.CommonAssets.lunarUtilityReplacementSkillDef, GenericSkill.SkillOverridePriority.Replacement);
+                            self.skillLocator.GetSkill(targetSlot).SetSkillOverride(self, heresyDefs[targetSlot], GenericSkill.SkillOverridePriority.Replacement);
                         }
                     }
 
