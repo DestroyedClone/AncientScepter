@@ -73,7 +73,7 @@ namespace AncientScepter
         {
             if (!NetworkServer.active) return;
             if (!damageReport.victimBody) return;
-            if (damageReport.attackerBody && damageReport.attackerBody.skillLocator.GetSkill(targetSlot).skillDef == myDef)
+            if (damageReport.attackerBody && damageReport.attackerBody.skillLocator.GetSkill(targetSlot)?.skillDef == myDef)
             {
                 var victimBody = damageReport.victimBody;
                 GameObject gameObject = damageReport.victim.gameObject;
