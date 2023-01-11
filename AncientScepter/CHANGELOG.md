@@ -1,5 +1,6 @@
 ﻿## Changelog
-`1.1.1`
+`1.1.2`
+- Updated to latest libraries
 - Added IDR to Nemesis Commando¹
 - Make registration of scepter skills slot agnostic²
 - Adds an overload for RegisterScepterSkill that takes²
@@ -10,6 +11,9 @@
 - Fixed scepter affecting skills that inherit from their targeted skillstate²
 	- moved the responsibility of executing scepter skills from possesion of the item to possession of the skilldef.
 - Thanks to Zenithrium¹ and RandomlyAwesome² for changes
+
+`1.1.1`
+- 🛠️fixed BetterUI compat having issues when BetterUI isn't installed
 
 `1.1.0`
 - 🛠️Updated for SOTV
