@@ -1,24 +1,12 @@
-﻿using Mono.Cecil.Cil;
-using MonoMod.Cil;
-using R2API;
+﻿using R2API;
 using RoR2;
-using RoR2.Projectile;
 using RoR2.Skills;
-using System;
-using UnityEngine;
-using static AncientScepter.SkillUtil;
-using System;
-using System.Collections.ObjectModel;
-using System.Runtime.InteropServices;
-using UnityEngine;
-using UnityEngine.Networking;
-using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
+using System.Collections.ObjectModel;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.Networking;
 using UnityEngine.AddressableAssets;
+using UnityEngine.Networking;
+using static AncientScepter.SkillUtil;
 
 namespace AncientScepter
 {
@@ -84,9 +72,10 @@ namespace AncientScepter
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
         internal void doBetterUI()
         {
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CrushCorruption"));
-                BetterUI.ProcCoefficientCatalog.AddSkill(myCtxDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CrushHealth"));
-        } 
+            BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CrushCorruption"));
+            BetterUI.ProcCoefficientCatalog.AddSkill(myCtxDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CrushHealth"));
+        }
+
         internal override void LoadBehavior()
         {
             HealthComponent.onCharacterHealServer += HealNearby;
@@ -94,7 +83,6 @@ namespace AncientScepter
             On.EntityStates.VoidSurvivor.CorruptMode.CorruptMode.OnEnter += CorruptMode_OnEnter;
             On.EntityStates.VoidSurvivor.CorruptMode.CorruptMode.OnExit += CorruptMode_OnExit;
         }
-
 
         private void CorruptMode_OnExit(On.EntityStates.VoidSurvivor.CorruptMode.CorruptMode.orig_OnExit orig, EntityStates.VoidSurvivor.CorruptMode.CorruptMode self)
         {

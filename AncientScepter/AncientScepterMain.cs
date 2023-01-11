@@ -22,7 +22,7 @@ namespace AncientScepter
     [BepInPlugin(ModGuid, ModName, ModVer)]
     [BepInDependency(R2API.R2API.PluginGUID, R2API.R2API.PluginVersion)]
     [BepInDependency("com.xoxfaby.BetterUI", BepInDependency.DependencyFlags.SoftDependency)]
-    [R2APISubmoduleDependency(nameof(ItemAPI), nameof(ContentAddition), nameof(LanguageAPI), nameof(LoadoutAPI), nameof(DamageAPI), nameof(PrefabAPI))]
+
     //[BepInDependency(TILER2.TILER2Plugin.ModGuid, BepInDependency.DependencyFlags.SoftDependency)]
     public class AncientScepterMain : BaseUnityPlugin
     {
