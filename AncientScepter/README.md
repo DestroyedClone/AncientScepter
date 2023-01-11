@@ -1,15 +1,15 @@
-﻿## Standalone Ancient Scepter
+﻿
+## Standalone Ancient Scepter
 
-[![github issues/request link](https://raw.githubusercontent.com/DestroyedClone/PoseHelper/master/PoseHelper/github_link.webp)](https://github.com/DestroyedClone/PoseHelper/issues) [![discord invite](https://raw.githubusercontent.com/DestroyedClone/PoseHelper/master/PoseHelper/discord_link.webp)](https://discord.gg/DpHu3qXMHK)
 [![github issues/request link](https://raw.githubusercontent.com/DestroyedClone/PoseHelper/master/PoseHelper/github_link.webp)](https://github.com/DestroyedClone/AncientScepter/issues) [![discord invite](https://raw.githubusercontent.com/DestroyedClone/PoseHelper/master/PoseHelper/discord_link.webp)](https://discord.gg/DpHu3qXMHK)
 
 - Adds the Ancient Scepter from Risk of Rain 1 as a standalone mod
 - Code is almost entirely by ThinkInvisible, this is merely a port of that, without the TILER2 dependency and with a custom model
 
-[![](https://media.discordapp.net/attachments/849798075001864214/893641536443674634/unknown.png?width=1144&height=591)
+[![](https://raw.githubusercontent.com/DestroyedClone/AncientScepter/master/AncientScepter/readme/logbookpage.webp)
 ]()
 
-| ![](https://cdn.discordapp.com/attachments/755273690131988522/814607241532407818/unknown.png) | ![](https://media.discordapp.net/attachments/849798075001864214/889274013493387284/Scepter.png) |
+| ![](https://raw.githubusercontent.com/DestroyedClone/AncientScepter/master/AncientScepter/readme/croco.webp) | ![](https://raw.githubusercontent.com/DestroyedClone/AncientScepter/master/AncientScepter/readme/logbookicon.webp) |
 |--|--|
 
 ## Upgrades
@@ -41,6 +41,10 @@
     - Alloy Vulture: Windblade > Repeated Windblade (50% chance to fire twice)
     - Aurelionite: Eye Laser > Piercing Eye Laser (Additional 35% of damage dealt pierces walls)
 
+## Implemented ModCompat
+This refers to compatibility that's included just with this mod, and will not be an exhaustive list of every mod that implements this.
+- BetterUI [⚡](https://thunderstore.io/package/XoXFaby/BetterUI/)
+
 ## To-Do/Issues
 * Mithrix Scepter
 * CaptainBustedAirstrike support:
@@ -56,89 +60,15 @@
 - All icons for Scepter Skills in this mod are now publicly accessible. See the static class `Assets.SpriteAssets`.
 
 ## Credits
-* **ThinkInvisible** - Original code and implementation
-* **DestroyedClone** - Porter, Maintainer
+* **ThinkInvisible** [⚡](https://thunderstore.io/package/ThinkInvis/)[🐙](https://github.com/ThinkInvis) - Original code and implementation
+* **DestroyedClone** [⚡](https://thunderstore.io/package/DestroyedClone/)[🐙](https://github.com/DestroyedClone) - Porter, Maintainer
 * **rob** - Fixed code
 * **bruh** and **redacted** - Made the Scepter model
-* **swuff** - Updated Textures, Consultation
-* **QandQuestion** - Lore
-* **Moffein** - Consultation
-* **Mico27** - Orb creation help
-* **TheTimeSweeper** - UnusedMode, Alternate Item Model, Item Displays, Other help
-* **/vm/** - Idea for Captain's Lilith Strike
-
-
-## Changelog
-`1.1.0`
-- 🛠️Updated for SOTV
-	- Flamethrower: Copied updated IL code from ClassicItems
-- ➕New Config:
-	- "Remove Classic Items' Ancient Scepter From Droplist": Enabled by default.
-- ➕Added Item Displays for Heretic, Railgunner, and Void FIend
-- ➕New Scepters (WIP)
-	- Railgunner:
-		- Supercharge -> Hypercharge: Permanently removes 10 armor, +0.5 proc coeff
-		- Cryocharge -> Permafrosted Cryocharge: Slows on hit, ice explosion
-	- Void Fiend
-		- Crush -> Reclaimed Crush: Heals nearby allies within 25m
-		- Corrupted Crush -> Reclaimed Crush (Corrupted): Damages nearby enemies within 25m. +2 stocks
-- BetterUI Compat
-- 🛠️Captain: PHN-8300 'Lilith' Strike
-	- Reduced blight duration (30s -> 20s) and stacks (10 -> 5)
-
-`1.0.9`
-- ➕Added new config setting: UnusedMode
-	-   Keep: Non-sceptered characters keep scepter when picked up
-	-   Reroll: Characters reroll according to the Reroll on pickup config
-	-   Metamorphosis: characters without scepter upgrades will not reroll if metamorphosis is active  
-		- Allowing you to play metamorphosis runs with sceptered characters
-- ➕Added alternate model
-- 🛠️Fixed the weird itemdef.modelpickupprefab warning thing
-- ➕Added item displays to [Enforcer and Nemforcer](https://thunderstore.io/package/EnforcerGang/Enforcer/)
-
-`1.0.8`
-- 🛠️Fixed Captain's Diablo Scepter Skill still inflicting Blight on allies when Captain Nuke Friendly Fire is disabled.
-- 🛠️Recategorized the config. Requires refreshing your config.
-
-`1.0.7`
-- 🛠️Temporarily replaced the texture used for the glow on the Ancient Scepter to the purple fire texture used by the Ancient Wisp, while waiting on the next material fix.
-
-`1.0.6`
-- 🛠️Config setting `StridesTakesPrecedence` changed to `HeresyTakesPrecedence` in accordance of RoR2 possessing more than one Heresy item
-- ➕Added configuration setting to blacklist AncientScepter from turrets, incorrectly causing the turrets to receive a reroll due to having no skill coded. (Disabled by default to maintain original behavior)
-- 🛠️Fixed Unity Error complaining about trying to register it to network despite missing a networkidentity
-- ➕Added configuration setting to Captain's Nuke skill whether or not it blights allies (Disabled by default)
-- 🛠️(For Devs) Adding a ScepterReplacer to a character that already has an existing ScepterReplacer for that slot and variant will replace it, instead of throwing an error.
-	- This change allows developers that modify or outright change existing skills to have their own Scepter skill for existing characters.
-- 🛠️(For Devs) All icons for Scepter Skills in this mod are now publicly accessible. See the static class `Assets.SpriteAssets`.
-
-`1.0.5`
- - 🛠️Restored the property accessor on the ItemDef of the ItemBase, which was preventing other mods from accessing the item properly.
-
-`1.0.4`
-- ❌Blacklisted from being copied by TinkersSatchel's "Mostly-Tame Mimic" to prevent accidental rerolls.
-- 🛠️Merged config option to reroll duplicates into: Disabled, Random, and Scrap.
-	- Scrap option allows extra to reroll into red scrap.
-- 🛠️Increased radius of Commando's "Death Blossom".
-	- Holding down primary fire while using the skill switches back to the vanilla aim radius.
-- 🛠️Added option to Mercernary's "Massacre", allowing the user to exit early to prevent softlocks; especially with with SkillsPlusPlus.
-	- Hold down your special ability to exit early.
-- ➕Added missing scepter skills for Captain's "Diablo Strike", Bandit's "Lights Out" and "Desperado", and Heretic's "Nevermore".
-- ➕Added new skills for Aurelionite's Laser, and Alloy Vulture's Windblade. 
-- ➕Updated Assets and Lore
-- ➕Updated Readme
-- 🛠️Updated internal names to be more independent of ClassicItems
-
-`1.0.3`
-- 🛠️Made ItemDef public so other mods can access it for their display rules
-
-`1.0.2`
-- 🛠️Fixed for latest RoR2 version
-
-`1.0.1`
-- 🛠️Fixed REX's upgrade not applying debuffs
-- 🛠️Fixed Captain's upgrade not having a skill icon
-- ➕Added item display for Bandit
-
-`1.0.0`
-- Initial release
+* **swuff** [🐙](https://github.com/swuff-star) - Updated Textures, Consultation
+* **QandQuestion**  - Lore
+* **Moffein** [⚡](https://thunderstore.io/package/Moffein/)[🐙](https://github.com/Moffein) - Consultation
+* **Mico27** [⚡](https://thunderstore.io/package/Mico27/)[🐙](https://github.com/Mico27/) - Orb creation help
+* **TheTimeSweeper** [⚡](https://thunderstore.io/package/TheTimesweeper/)[🐙](https://github.com/TheTimeSweeper) - UnusedMode, Alternate Item Model, Item Displays, Other help
+* **/vm/** ⚡🐙 - Idea for Captain's Lilith Strike
+* **Zenithrium** [⚡](https://thunderstore.io/package/Zenithrium/)[🐙](https://github.com/Zenithrium/) - Nemmando IDR
+* **RandomlyAwesome** [⚡](https://thunderstore.io/package/RandomlyAwesome/)[🐙](https://github.com/yekoc) - BetterUI Compat Fix, Various Scepter Skill fixes

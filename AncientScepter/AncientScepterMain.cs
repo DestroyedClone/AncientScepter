@@ -26,7 +26,7 @@ namespace AncientScepter
     //[BepInDependency(TILER2.TILER2Plugin.ModGuid, BepInDependency.DependencyFlags.SoftDependency)]
     public class AncientScepterMain : BaseUnityPlugin
     {
-        public const string ModVer = "1.1.0";
+        public const string ModVer = "1.1.1";
         public const string ModName = "StandaloneAncientScepter";
         public const string ModGuid = "com.DestroyedClone.AncientScepter";
 
