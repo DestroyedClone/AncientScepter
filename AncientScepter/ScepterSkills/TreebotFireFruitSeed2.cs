@@ -85,7 +85,7 @@ namespace AncientScepter
                         origin = gameObject.transform.position,
                         rotation = UnityEngine.Random.rotation
                     }, true);
-                    int num2 = Mathf.Min(Math.Max(1, (int)(victimBody.bestFitRadius * 2f)), 12);
+                    int num2 = Mathf.Min(Math.Max(2, (int)(victimBody.bestFitRadius * 2f)), 10);
                     for (int j = 0; j < num2; j++)
                     {
                         GameObject gameObject4 = UnityEngine.Object.Instantiate<GameObject>(ScepterTreebotFruitPackPrefab, gameObject.transform.position + UnityEngine.Random.insideUnitSphere * victimBody.radius * 0.5f, UnityEngine.Random.rotation);
