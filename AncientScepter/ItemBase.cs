@@ -95,21 +95,23 @@ namespace AncientScepter
             //ItemDef.tier = Tier;
             ItemDef.deprecatedTier = Tier;
             if (ItemTags.Length > 0) { ItemDef.tags = ItemTags; }
-            /*
+
+            
             if (TILER2_MimicBlacklisted)
             {
-                if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey(TILER2.TILER2Plugin.ModGuid))
+                if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.ThinkInvisible.TILER2"))
                 {
                     TILER2_BlacklistItem(ItemDef);
                 }
-            }*/
+            }
+
             ItemAPI.Add(new CustomItem(ItemDef, CreateDisplayRules()));
         }
 
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         public static void TILER2_BlacklistItem(ItemDef itemDef)
         {
-            //TILER2.FakeInventory.blacklist.Add(itemDef);
+            TILER2.FakeInventory.blacklist.Add(itemDef);
         }
 
         public virtual void Hooks()
