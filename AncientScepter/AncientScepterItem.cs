@@ -45,6 +45,7 @@ namespace AncientScepter
         public static StridesInteractionMode stridesInteractionMode;
         public static bool altModel;
         public static bool removeClassicItemsScepterFromPool;
+        public static bool enableSOTVTransforms;
 
         // Artificer
         public static bool artiFlamePerformanceMode;
@@ -260,6 +261,12 @@ namespace AncientScepter
             {
                 Run.onRunStartGlobal += RemoveClassicItemsScepter;
             }
+
+            enableSOTVTransforms =
+                config.Bind(configCategory,
+                "Transformation Notification",
+                true,
+                "If true, then when scepters are re-rolled, then it will be accompanied by a transformation notification like other items.").Value;
         }
 
 
@@ -690,7 +697,11 @@ namespace AncientScepter
                     for (var i = 0; i < count; i++)
                     {
                         self.inventory.RemoveItem(ItemDef, 1);
-                        self.inventory.GiveItem(PickupCatalog.GetPickupDef(list[UnityEngine.Random.Range(0, list.Count)]).itemIndex);
+                        var newItem = PickupCatalog.GetPickupDef(list[UnityEngine.Random.Range(0, list.Count)]).itemIndex;
+                        self.inventory.GiveItem(newItem);
+
+                        if (enableSOTVTransforms)
+                            CharacterMasterNotificationQueue.SendTransformNotification(self.master, ItemDef.itemIndex, newItem, CharacterMasterNotificationQueue.TransformationType.Default);
                     }
                     break;
                 case RerollMode.Scrap:
@@ -698,6 +709,9 @@ namespace AncientScepter
                     {
                         self.inventory.RemoveItem(ItemDef, 1);
                         self.inventory.GiveItem(RoR2Content.Items.ScrapRed);
+
+                        if (enableSOTVTransforms)
+                            CharacterMasterNotificationQueue.SendTransformNotification(self.master, ItemDef.itemIndex, RoR2Content.Items.ScrapRed.itemIndex, CharacterMasterNotificationQueue.TransformationType.Default);
                     }
                     break;
             }

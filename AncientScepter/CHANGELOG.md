@@ -1,16 +1,17 @@
 ﻿## Changelog
 `1.1.2`
 - Updated to latest libraries
-- Added IDR to Nemesis Commando¹
-- Make registration of scepter skills slot agnostic²
+- ➕Added IDR to Nemesis Commando¹
+- 🛠️Make registration of scepter skills slot agnostic²
 - Adds an overload for RegisterScepterSkill that takes²
 (replacementdef,bodyname,targetdef)
-- BetterUI Compat Fixed²
+- 🛠️BetterUI Compat Fixed²
 	- Now loads properly if BetterUI is not installed
 	- Fixed BetterUI Mobile Turret compat
-- Fixed scepter affecting skills that inherit from their targeted skillstate²
-	- moved the responsibility of executing scepter skills from possesion of the item to possession of the skilldef.
-- Thanks to Zenithrium¹ and RandomlyAwesome² for changes
+- 🛠️Fixed scepter affecting skills that inherit from their targeted skillstate²
+	- moved the responsibility of executing scepter skills from possession of the item to possession of the skilldef.
+- 😎Thanks to Zenithrium¹ and RandomlyAwesome² for changes
+- ➕Added config setting to show transformation notification on reroll
 
 `1.1.1`
 - 🛠️fixed BetterUI compat having issues when BetterUI isn't installed
