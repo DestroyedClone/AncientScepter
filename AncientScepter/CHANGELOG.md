@@ -12,6 +12,8 @@
 	- moved the responsibility of executing scepter skills from possession of the item to possession of the skilldef.
 - 😎Thanks to Zenithrium¹ and RandomlyAwesome² for changes
 - ➕Added config setting to show transformation notification on reroll
+- 🛠️Fixed Tinker's Satchel Mostly Tame Mimic from duplicating the item, causing a reroll if reroll was enabled.
+- 🛠️"COMMAND: Reap": Increased number of buff fruits from 1-8 to 2-10
 
 `1.1.1`
 - 🛠️fixed BetterUI compat having issues when BetterUI isn't installed

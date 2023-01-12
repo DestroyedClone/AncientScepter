@@ -1,4 +1,5 @@
 ﻿
+
 ## Standalone Ancient Scepter
 
 [![github issues/request link](https://raw.githubusercontent.com/DestroyedClone/PoseHelper/master/PoseHelper/github_link.webp)](https://github.com/DestroyedClone/AncientScepter/issues) [![discord invite](https://raw.githubusercontent.com/DestroyedClone/PoseHelper/master/PoseHelper/discord_link.webp)](https://discord.gg/DpHu3qXMHK)
@@ -49,10 +50,9 @@ This refers to compatibility that's included just with this mod, and will not be
 * Mithrix Scepter
 * CaptainBustedAirstrike support:
 	* Currently it uses the reduced cooldown from the standard alt airstrike.
-* Alternate Replacement for Diablo Strike
 * Further improvements to scepters(?)
-* Railgunner, Void Fiend
 * Fix Void Fiend's Scepter desyncing overrides if the Scepter is lost in corrupt mode
+* Transformation Notification shows before the pickup notification for the subsequent Scepter
 
 ## For Devs
 - Adding a ScepterReplacer to a character that already has an existing ScepterReplacer for that slot and variant will replace it.
