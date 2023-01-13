@@ -20,7 +20,7 @@ namespace AncientScepter
         public override string overrideStr => "\n<color=#d299ff>SCEPTER: Deals 5000% fatal damage to you and nearby enemies after a short time.</color>";
 
         public override string targetBody => "HereticBody";
-        public override SkillSlot targetSlot => SkillSlot.Special;
+        public override SkillSlot targetSlot => SkillSlot.None;
         public override int targetVariantIndex => 0;
 
 

@@ -498,7 +498,6 @@ namespace AncientScepter
             skills.Add(new CrocoDisease2());
             skills.Add(new EngiTurret2());
             skills.Add(new EngiWalker2());
-            skills.Add(new HereticNevermore2());
             skills.Add(new HuntressBallista2());
             skills.Add(new HuntressRain2());
             skills.Add(new LoaderChargeFist2());
@@ -533,11 +532,14 @@ namespace AncientScepter
                 skill.SetupAttributes();
                 RegisterScepterSkill(skill.myDef, skill.targetBody, skill.targetSlot, skill.targetVariantIndex);
             }
+            var Nevermore = new HereticNevermore2();
+            Nevermore.SetupAttributes();
+            RegisterScepterSkill( Nevermore.myDef,Nevermore.targetBody,UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<SkillDef>("RoR2/Base/Heretic/HereticDefaultAbility.asset").WaitForCompletion());
         }
 
         public void Install()
         {
-            On.RoR2.CharacterBody.OnInventoryChanged += On_CBOnInventoryChanged;
+            CharacterBody.onBodyInventoryChangedGlobal += On_CBInventoryChangedGlobal;
             On.RoR2.CharacterMaster.GetDeployableSameSlotLimit += On_CMGetDeployableSameSlotLimit;
             On.RoR2.GenericSkill.SetSkillOverride += On_GSSetSkillOverride;
             RoR2.Run.onRunStartGlobal += On_RunStartGlobal;
@@ -573,11 +575,10 @@ namespace AncientScepter
         {
             bool skillDefIsNotHeresy()
             {
-                var skillIndex = skillDef.skillIndex;
-                return (skillIndex != CharacterBody.CommonAssets.lunarPrimaryReplacementSkillDef.skillIndex
-                    || skillIndex != CharacterBody.CommonAssets.lunarSecondaryReplacementSkillDef.skillIndex
-                    || skillIndex != CharacterBody.CommonAssets.lunarUtilityReplacementSkillDef.skillIndex
-                    || skillIndex != CharacterBody.CommonAssets.lunarSpecialReplacementSkillDef.skillIndex);
+                return (skillDef != CharacterBody.CommonAssets.lunarPrimaryReplacementSkillDef
+                    || skillDef != CharacterBody.CommonAssets.lunarSecondaryReplacementSkillDef
+                    || skillDef != CharacterBody.CommonAssets.lunarUtilityReplacementSkillDef
+                    || skillDef != CharacterBody.CommonAssets.lunarSpecialReplacementSkillDef);
             }
 
             if (stridesInteractionMode != StridesInteractionMode.ScepterTakesPrecedence
@@ -664,24 +665,22 @@ namespace AncientScepter
 
         private bool handlingInventory = false;
 
-        private void On_CBOnInventoryChanged(On.RoR2.CharacterBody.orig_OnInventoryChanged orig, CharacterBody self)
-        {
-            orig(self);
-            if (handlingInventory) return;
+        private void On_CBInventoryChangedGlobal(CharacterBody body){
+          if(!handlingInventory){
             handlingInventory = true;
-
-            if (!HandleScepterSkill(self) && RerollUnused())
+            if (!HandleScepterSkill(body) && RerollUnused())
             {
-                if (GetCount(self) > 0)
+                if (GetCount(body) > 0)
                 {
-                    Reroll(self, GetCount(self));
+                    Reroll(body, GetCount(body));
                 }
             }
-            else if (GetCount(self) > 1 && rerollMode != RerollMode.Disabled)
+            else if (GetCount(body) > 1 && rerollMode != RerollMode.Disabled)
             {
-                Reroll(self, GetCount(self) - 1);
-            }
+                Reroll(body, GetCount(body) - 1);
+            } 
             handlingInventory = false;
+          }
         }
 
         private bool RerollUnused()
@@ -754,17 +753,27 @@ namespace AncientScepter
                 var repl = scepterReplacers.FindAll(x => x.bodyName == bodyName);
                 if (repl.Count > 0)
                 {
-                    var curSkills = self.skillLocator.allSkills.Select((skill) => skill.baseSkill);
-                    curSkills = curSkills.Concat(self.skillLocator.allSkills.Select((skill) => skill.skillDef)).Distinct();
-                    ScepterReplacer replVar = repl.Find((x) => curSkills.Contains(x.trgtDef));
-                    if(replVar == null) return false;
-                    GenericSkill targetSkill = self.skillLocator.FindSkillByDef(replVar.trgtDef);
-                    if(!targetSkill){
-                      targetSkill = System.Array.Find(self.skillLocator.allSkills,(s) => s.baseSkill == replVar.trgtDef);
+                    if(repl.Select(x => x.replDef).Intersect(self.skillLocator.allSkills.Select(x => x.skillDef)).Any() && GetCount(self) > 0){return true;}
+                    GenericSkill targetSkill = null;
+                    SkillSlot targetSlot = SkillSlot.None;
+                    ScepterReplacer replVar = null;
+                    bool heresyExists = false;
+                    foreach(var replacement in repl){
+                      foreach(var skill in self.skillLocator.allSkills.Reverse().ToList().FindAll((s) => s.skillDef == replacement.trgtDef || s.baseSkill == replacement.trgtDef)){
+                          targetSkill = skill;
+                          targetSlot = (replacement.slotIndex == SkillSlot.None)? self.skillLocator.FindSkillSlot(targetSkill) : replacement.slotIndex;
+                          if((stridesInteractionMode != StridesInteractionMode.ScepterTakesPrecedence || bodyName == "HereticBody" ) && hasHeresyForSlot(targetSlot) && replacement.trgtDef != heresyDefs[targetSlot]){
+                            heresyExists = true;
+                            continue;
+                          }
+                          replVar = replacement;
+                          break;
+                      }
+                      if(replVar != null){
+                        break;
+                      }
                     }
-                    SkillSlot targetSlot = (replVar.slotIndex == SkillSlot.None)? self.skillLocator.FindSkillSlot(targetSkill) : replVar.slotIndex;
-                    if (!targetSkill) return false;
-                    if (stridesInteractionMode == StridesInteractionMode.ScepterRerolls && hasHeresyForSlot(targetSlot) && replVar.trgtDef != heresyDefs[targetSlot]) return false;
+                    if (replVar == null){ return !(stridesInteractionMode == StridesInteractionMode.ScepterRerolls && heresyExists);}
                     if (!forceOff && GetCount(self) > 0)
                     {
                         if (stridesInteractionMode == StridesInteractionMode.ScepterTakesPrecedence && hasHeresyForSlot(targetSlot))
