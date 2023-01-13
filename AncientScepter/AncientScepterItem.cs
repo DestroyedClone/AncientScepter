@@ -81,7 +81,11 @@ namespace AncientScepter
 
         // Void Fiend
 
-        //TODO: test w/ stage changes
+        //TODO: test w/ stage changes ?
+
+        //Mithrix
+        //public static bool mithrixEnableScepter;
+
         public enum StridesInteractionMode
         {
             HeresyTakesPrecedence, ScepterTakesPrecedence, ScepterRerolls
@@ -236,6 +240,11 @@ namespace AncientScepter
                             "Enable skills for monsters", 
                             true, 
                             "If true, certain monsters get the effects of the Ancient Scepter.").Value;
+            /*mithrixEnableScepter =
+                config.Bind(configCategory,
+                            "Enable Mithrix Lines",
+                            true,
+                            "If true, Mithrix will have additional dialogue when acquiring the Ancient Scepter. Only applies on Commencement. Requires Enable skills for monsters to be enabled.").Value;*/
             //enableBrotherEffects = config.Bind(configCategory, "Enable Mithrix Lines", true, "If true, Mithrix will have additional dialogue when acquiring the Ancient Scepter.").Value;
             //enableCommandoAutoaim = config.Bind(configCategory, "Enable Commando Autoaim", true, "This may break compatibiltiy with skills.").Value;
             altModel =
@@ -510,6 +519,10 @@ namespace AncientScepter
             {
                 skills.Add(new AurelioniteEyeLaser2());
                 skills.Add(new VultureWindblade2());
+                /*if (mithrixEnableScepter)
+                {
+                    skills.Add(new BrotherFistSlam2());
+                }*/
             }
         }
 
