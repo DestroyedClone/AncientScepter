@@ -3,8 +3,7 @@
 - Updated to latest libraries
 - ➕Added IDR to Nemesis Commando¹
 - 🛠️Make registration of scepter skills slot agnostic²
-- Adds an overload for RegisterScepterSkill that takes²
-(replacementdef,bodyname,targetdef)
+- Adds an overload for RegisterScepterSkill that takes (replacementdef,bodyname,targetdef)²
 - 🛠️BetterUI Compat Fixed²
 	- Now loads properly if BetterUI is not installed
 	- Fixed BetterUI Mobile Turret compat
