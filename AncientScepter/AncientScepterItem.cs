@@ -632,6 +632,7 @@ namespace AncientScepter
                 AncientScepterMain._logger.LogMessage($"Replacing scepter skill for \"{targetBodyName}\" ({firstMatch.replDef.skillName}) with ({replacingDef.skillName})");
                 scepterReplacers.Remove(firstMatch);
             }
+            AncientScepterMain._logger.LogMessage($"Adding scepter skill for \"{targetBodyName}\" ({replacingDef.skillName})");
             scepterReplacers.Add(new ScepterReplacer { bodyName = targetBodyName, slotIndex = targetSlot, variantIndex = targetVariant, replDef = replacingDef });
             return true;
         }
@@ -644,6 +645,7 @@ namespace AncientScepter
                 AncientScepterMain._logger.LogMessage($"Replacing scepter skill for \"{targetBodyName}\" ({firstMatch.replDef.skillName}) with ({replacingDef.skillName})");
                 scepterReplacers.Remove(firstMatch);
             }
+            AncientScepterMain._logger.LogMessage($"Adding scepter skill for \"{targetBodyName}\" ({replacingDef.skillName})");
             scepterReplacers.Add(new ScepterReplacer { bodyName = targetBodyName, slotIndex = SkillSlot.None, variantIndex = -1, replDef = replacingDef,trgtDef = targetDef });
             return true;
         }
@@ -655,9 +657,15 @@ namespace AncientScepter
             heresyDefs.Add(SkillSlot.Special,CharacterBody.CommonAssets.lunarSpecialReplacementSkillDef);
             foreach(ScepterReplacer repdef in scepterReplacers.Where(x => x.trgtDef == null)){
                 var prefab = BodyCatalog.FindBodyPrefab(repdef.bodyName);
-                var locator = prefab.GetComponent<SkillLocator>();
+                var locator = prefab?.GetComponent<SkillLocator>();
                 if(locator && repdef.slotIndex != SkillSlot.None && repdef.variantIndex >= 0){
-                  repdef.trgtDef = locator.GetSkill(repdef.slotIndex).skillFamily.variants[repdef.variantIndex].skillDef;
+                  var variants = locator.GetSkill(repdef.slotIndex).skillFamily.variants;
+                  if(variants.Length <= repdef.variantIndex){
+                    AncientScepterMain._logger.LogError($"Invalid Scepter Replacement for body:{repdef.bodyName},slot:{repdef.slotIndex},with skill:{repdef.replDef.skillNameToken}");
+                    repdef.trgtDef = null;
+                    continue;
+                  }
+                  repdef.trgtDef = variants[repdef.variantIndex].skillDef;
                 }
             }
             Run.onRunStartGlobal -= On_RunStartGlobal;
