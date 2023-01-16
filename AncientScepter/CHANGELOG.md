@@ -1,4 +1,9 @@
-﻿## Changelog
+﻿
+## Changelog
+`1.1.21`
+- Better handling of broken defs from mods + logging
+- Added nullcheck to removeclassicitemsscepter method to  try to fix out of range exception
+
 `1.1.2`
 - Updated to latest libraries
 - ➕Added IDR to Nemesis Commando¹
