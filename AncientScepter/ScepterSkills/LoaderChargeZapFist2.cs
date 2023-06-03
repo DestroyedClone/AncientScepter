@@ -76,7 +76,7 @@ namespace AncientScepter
         private void On_BaseChargeFistEnter(On.EntityStates.Loader.BaseChargeFist.orig_OnEnter orig, BaseChargeFist self)
         {
             orig(self);
-            if (!(self is ChargeZapFist) || self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef != myDef) return;
+            if (!(self is ChargeZapFist) || self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef != myDef) return;
             var mTsf = self.outer.commonComponents.modelLocator?.modelTransform?.GetComponent<ChildLocator>()?.FindChild(BaseChargeFist.chargeVfxChildLocatorName);
             EffectManager.SpawnEffect(Resources.Load<GameObject>("prefabs/effects/MageLightningBombExplosion"),
                 new EffectData
@@ -96,7 +96,7 @@ namespace AncientScepter
                 c.Emit(OpCodes.Ldarg_0);
                 c.EmitDelegate<Func<GameObject, SwingZapFist, GameObject>>((origProj, state) =>
                 {
-                    if (state.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef != myDef) return origProj;
+                    if (state.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef != myDef) return origProj;
                     var mTsf = state.outer.commonComponents.modelLocator?.modelTransform?.GetComponent<ChildLocator>()?.FindChild(state.swingEffectMuzzleString);
                     EffectManager.SpawnEffect(Resources.Load<GameObject>("prefabs/effects/ImpactEffects/LightningStrikeImpact"),
                         new EffectData

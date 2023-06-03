@@ -63,7 +63,7 @@ namespace AncientScepter
         private void On_FireFMJEnter(On.EntityStates.GenericProjectileBaseState.orig_OnEnter orig, EntityStates.GenericProjectileBaseState self)
         {
             orig(self);
-            if (!(self is EntityStates.Merc.Weapon.ThrowEvisProjectile) || self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef != myDef) return;
+            if (!(self is EntityStates.Merc.Weapon.ThrowEvisProjectile) || self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef != myDef) return;
             if (!self.outer.commonComponents.skillLocator?.special) return;
             var fireCount = self.outer.commonComponents.skillLocator.special.stock;
             self.outer.commonComponents.skillLocator.special.stock = 0;

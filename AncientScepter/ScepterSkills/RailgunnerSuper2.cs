@@ -84,7 +84,7 @@ namespace AncientScepter
         private void BaseCharged_OnEnter(On.EntityStates.Railgunner.Backpack.BaseCharged.orig_OnEnter orig, EntityStates.Railgunner.Backpack.BaseCharged self)
         {
             var cachedOverride = self.primaryOverride;
-            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef == myDef)
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == myDef)
             {
                 if (self is EntityStates.Railgunner.Backpack.ChargedSuper)
                 {
@@ -102,7 +102,7 @@ namespace AncientScepter
         private void BaseCharged_OnExit(On.EntityStates.Railgunner.Backpack.BaseCharged.orig_OnExit orig, EntityStates.Railgunner.Backpack.BaseCharged self)
         {
             var cachedOverride = self.primaryOverride;
-            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef == myDef)
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == myDef)
             {
                 if (self is EntityStates.Railgunner.Backpack.ChargedSuper)
                 {
@@ -120,7 +120,7 @@ namespace AncientScepter
         private void Offline_OnEnter(On.EntityStates.Railgunner.Backpack.Offline.orig_OnEnter orig, EntityStates.Railgunner.Backpack.Offline self)
         {
             var origDuration = self.baseDuration;
-            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef == myDef)
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == myDef)
             {
                 self.baseDuration = Mathf.Max(0, self.baseDuration - 1);
             }
@@ -152,7 +152,7 @@ namespace AncientScepter
         private void BaseFireSnipe_ModifyBullet(On.EntityStates.Railgunner.Weapon.BaseFireSnipe.orig_ModifyBullet orig, EntityStates.Railgunner.Weapon.BaseFireSnipe self, BulletAttack bulletAttack)
         {
             //var cachedProcCoefficient = bulletAttack.procCoefficient;
-            if (self is EntityStates.Railgunner.Weapon.FireSnipeSuper && self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef == myDef)
+            if (self is EntityStates.Railgunner.Weapon.FireSnipeSuper && self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == myDef)
             {
                 bulletAttack.AddModdedDamageType(CustomDamageTypes.ScepterDestroy10ArmorDT);
                 bulletAttack.procCoefficient += 0.5f;
