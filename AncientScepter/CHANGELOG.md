@@ -1,5 +1,10 @@
 ﻿
 ## Changelog
+`1.1.22`
+- Fixed Handling of cases where upgraded skill states are reused by other bodies.
+  - Specifically,fixes Incinerator/Flamethrower Drones erroring out on attack.
+- Fixed non-existent/old bodies causing issues when inside Rex's Chaotic Growth
+
 `1.1.21`
 - Better handling of broken defs from mods + logging
 - Added nullcheck to removeclassicitemsscepter method to  try to fix out of range exception
