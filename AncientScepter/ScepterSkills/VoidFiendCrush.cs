@@ -87,7 +87,7 @@ namespace AncientScepter
         private void CorruptMode_OnExit(On.EntityStates.VoidSurvivor.CorruptMode.CorruptMode.orig_OnExit orig, EntityStates.VoidSurvivor.CorruptMode.CorruptMode self)
         {
             var cachedSkillDef = self.specialOverrideSkillDef;
-            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef == myDef)
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == myDef)
             {
                 self.specialOverrideSkillDef = myCtxDef;
                 self.characterBody.skillLocator.special.UnsetSkillOverride(self, cachedSkillDef, GenericSkill.SkillOverridePriority.Upgrade);
@@ -99,7 +99,7 @@ namespace AncientScepter
         private void CorruptMode_OnEnter(On.EntityStates.VoidSurvivor.CorruptMode.CorruptMode.orig_OnEnter orig, EntityStates.VoidSurvivor.CorruptMode.CorruptMode self)
         {
             var cachedSkillDef = self.specialOverrideSkillDef;
-            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef == myDef)
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == myDef)
             {
                 self.specialOverrideSkillDef = myCtxDef;
                 self.characterBody.skillLocator.special.UnsetSkillOverride(self, cachedSkillDef, GenericSkill.SkillOverridePriority.Upgrade);
@@ -113,7 +113,7 @@ namespace AncientScepter
             orig(healthComponent, damageInfo);
             if (damageInfo.procChainMask.HasProc(ProcType.VoidSurvivorCrush))
             {
-                if (healthComponent.body.skillLocator.GetSkill(targetSlot).skillDef == myDef)
+                if (healthComponent.body.skillLocator.GetSkill(targetSlot)?.skillDef == myDef)
                 {
                     DamageInfo damageInfoToDeal = new DamageInfo
                     {
@@ -164,7 +164,7 @@ namespace AncientScepter
         //From HealingWard.cs
         private void HealNearby(HealthComponent healthComponent, float healAmount, ProcChainMask procChainMask)
         {
-            if (procChainMask.HasProc(ProcType.VoidSurvivorCrush) && healthComponent.body.skillLocator.GetSkill(targetSlot).skillDef == myDef)
+            if (procChainMask.HasProc(ProcType.VoidSurvivorCrush) && healthComponent.body.skillLocator.GetSkill(targetSlot)?.skillDef == myDef)
             {
                 ReadOnlyCollection<TeamComponent> teamMembers = TeamComponent.GetTeamMembers(healthComponent.body.teamComponent.teamIndex);
                 float num = 25 * 25;

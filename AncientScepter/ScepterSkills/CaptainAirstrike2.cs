@@ -95,7 +95,7 @@ namespace AncientScepter
             var isAirstrike = self is CallAirstrike1
                 || self is CallAirstrike2
                 || self is CallAirstrike3;
-            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef == myDef && isAirstrike) return false;
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == myDef && isAirstrike) return false;
             return orig(self);
         }
 
@@ -123,7 +123,7 @@ namespace AncientScepter
                 || self is CallAirstrike2
                 || self is CallAirstrike3;
 
-            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef == myDef && isAirstrike)
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == myDef && isAirstrike)
             {
                 self.damageCoefficient = 5f;
                 self.AddRecoil(-1f, 1f, -1f, 1f);
@@ -133,7 +133,7 @@ namespace AncientScepter
         private void On_SetupAirstrikeStateEnter(On.EntityStates.Captain.Weapon.SetupAirstrike.orig_OnEnter orig, EntityStates.Captain.Weapon.SetupAirstrike self) //exc
         {
             var origOverride = SetupAirstrike.primarySkillDef;
-            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef == myDef)
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == myDef)
             {
                 SetupAirstrike.primarySkillDef = myCallDef;
             }

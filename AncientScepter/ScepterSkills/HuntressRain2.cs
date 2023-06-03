@@ -86,7 +86,7 @@ namespace AncientScepter
         private void On_ArrowRain_DoFireArrowRain(On.EntityStates.Huntress.ArrowRain.orig_DoFireArrowRain orig, ArrowRain self)
         {
             var origPrefab = ArrowRain.projectilePrefab;
-            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef == myDef) ArrowRain.projectilePrefab = projReplacer;
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == myDef) ArrowRain.projectilePrefab = projReplacer;
             orig(self);
             ArrowRain.projectilePrefab = origPrefab;
         }

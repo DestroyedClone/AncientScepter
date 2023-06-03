@@ -77,7 +77,7 @@ namespace AncientScepter
         {
             orig(self);
             if (!self.outer.commonComponents.characterBody) return;
-            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef != myDef) return;
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef != myDef) return;
             var cpt = self.outer.commonComponents.characterBody.GetComponent<ScepterToolbotDashTracker>();
             if (!cpt) cpt = self.outer.commonComponents.characterBody.gameObject.AddComponent<ScepterToolbotDashTracker>();
             cpt.enabled = true;

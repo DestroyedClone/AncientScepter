@@ -94,7 +94,7 @@ namespace AncientScepter
         private void BaseFireSnipe_OnExit(On.EntityStates.Railgunner.Weapon.BaseFireSnipe.orig_OnExit orig, EntityStates.Railgunner.Weapon.BaseFireSnipe self)
         {
             orig(self);
-            if (self is EntityStates.Railgunner.Weapon.FireSnipeCryo && self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef == myDef)
+            if (self is EntityStates.Railgunner.Weapon.FireSnipeCryo && self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == myDef)
             {
                 var cb = self.outer.commonComponents.characterBody;
                 if (cb)
@@ -107,7 +107,7 @@ namespace AncientScepter
         private void FireSnipeCryo_ModifyBullet(On.EntityStates.Railgunner.Weapon.FireSnipeCryo.orig_ModifyBullet orig, EntityStates.Railgunner.Weapon.FireSnipeCryo self, BulletAttack bulletAttack)
         {
             orig(self, bulletAttack);
-            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot).skillDef == myDef)
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == myDef)
             {
                 bulletAttack.AddModdedDamageType(CustomDamageTypes.ScepterSlow80For30DT);
 

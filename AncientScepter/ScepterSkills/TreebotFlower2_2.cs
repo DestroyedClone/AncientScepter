@@ -66,21 +66,22 @@ namespace AncientScepter
         {
             var owner = self.outer.GetComponent<ProjectileController>()?.owner;
             var origRadius = TreebotFlower2Projectile.radius;
-            if (owner.GetComponent<CharacterBody>().skillLocator.GetSkill(targetSlot).skillDef == myDef) TreebotFlower2Projectile.radius *= 2f;
+            if (owner.GetComponent<CharacterBody>().skillLocator.GetSkill(targetSlot)?.skillDef == myDef) TreebotFlower2Projectile.radius *= 2f;
             orig(self);
             TreebotFlower2Projectile.radius = origRadius;
         }
 
         private void On_TreebotFlower2RootPulse(On.EntityStates.Treebot.TreebotFlower.TreebotFlower2Projectile.orig_RootPulse orig, TreebotFlower2Projectile self)
         {
-            var isBoosted = self.owner?.GetComponent<CharacterBody>().skillLocator.GetSkill(targetSlot).skillDef == myDef;
+            var isBoosted = self.owner?.GetComponent<CharacterBody>().skillLocator.GetSkill(targetSlot)?.skillDef == myDef;
             var origRadius = TreebotFlower2Projectile.radius;
             if (isBoosted) TreebotFlower2Projectile.radius *= 2f;
             orig(self);
             TreebotFlower2Projectile.radius = origRadius;
             if (!isBoosted) return;
-            self.rootedBodies.ForEach(cb =>
+            self.rootedBodies?.ForEach(cb =>
             {
+                if(cb){
                 var nbi = AncientScepterItem.instance.rng.NextElementUniform(new[] {
                     RoR2Content.Buffs.Bleeding,
                     RoR2Content.Buffs.ClayGoo,
@@ -91,9 +92,9 @@ namespace AncientScepter
                     RoR2Content.Buffs.Pulverized
                 }); //todo: freezebuff
                 if (nbi == RoR2Content.Buffs.OnFire) DotController.InflictDot(cb.gameObject, self.owner, DotController.DotIndex.Burn, 1.5f, 1f);
-                if (nbi == RoR2Content.Buffs.Bleeding) DotController.InflictDot(cb.gameObject, self.owner, DotController.DotIndex.Bleed, 1.5f, 1f);
-                cb.AddTimedBuff(nbi, 1.5f);
-            });
+                else if (nbi == RoR2Content.Buffs.Bleeding) DotController.InflictDot(cb.gameObject, self.owner, DotController.DotIndex.Bleed, 1.5f, 1f);
+                else cb.AddTimedBuff(nbi, 1.5f);
+            }});
         }
     }
 }

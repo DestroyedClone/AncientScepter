@@ -186,7 +186,7 @@ namespace AncientScepter
         {
             if ((damageInfo.damageType & DamageType.GiveSkullOnKill) == DamageType.GiveSkullOnKill)
             {
-                if (self.body && self.body.master && damageInfo.attacker && damageInfo.attacker.GetComponent<HealthComponent>() && damageInfo.attacker.GetComponent<CharacterBody>().skillLocator.GetSkill(targetSlot).skillDef == myDef)
+                if (self.body && self.body.master && damageInfo.attacker && damageInfo.attacker.GetComponent<HealthComponent>() && damageInfo.attacker.GetComponent<CharacterBody>().skillLocator.GetSkill(targetSlot)?.skillDef == myDef)
                 {
                     var attackerHC = damageInfo.attacker.GetComponent<HealthComponent>();
                     var baseAI = self.body.master.GetComponent<RoR2.CharacterAI.BaseAI>();
