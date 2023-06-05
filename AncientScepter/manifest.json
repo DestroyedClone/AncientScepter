@@ -1,8 +1,8 @@
 {
   "name": "StandaloneAncientScepter",
-  "version_number": "1.1.22",
+  "version_number": "1.1.23",
   "website_url": "https://github.com/DestroyedClone/AncientScepter",
-  "description": "1.1.22 - slighter fixes  | A full port of ThinkInvisible's Ancient Scepter, complete with a custom model, item displays, and no extra dependencies.",
+  "description": "1.1.23 - flaming hotfix  | A full port of ThinkInvisible's Ancient Scepter, complete with a custom model, item displays, and no extra dependencies.",
   "dependencies": [
     "bbepis-BepInExPack-5.4.2103",
     "tristanmcpherson-R2API-4.3.5",

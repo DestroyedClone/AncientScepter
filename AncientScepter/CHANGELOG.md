@@ -1,5 +1,8 @@
-﻿
+
 ## Changelog
+`1.1.23`
+- Fixed inverted check on Artificer Flamethrower
+
 `1.1.22`
 - Fixed Handling of cases where upgraded skill states are reused by other bodies.
   - Specifically,fixes Incinerator/Flamethrower Drones erroring out on attack.
