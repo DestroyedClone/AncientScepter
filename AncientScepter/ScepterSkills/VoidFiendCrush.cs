@@ -41,7 +41,8 @@ namespace AncientScepter
             var namestr = "Reclaimed Suppress";
             LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = $"{oldDef.skillName}Scepter";
+            //Both variants of supress are named crocoleap internally,so we might as well give em better names
+            myDef.skillName = $"VoidSurvivorCrushCorruptionScepter";
             (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
@@ -52,10 +53,11 @@ namespace AncientScepter
             dirtySkillDef = oldCtxDef;
             myCtxDef = CloneSkillDef(oldCtxDef);
 
-            myCtxDef.skillName = $"{oldCtxDef.skillName}Scepter";
+            myCtxDef.skillName = $"VoidSurvivorCrushHealthScepter";
             (myCtxDef as ScriptableObject).name = myCtxDef.skillName;
             var corruptedNameToken = "ANCIENTSCEPTER_VOIDSURVIVOR_CORRUPTEDCRUSHCORRUPTIONNAME";
             LanguageAPI.Add(corruptedNameToken, "Forfeited Suppress");
+            myCtxDef.skillNameToken = corruptedNameToken;
             myCtxDef.skillDescriptionToken = newDescToken;
             myCtxDef.baseMaxStock += 2;
             myCtxDef.icon = Assets.SpriteAssets.VoidFiendCorruptedSuppress2;
@@ -80,8 +82,8 @@ namespace AncientScepter
         {
             HealthComponent.onCharacterHealServer += HealNearby;
             On.RoR2.HealthComponent.TakeDamage += DamageNearby;
-            On.EntityStates.VoidSurvivor.CorruptMode.CorruptMode.OnEnter += CorruptMode_OnEnter;
-            On.EntityStates.VoidSurvivor.CorruptMode.CorruptMode.OnExit += CorruptMode_OnExit;
+            //On.EntityStates.VoidSurvivor.CorruptMode.CorruptMode.OnEnter += CorruptMode_OnEnter;
+            //On.EntityStates.VoidSurvivor.CorruptMode.CorruptMode.OnExit += CorruptMode_OnExit;
         }
 
         private void CorruptMode_OnExit(On.EntityStates.VoidSurvivor.CorruptMode.CorruptMode.orig_OnExit orig, EntityStates.VoidSurvivor.CorruptMode.CorruptMode self)
@@ -113,7 +115,7 @@ namespace AncientScepter
             orig(healthComponent, damageInfo);
             if (damageInfo.procChainMask.HasProc(ProcType.VoidSurvivorCrush))
             {
-                if (healthComponent.body.skillLocator.GetSkill(targetSlot)?.skillDef == myDef)
+                if (healthComponent.body.skillLocator.GetSkill(targetSlot)?.skillDef == myCtxDef)
                 {
                     DamageInfo damageInfoToDeal = new DamageInfo
                     {
@@ -143,6 +145,7 @@ namespace AncientScepter
             {
                 return;
             }
+            var corruption = new EntityStates.VoidSurvivor.Weapon.CrushHealth().corruptionChange;
             foreach (TeamComponent teamComponent in recipients)
             {
                 Vector3 vector = teamComponent.transform.position - currentPosition;
@@ -155,6 +158,8 @@ namespace AncientScepter
                         {
                             damageInfo.position = component.healthComponent.transform.position;
                             component.healthComponent.TakeDamage(damageInfo);
+                            VoidSurvivorController cont = component.GetComponent<VoidSurvivorController>();
+                            cont?.AddCorruption(corruption);
                         }
                     }
                 }
@@ -169,6 +174,7 @@ namespace AncientScepter
                 ReadOnlyCollection<TeamComponent> teamMembers = TeamComponent.GetTeamMembers(healthComponent.body.teamComponent.teamIndex);
                 float num = 25 * 25;
                 Vector3 position = healthComponent.body.corePosition;
+                float corruption = new EntityStates.VoidSurvivor.Weapon.CrushCorruption().corruptionChange;
                 for (int i = 0; i < teamMembers.Count; i++)
                 {
                     if ((teamMembers[i].transform.position - position).sqrMagnitude <= num)
@@ -181,6 +187,8 @@ namespace AncientScepter
                             {
                                 ProcChainMask procMask = default;
                                 component.Heal(num2, procMask, true);
+                                VoidSurvivorController cont = component.body.GetComponent<VoidSurvivorController>();
+                                cont?.AddCorruption(corruption);
                             }
                         }
                     }

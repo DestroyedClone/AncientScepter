@@ -1,5 +1,10 @@
 
 ## Changelog
+`1.1.30`
+- Improved handling of SkillOverrides,fixing multiple cases of unexpected behavior.
+- Polished Void Fiend's scepter ability.
+- Moved mod dependencies over to singular r2api modules instead of the legacy one.
+
 `1.1.23`
 - Fixed inverted check on Artificer Flamethrower
 

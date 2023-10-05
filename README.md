@@ -54,7 +54,6 @@ This refers to compatibility that's included just with this mod, and will not be
 * CaptainBustedAirstrike support:
 	* Currently it uses the reduced cooldown from the standard alt airstrike.
 * Further improvements to scepters(?)
-* Fix Void Fiend's Scepter desyncing overrides if the Scepter is lost in corrupt mode
 * Transformation Notification shows before the pickup notification for the subsequent Scepter
 
 ## For Devs

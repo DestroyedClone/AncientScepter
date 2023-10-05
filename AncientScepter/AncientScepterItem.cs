@@ -533,6 +533,7 @@ namespace AncientScepter
                 skill.SetupAttributes();
                 RegisterScepterSkill(skill.myDef, skill.targetBody, skill.targetSlot, skill.targetVariantIndex);
             }
+            RegisterScepterSkill(VoidFiendCrush.myCtxDef,"VoidSurvivorBody",VoidFiendCrush.dirtySkillDef);
             var Nevermore = new HereticNevermore2();
             Nevermore.SetupAttributes();
             RegisterScepterSkill( Nevermore.myDef,Nevermore.targetBody,UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<SkillDef>("RoR2/Base/Heretic/HereticDefaultAbility.asset").WaitForCompletion());
@@ -542,7 +543,7 @@ namespace AncientScepter
         {
             CharacterBody.onBodyInventoryChangedGlobal += On_CBInventoryChangedGlobal;
             On.RoR2.CharacterMaster.GetDeployableSameSlotLimit += On_CMGetDeployableSameSlotLimit;
-            On.RoR2.GenericSkill.SetSkillOverride += On_GSSetSkillOverride;
+            On.RoR2.GenericSkill.UnsetSkillOverride += On_GSUnsetSkillOverride;
             RoR2.Run.onRunStartGlobal += On_RunStartGlobal;
 
             foreach (var skill in skills)
@@ -572,26 +573,33 @@ namespace AncientScepter
 
         private bool handlingOverride = false;
 
-        private void On_GSSetSkillOverride(On.RoR2.GenericSkill.orig_SetSkillOverride orig, GenericSkill self, object source, SkillDef skillDef, GenericSkill.SkillOverridePriority priority)
+        private void On_GSUnsetSkillOverride(On.RoR2.GenericSkill.orig_UnsetSkillOverride orig, GenericSkill self,object source , SkillDef skillDef,GenericSkill.SkillOverridePriority priority)
         {
-            bool skillDefIsNotHeresy()
+         /*   bool skillDefIsNotHeresy()
             {
                 return (skillDef != CharacterBody.CommonAssets.lunarPrimaryReplacementSkillDef
                     || skillDef != CharacterBody.CommonAssets.lunarSecondaryReplacementSkillDef
                     || skillDef != CharacterBody.CommonAssets.lunarUtilityReplacementSkillDef
                     || skillDef != CharacterBody.CommonAssets.lunarSpecialReplacementSkillDef);
             }
+            var body = self.characterBody;
 
-            if (stridesInteractionMode != StridesInteractionMode.ScepterTakesPrecedence
-                || skillDefIsNotHeresy()
-                || !(source is CharacterBody body)
-                || body.inventory.GetItemCount(ItemDef) < 1
+            if ((stridesInteractionMode != StridesInteractionMode.ScepterTakesPrecedence
+                && !skillDefIsNotHeresy())
+                || body?.inventory.GetItemCount(ItemDef) < 1
                 || handlingOverride)
-                orig(self, source, skillDef, priority);
+                orig(self, skillDef);
             else
             {
                 handlingOverride = true;
                 HandleScepterSkill(body);
+                handlingOverride = false;
+            }*/
+            orig(self,source,skillDef,priority);
+            if(!handlingOverride && self.characterBody){
+                handlingOverride = true;
+                ForceCleanScepter(self.characterBody);
+                HandleScepterSkill(self.characterBody);
                 handlingOverride = false;
             }
         }
@@ -738,6 +746,16 @@ namespace AncientScepter
             }
         }
 
+        private void ForceCleanScepter(CharacterBody self){
+           var bodyName = BodyCatalog.GetBodyName(self.bodyIndex);
+           var repl = scepterReplacers.FindAll(x => x.bodyName == bodyName);
+           foreach(var skill in self.skillLocator.allSkills){
+              if(repl.Any((r) => r.replDef == skill.skillDef)){
+                skill.UnsetSkillOverride(self,skill.skillDef,GenericSkill.SkillOverridePriority.Upgrade);
+              }
+           }
+        }
+
         private bool HandleScepterSkill(CharacterBody self, bool forceOff = false)
         {
             bool hasHeresyForSlot(SkillSlot skillSlot)
@@ -778,7 +796,7 @@ namespace AncientScepter
                           replVar = replacement;
                           break;
                       }
-                      if(replVar != null){
+                      if(replVar != null && targetSkill && replVar.trgtDef == targetSkill.skillDef){
                         break;
                       }
                     }
@@ -790,6 +808,7 @@ namespace AncientScepter
                             self.skillLocator.GetSkill(targetSlot).UnsetSkillOverride(self, heresyDefs[targetSlot], GenericSkill.SkillOverridePriority.Replacement);
                         }
                         targetSkill.SetSkillOverride(self, replVar.replDef, GenericSkill.SkillOverridePriority.Upgrade);
+                        targetSkill.onSkillChanged += UnsetOverrideLater;
                     }
                     else
                     {
@@ -801,9 +820,15 @@ namespace AncientScepter
                     }
 
                     return true;
+                    void UnsetOverrideLater(GenericSkill skill){
+                       skill.onSkillChanged -= UnsetOverrideLater;
+                       skill.UnsetSkillOverride(self, replVar.replDef,GenericSkill.SkillOverridePriority.Upgrade);
+                       HandleScepterSkill(skill.characterBody);
+                    }
                 }
             }
             return false;
+
         }
     }
 }

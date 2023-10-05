@@ -21,12 +21,18 @@ namespace AncientScepter
 {
     [BepInPlugin(ModGuid, ModName, ModVer)]
     [BepInDependency(R2API.R2API.PluginGUID, R2API.R2API.PluginVersion)]
+    [BepInDependency(R2API.ItemAPI.PluginGUID,R2API.ItemAPI.PluginVersion)]
+    [BepInDependency(R2API.PrefabAPI.PluginGUID,R2API.PrefabAPI.PluginVersion)]
+    [BepInDependency(R2API.LanguageAPI.PluginGUID,R2API.LanguageAPI.PluginVersion)]
+    [BepInDependency(R2API.DamageAPI.PluginGUID,R2API.DamageAPI.PluginVersion)]
+    [BepInDependency(R2API.OrbAPI.PluginGUID,R2API.OrbAPI.PluginVersion)]
+    [BepInDependency(R2API.ContentManagement.R2APIContentManager.PluginGUID,R2API.ContentManagement.R2APIContentManager.PluginVersion)]
     [BepInDependency("com.xoxfaby.BetterUI", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.ThinkInvisible.TILER2", BepInDependency.DependencyFlags.SoftDependency)]
 
     public class AncientScepterMain : BaseUnityPlugin
     {
-        public const string ModVer = "1.1.23";
+        public const string ModVer = "1.1.30";
         public const string ModName = "StandaloneAncientScepter";
         public const string ModGuid = "com.DestroyedClone.AncientScepter";
 
