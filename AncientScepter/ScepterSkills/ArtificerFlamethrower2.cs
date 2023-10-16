@@ -105,7 +105,7 @@ namespace AncientScepter
         internal void doBetterUI()
         {
             BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("MageBodyFlamethrower"));
-            BetterUI.ProcCoefficientCatalog.AddToSkill(myDef.skillName, Language.GetString("STANDALONEANCIENTSCEPTER_BETTERUI_MAGE_FIRECLOUD"), 0.1f);
+            BetterUI.ProcCoefficientCatalog.AddToSkill(myDef.skillName, "STANDALONEANCIENTSCEPTER_BETTERUI_MAGE_FIRECLOUD", 0.1f);
         } 
         internal override void LoadBehavior()
         {

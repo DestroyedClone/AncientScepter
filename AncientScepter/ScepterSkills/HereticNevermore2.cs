@@ -57,8 +57,8 @@ namespace AncientScepter
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
         internal void doBetterUI()
         {
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, "STANDALONEANCIENTSCEPTER_BETTERUI_BUFF_PERISHSONG_NAME", 0);
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, "STANDALONEANCIENTSCEPTER_BETTERUI__BUFF_PERISHSONG_DESC", 0);
+                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, "STANDALONEANCIENTSCEPTER_BETTERUI_HERETIC_SING", 0);
+                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, "STANDALONEANCIENTSCEPTER_BETTERUI_HERETIC_SINGACTIVATE", 0);
         } 
         public static float GetEstimatedDamageForPerishSong()
         {

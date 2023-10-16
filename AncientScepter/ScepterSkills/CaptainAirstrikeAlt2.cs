@@ -134,9 +134,9 @@ namespace AncientScepter
         internal void doBetterUI()
         {
             BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CallAirstrikeAlt"));
-            BetterUI.ProcCoefficientCatalog.AddToSkill(myDef.skillName, "Irradiate", 0);
+            BetterUI.ProcCoefficientCatalog.AddToSkill(myDef.skillName, "STANDALONEANCIENTSCEPTER_BETTERUI_CAPTAIN_AIRSTRIKEALT_NUKEPROC", 0);
             BetterUI.ProcCoefficientCatalog.AddSkill(myCallDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CallAirstrikeAlt"));
-            BetterUI.ProcCoefficientCatalog.AddToSkill(myCallDef.skillName, "Irradiate", 0);
+            BetterUI.ProcCoefficientCatalog.AddToSkill(myCallDef.skillName, "STANDALONEANCIENTSCEPTER_BETTERUI_CAPTAIN_AIRSTRIKEALT_NUKEPROC", 0);
         } 
         internal override void LoadBehavior()
         {

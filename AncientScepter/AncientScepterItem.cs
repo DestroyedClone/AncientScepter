@@ -11,6 +11,8 @@ using static AncientScepter.SkillUtil;
 using AncientScepter.ScepterSkillsMonster;
 using System.Runtime.CompilerServices;
 using System;
+using static AncientScepter.AncientScepterItem;
+using static ThinkInvisible.ClassicItems.Scepter;
 
 namespace AncientScepter
 {
@@ -45,32 +47,47 @@ namespace AncientScepter
     public class AncientScepterItem : ItemBase<AncientScepterItem>
     {
         public static RerollMode rerollMode;
+        public static ConfigEntry<RerollMode> cfgRerollMode;
         public static UnusedMode unusedMode;
+        public static ConfigEntry<UnusedMode> cfgUnusedMode;
         public static bool enableMonsterSkills;
+        public static ConfigEntry<bool> cfgEnableMonsterSkills;
         //public static bool enableBrotherEffects;
+        //public static bool cfgEnableBrotherEffects;
         public static StridesInteractionMode stridesInteractionMode;
+        public static ConfigEntry<StridesInteractionMode> cfgStridesInteractionMode;
         public static bool altModel;
+        public static ConfigEntry<bool> cfgAltModel;
         public static bool removeClassicItemsScepterFromPool;
+        public static ConfigEntry<bool> cfgRemoveClassicItemsScepterFromPool;
         public static bool enableSOTVTransforms;
-        public static bool useReplacementDescriptions;
+        public static ConfigEntry<bool> cfgEnableSOTVTransforms;
+        public static bool useFullReplacementDescriptions;
+        public static ConfigEntry<bool> cfgUseFullReplacementDescriptions;
 
         // Artificer
         public static bool artiFlamePerformanceMode;
+        public static ConfigEntry<bool> cfgArtiFlamePerformanceMode;
 
         // Bandit
 
         // Captain
         public static bool captainNukeFriendlyFire;
+        public static ConfigEntry<bool> cfgCaptainNukeFriendlyFire;
 
         // Commando
+        //public static bool enableCommandoAutoaim;
         //public static bool enableCommandoAutoaim;
 
         // Croco
 
         // Engi
         public static bool engiTurretAdjustCooldown;
+        public static ConfigEntry<bool> cfgEngiTurretAdjustCooldown;
         public static bool engiWalkerAdjustCooldown;
+        public static ConfigEntry<bool> cfgEngiWalkerAdjustCooldown;
         public static bool turretBlacklist;
+        public static ConfigEntry<bool> cfgTurretBlacklist;
 
         // Heretic
 
@@ -113,7 +130,7 @@ namespace AncientScepter
 
         public override string ItemName => "Ancient Scepter";
 
-        public override string ItemLangTokenName => "ANCIENT_SCEPTER";
+        public override string ItemLangTokenName => "STANDALONEANCIENTSCEPTER";
 
         public override string ItemPickupDesc => "Upgrades one of your skills.";
 
@@ -171,12 +188,6 @@ namespace AncientScepter
             Install();
             //InstallLanguage();
             On.RoR2.UI.MainMenu.MainMenuController.Start += MainMenuController_Start;
-            Language.onCurrentLanguageChanged += UpdateTranslations;
-        }
-
-        private void UpdateTranslations()
-        {
-
         }
 
         private void MainMenuController_Start(On.RoR2.UI.MainMenu.MainMenuController.orig_Start orig, RoR2.UI.MainMenu.MainMenuController self)
@@ -203,56 +214,65 @@ namespace AncientScepter
         {
             string configCategory = "Item: " + ItemName;
 
-            engiTurretAdjustCooldown = 
+            cfgEngiTurretAdjustCooldown = 
                 config.Bind("Engineer", 
                             "TR12-C Gauss Compact Faster Recharge", 
                             false, 
-                            "If true, TR12-C Gauss Compact will recharge faster to match the additional stock.").Value;
-            engiWalkerAdjustCooldown = 
+                            "If true, TR12-C Gauss Compact will recharge faster to match the additional stock.");
+            engiTurretAdjustCooldown = cfgEngiTurretAdjustCooldown.Value;
+            cfgEngiWalkerAdjustCooldown = 
                 config.Bind("Engineer", 
                             "TR58-C Carbonizer Mini Faster Recharge", 
                             false, 
-                            "If true, TR58-C Carbonizer Mini will recharge faster to match the additional stock.").Value;
-            turretBlacklist = 
+                            "If true, TR58-C Carbonizer Mini will recharge faster to match the additional stock.");
+            engiWalkerAdjustCooldown = cfgEngiWalkerAdjustCooldown.Value;
+            cfgTurretBlacklist = 
                 config.Bind("Engineer", 
                             "Blacklist Turrets", 
                             false, 
                             "If true, turrets will be blacklisted from getting the Ancient Scepter." +
-                            "\nIf false, they will get the scepter and will get rerolled depending on the reroll mode.").Value;
-            artiFlamePerformanceMode = 
+                            "\nIf false, they will get the scepter and will get rerolled depending on the reroll mode.");
+            turretBlacklist = cfgTurretBlacklist.Value;
+            cfgArtiFlamePerformanceMode = 
                 config.Bind("Artificer", 
                             "ArtiFlamePerformance",
                             false, 
-                            "If true, Dragon's Breath will use significantly lighter particle effects and no dynamic lighting.").Value;
-            captainNukeFriendlyFire = 
+                            "If true, Dragon's Breath will use significantly lighter particle effects and no dynamic lighting.");
+            artiFlamePerformanceMode = cfgArtiFlamePerformanceMode.Value;
+            cfgCaptainNukeFriendlyFire = 
                 config.Bind("Captain", 
                             "Captain Nuke Friendly Fire", 
                             false, 
-                            "If true, then Captain's Scepter Nuke will also inflict blight on allies.").Value;
-            rerollMode = 
+                            "If true, then Captain's Scepter Nuke will also inflict blight on allies.");
+            captainNukeFriendlyFire = cfgCaptainNukeFriendlyFire.Value;
+            cfgRerollMode = 
                 config.Bind(configCategory, 
                             "Reroll on pickup mode", 
                             RerollMode.Random, 
                             "If \"Disabled\", additional stacks will not be rerolled" +
                             "\nIf \"Random\", any stacks picked up past the first will reroll to other red items." +
-                            "\nIf \"Scrap\", any stacks picked up past the first will reroll into red scrap.").Value;
-            unusedMode =
+                            "\nIf \"Scrap\", any stacks picked up past the first will reroll into red scrap.");
+            rerollMode = cfgRerollMode.Value;
+            cfgUnusedMode =
                 config.Bind(configCategory,
                             "Unused mode",
                             UnusedMode.Metamorphosis,
                             "If \"Keep\", Characters which cannot benefit from the item will still keep it." +
                             "\nIf \"Reroll\", Characters without any scepter upgrades will reroll according to above pickup mode." +
-                            "\nIf \"Metamorphosis\", Characters without scepter upgrades will only reroll if Artifact of Metamorphosis is not active.").Value;
-            stridesInteractionMode = 
+                            "\nIf \"Metamorphosis\", Characters without scepter upgrades will only reroll if Artifact of Metamorphosis is not active.");
+            unusedMode = cfgUnusedMode.Value;
+            cfgStridesInteractionMode = 
                 config.Bind(configCategory, 
                             "Strides pickup mode", 
                             StridesInteractionMode.ScepterRerolls, 
-                            "Changes what happens when a character whose skill is affected by Ancient Scepter has both Ancient Scepter and the corresponding heretic skill replacements (Visions/Hooks/Strides/Essence) at the same time.").Value; //defer until next stage
-            enableMonsterSkills = 
+                            "Changes what happens when a character whose skill is affected by Ancient Scepter has both Ancient Scepter and the corresponding heretic skill replacements (Visions/Hooks/Strides/Essence) at the same time."); //defer until next stage
+            stridesInteractionMode = cfgStridesInteractionMode.Value;
+            cfgEnableMonsterSkills = 
                 config.Bind(configCategory, 
                             "Enable skills for monsters", 
                             true, 
-                            "If true, certain monsters get the effects of the Ancient Scepter.").Value;
+                            "If true, certain monsters get the effects of the Ancient Scepter.");
+            enableMonsterSkills = cfgEnableMonsterSkills.Value;
             /*mithrixEnableScepter =
                 config.Bind(configCategory,
                             "Enable Mithrix Lines",
@@ -260,16 +280,18 @@ namespace AncientScepter
                             "If true, Mithrix will have additional dialogue when acquiring the Ancient Scepter. Only applies on Commencement. Requires Enable skills for monsters to be enabled.").Value;*/
             //enableBrotherEffects = config.Bind(configCategory, "Enable Mithrix Lines", true, "If true, Mithrix will have additional dialogue when acquiring the Ancient Scepter.").Value;
             //enableCommandoAutoaim = config.Bind(configCategory, "Enable Commando Autoaim", true, "This may break compatibiltiy with skills.").Value;
-            altModel =
+            cfgAltModel =
                 config.Bind(configCategory,
                             "Alt Model",
                             false,
-                            "Changes the model as a reference to a certain other scepter that upgrades abilities.").Value;
-            removeClassicItemsScepterFromPool =
+                            "Changes the model as a reference to a certain other scepter that upgrades abilities.");
+            altModel = cfgAltModel.Value;
+            cfgRemoveClassicItemsScepterFromPool =
                 config.Bind(configCategory,
                             "CLASSICITEMS: Remove Classic Items Ancient Scepter From Droplist If Installed",
                             true,
-                            "If true, then the Ancient Scepter from Classic Items will be removed from the drop pool to prevent complications.").Value;
+                            "If true, then the Ancient Scepter from Classic Items will be removed from the drop pool to prevent complications.");
+            removeClassicItemsScepterFromPool = cfgRemoveClassicItemsScepterFromPool.Value;
 
             var engiSkill = skills.First(x => x is EngiTurret2);
             engiSkill.myDef.baseRechargeInterval = EngiTurret2.oldDef.baseRechargeInterval * (engiTurretAdjustCooldown ? 2f / 3f : 1f);
@@ -284,16 +306,18 @@ namespace AncientScepter
                 Run.onRunStartGlobal += RemoveClassicItemsScepter;
             }
 
-            enableSOTVTransforms =
+            cfgEnableSOTVTransforms =
                 config.Bind(configCategory,
                 "Transformation Notification",
                 true,
-                "If true, then when scepters are re-rolled, then it will be accompanied by a transformation notification like other items.").Value;
-            useReplacementDescriptions =
+                "If true, then when scepters are re-rolled, then it will be accompanied by a transformation notification like other items.");
+            enableSOTVTransforms = cfgEnableSOTVTransforms.Value;
+            cfgUseFullReplacementDescriptions =
                 config.Bind(configCategory,
                 "Full Description",
                 false,
-                "If true, then the description for the scepter skill will be replaced instead of appending the SCEPTER description. Full description may describe less detail.").Value;
+                "If true, then the description for the scepter skill will be replaced instead of appending the SCEPTER description. Full description may describe less detail.");
+            useFullReplacementDescriptions = cfgUseFullReplacementDescriptions.Value;
         }
 
 
