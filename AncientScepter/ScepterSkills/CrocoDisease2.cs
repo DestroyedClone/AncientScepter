@@ -18,7 +18,8 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Victims become walking sources of Plague.</color>";
+        public override string overrideToken => "STANDALONEANCIENTSCEPTER_CROCO_DISEASEOVERRIDE";
+        public override string fullDescToken => "STANDALONEANCIENTSCEPTER_CROCO_DISEASEFULLDESC";
 
         public override string targetBody => "CrocoBody";
         public override SkillSlot targetSlot => SkillSlot.Special;
@@ -29,13 +30,11 @@ namespace AncientScepter
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/CrocoBody/CrocoDisease");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_CROCO_DISEASENAME";
-            newDescToken = "ANCIENTSCEPTER_CROCO_DISEASEDESC";
+            var nametoken = "STANDALONEANCIENTSCEPTER_CROCO_DISEASENAME";
+            newDescToken = "STANDALONEANCIENTSCEPTER_CROCO_DISEASEDESC";
             oldDescToken = oldDef.skillDescriptionToken;
-            var namestr = "Plague";
-            LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = $"{oldDef.skillName}Scepter";
+            myDef.skillName = $"StandaloneAncientScepter_{oldDef.skillName}Scepter";
             (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
@@ -45,7 +44,7 @@ namespace AncientScepter
 
             var mshPrefab = Resources.Load<GameObject>("Prefabs/NetworkedObjects/MushroomWard");
 
-            var dwPrefabPrefab = new GameObject("CIDiseaseAuraPrefabPrefab");
+            var dwPrefabPrefab = new GameObject("StandaloneAncientScepterDiseaseAuraPrefabPrefab");
             dwPrefabPrefab.AddComponent<TeamFilter>();
             dwPrefabPrefab.AddComponent<MeshFilter>().mesh = mshPrefab.GetComponentInChildren<MeshFilter>().mesh;
             dwPrefabPrefab.AddComponent<MeshRenderer>().material = UnityEngine.Object.Instantiate(mshPrefab.GetComponentInChildren<MeshRenderer>().material);
@@ -54,7 +53,7 @@ namespace AncientScepter
             var dw = dwPrefabPrefab.AddComponent<DiseaseWard>();
             dw.rangeIndicator = dwPrefabPrefab.GetComponent<MeshRenderer>().transform;
             dw.interval = 1f;
-            diseaseWardPrefab = dwPrefabPrefab.InstantiateClone("AncientScepterDiseaseWardAuraPrefab");
+            diseaseWardPrefab = dwPrefabPrefab.InstantiateClone("StandaloneAncientScepterDiseaseWardAuraPrefab");
             UnityEngine.Object.Destroy(dwPrefabPrefab);
 
             if (ModCompat.compatBetterUI)

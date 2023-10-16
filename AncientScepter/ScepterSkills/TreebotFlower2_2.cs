@@ -14,7 +14,8 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Double radius. Pulses random debuffs.</color>";
+        public override string overrideToken => "STANDALONEANCIENTSCEPTER_TREEBOT_FLOWER2OVERRIDE";
+        public override string fullDescToken => "STANDALONEANCIENTSCEPTER_TREEBOT_FLOWER2FULLDESC";
 
         public override string targetBody => "TreebotBody";
         public override SkillSlot targetSlot => SkillSlot.Special;
@@ -25,13 +26,11 @@ namespace AncientScepter
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/TreebotBody/TreebotBodyFireFlower2");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_TREEBOT_FLOWER2NAME";
-            newDescToken = "ANCIENTSCEPTER_TREEBOT_FLOWER2DESC";
+            var nametoken = "STANDALONEANCIENTSCEPTER_TREEBOT_FLOWER2NAME";
+            newDescToken = "STANDALONEANCIENTSCEPTER_TREEBOT_FLOWER2DESC";
             oldDescToken = oldDef.skillDescriptionToken;
-            var namestr = "Chaotic Growth";
-            LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = $"{oldDef.skillName}Scepter";
+            myDef.skillName = $"StandaloneAncientScepter_{oldDef.skillName}Scepter";
             (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;

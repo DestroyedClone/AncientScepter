@@ -14,7 +14,8 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Double damage and lunge speed. Utterly ridiculous knockback.</color>";
+        public override string overrideToken => "STANDALONEANCIENTSCEPTER_LOADER_CHARGEFISTOVERRIDE";
+        public override string fullDescToken => "STANDALONEANCIENTSCEPTER_LOADER_CHARGEFISTFULLDESC";
 
         public override string targetBody => "LoaderBody";
         public override SkillSlot targetSlot => SkillSlot.Utility;
@@ -25,13 +26,11 @@ namespace AncientScepter
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/LoaderBody/ChargeFist");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_LOADER_CHARGEFISTNAME";
-            newDescToken = "ANCIENTSCEPTER_LOADER_CHARGEFISTDESC";
+            var nametoken = "STANDALONEANCIENTSCEPTER_LOADER_CHARGEFISTNAME";
+            newDescToken = "STANDALONEANCIENTSCEPTER_LOADER_CHARGEFISTDESC";
             oldDescToken = oldDef.skillDescriptionToken;
-            var namestr = "Megaton Punch";
-            LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = $"{oldDef.skillName}Scepter";
+            myDef.skillName = $"StandaloneAncientScepter_{oldDef.skillName}Scepter";
             (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;

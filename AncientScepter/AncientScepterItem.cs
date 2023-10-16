@@ -10,6 +10,7 @@ using static AncientScepter.MiscUtil;
 using static AncientScepter.SkillUtil;
 using AncientScepter.ScepterSkillsMonster;
 using System.Runtime.CompilerServices;
+using System;
 
 namespace AncientScepter
 {
@@ -19,7 +20,12 @@ namespace AncientScepter
         public abstract SkillDef myDef { get; protected set; }
         public abstract string oldDescToken { get; protected set; }
         public abstract string newDescToken { get; protected set; }
-        public abstract string overrideStr { get; }
+
+        [Obsolete("Use overrideToken instead, and use a language token.")]
+        public virtual string overrideStr { get; }
+        public virtual string overrideToken { get; } = "";
+        public virtual object[] overrideTokenParams { get; }
+        public virtual string fullDescToken { get; protected set; }
 
         internal abstract void SetupAttributes();
 
@@ -46,6 +52,7 @@ namespace AncientScepter
         public static bool altModel;
         public static bool removeClassicItemsScepterFromPool;
         public static bool enableSOTVTransforms;
+        public static bool useReplacementDescriptions;
 
         // Artificer
         public static bool artiFlamePerformanceMode;
@@ -158,12 +165,18 @@ namespace AncientScepter
             ancientWispPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/characterbodies/AncientWispBody");
             RegisterSkills();
             CreateConfig(config);
-            CreateLang();
+            //CreateLang();
             CreateItem();
             Hooks();
             Install();
             //InstallLanguage();
             On.RoR2.UI.MainMenu.MainMenuController.Start += MainMenuController_Start;
+            Language.onCurrentLanguageChanged += UpdateTranslations;
+        }
+
+        private void UpdateTranslations()
+        {
+
         }
 
         private void MainMenuController_Start(On.RoR2.UI.MainMenu.MainMenuController.orig_Start orig, RoR2.UI.MainMenu.MainMenuController self)
@@ -276,6 +289,11 @@ namespace AncientScepter
                 "Transformation Notification",
                 true,
                 "If true, then when scepters are re-rolled, then it will be accompanied by a transformation notification like other items.").Value;
+            useReplacementDescriptions =
+                config.Bind(configCategory,
+                "Full Description",
+                false,
+                "If true, then the description for the scepter skill will be replaced instead of appending the SCEPTER description. Full description may describe less detail.").Value;
         }
 
 
@@ -559,6 +577,7 @@ namespace AncientScepter
             }
         }
 
+        /*
         public void InstallLanguage()
         {
             foreach (var skill in skills)
@@ -569,7 +588,7 @@ namespace AncientScepter
                 }
                 languageOverlays.Add(LanguageAPI.AddOverlay(skill.newDescToken, Language.GetString(skill.oldDescToken) + skill.overrideStr));
             }
-        }
+        }*/
 
         private bool handlingOverride = false;
 

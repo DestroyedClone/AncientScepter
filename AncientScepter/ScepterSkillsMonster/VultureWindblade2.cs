@@ -20,6 +20,7 @@ namespace AncientScepter.ScepterSkillsMonster
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
         public override string overrideStr => "\n<color=#d299ff>SCEPTER: 50% chance to fire an additional windblade for half damage.</color>";
+        public override string overrideToken => "";
 
         public override string targetBody => "VultureBody";
         public override SkillSlot targetSlot => SkillSlot.Primary;

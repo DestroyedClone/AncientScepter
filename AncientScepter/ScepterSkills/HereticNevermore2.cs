@@ -17,7 +17,8 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Deals 5000% fatal damage to you and nearby enemies after a short time.</color>";
+        public override string overrideToken => "STANDALONEANCIENTSCEPTER_HERETIC_SQUAWKOVERRIDE";
+        public override string fullDescToken => "STANDALONEANCIENTSCEPTER_HERETIC_SQUAWKFULLDESC";
 
         public override string targetBody => "HereticBody";
         public override SkillSlot targetSlot => SkillSlot.None;
@@ -32,13 +33,11 @@ namespace AncientScepter
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/HereticBody/HereticDefaultAbility");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_HERETIC_SQUAWKNAME";
-            newDescToken = "ANCIENTSCEPTER_HERETIC_SQUAWKDESC";
+            var nametoken = "STANDALONEANCIENTSCEPTER_HERETIC_SQUAWKNAME";
+            newDescToken = "STANDALONEANCIENTSCEPTER_HERETIC_SQUAWKDESC";
             oldDescToken = oldDef.skillDescriptionToken;
-            var namestr = "Perish Song";
-            LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = $"{oldDef.skillName}Scepter";
+            myDef.skillName = $"StandaloneAncientScepter_{oldDef.skillName}Scepter";
             (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
@@ -58,8 +57,8 @@ namespace AncientScepter
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
         internal void doBetterUI()
         {
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, "Sing", 0);
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, "Perish Song Activation", 0);
+                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, "STANDALONEANCIENTSCEPTER_BETTERUI_BUFF_PERISHSONG_NAME", 0);
+                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, "STANDALONEANCIENTSCEPTER_BETTERUI__BUFF_PERISHSONG_DESC", 0);
         } 
         public static float GetEstimatedDamageForPerishSong()
         {

@@ -29,6 +29,7 @@ namespace AncientScepter
     [BepInDependency(R2API.ContentManagement.R2APIContentManager.PluginGUID,R2API.ContentManagement.R2APIContentManager.PluginVersion)]
     [BepInDependency("com.xoxfaby.BetterUI", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.ThinkInvisible.TILER2", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.rune580.riskofoptions", BepInDependency.DependencyFlags.SoftDependency)]
 
     public class AncientScepterMain : BaseUnityPlugin
     {
@@ -74,8 +75,6 @@ namespace AncientScepter
             BetterUI.Buffs.RegisterBuffInfo(AncientScepterMain.perishSongDebuff,
                 "STANDALONEANCIENTSCEPTER_BUFF_PERISHSONG_NAME",
                 "STANDALONEANCIENTSCEPTER_BUFF_PERISHSONG_DESC");
-            LanguageAPI.Add("STANDALONEANCIENTSCEPTER_BUFF_PERISHSONG_NAME", "Perish Song");
-            LanguageAPI.Add("STANDALONEANCIENTSCEPTER_BUFF_PERISHSONG_DESC", "After 30 seconds, take 5000% damage from the Heretic that inflicted you.");
         }
 
         public static void SetupBuffs()
@@ -130,7 +129,9 @@ namespace AncientScepter
                 //Debug.Log($"{skill.oldDescToken} : {Language.GetString(skill.oldDescToken)}");
                 //Debug.Log($"{skill.overrideStr}");
 
-                var languageOverlay = LanguageAPI.AddOverlay(skill.newDescToken, Language.GetString(skill.oldDescToken) + skill.overrideStr, Language.currentLanguageName ?? "en");
+                var overlayToken = skill.overrideToken.IsNullOrWhiteSpace() 
+                    ? Language.GetStringFormatted(skill.overrideToken, skill.overrideTokenParams) : skill.overrideStr;
+                var languageOverlay = LanguageAPI.AddOverlay(skill.newDescToken, Language.GetString(skill.oldDescToken) + overlayToken, Language.currentLanguageName ?? "en");
 
                 //Debug.Log($"{skill.newDescToken}");
 

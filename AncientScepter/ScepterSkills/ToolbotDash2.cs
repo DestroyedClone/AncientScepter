@@ -13,6 +13,8 @@ namespace AncientScepter
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
         public override string overrideStr => "\n<color=#d299ff>SCEPTER: Halves incoming damage (stacks with armor), double duration. After stopping: retaliate and stun for 200% of unmodified damage taken with a huge explosion.</color>";
+        public override string overrideToken => "STANDALONEANCIENTSCEPTER_TOOLBOT_DASHOVERRIDE";
+        public override string fullDescToken => "STANDALONEANCIENTSCEPTER_TOOLBOT_DASHFULLDESC";
 
         public override string targetBody => "ToolbotBody";
         public override SkillSlot targetSlot => SkillSlot.Utility;
@@ -26,10 +28,8 @@ namespace AncientScepter
             var nametoken = "ANCIENTSCEPTER_TOOLBOT_DASHNAME";
             newDescToken = "ANCIENTSCEPTER_TOOLBOT_DASHDESC";
             oldDescToken = oldDef.skillDescriptionToken;
-            var namestr = "Breach Mode";
-            LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = $"{oldDef.skillName}Scepter";
+            myDef.skillName = $"StandaloneAncientScepter_{oldDef.skillName}Scepter";
             (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
@@ -47,7 +47,7 @@ namespace AncientScepter
         internal void doBetterUI()
         {
                 BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("ToolbotBodyToolbotDash"));
-                BetterUI.ProcCoefficientCatalog.AddToSkill(myDef.skillName, "Explosion", 1f);
+                BetterUI.ProcCoefficientCatalog.AddToSkill(myDef.skillName, "STANDALONEANCIENTSCEPTER_BETTERUI_TOOLBOT_EXPLOSION", 1f);
         } 
         internal override void LoadBehavior()
         {

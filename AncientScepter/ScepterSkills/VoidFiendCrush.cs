@@ -18,6 +18,8 @@ namespace AncientScepter
         public override string newDescToken { get; protected set; }
 
         public override string overrideStr => "\n<color=#d299ff>SCEPTER: Suppresses nearby enemies or allies within 25m. Corrupted Supress has +2 charges.</color>";
+        public override string overrideToken => "";
+        public override string fullDescToken => "";
 
         public override string targetBody => "VoidSurvivorBody";
 
@@ -42,7 +44,7 @@ namespace AncientScepter
             LanguageAPI.Add(nametoken, namestr);
 
             //Both variants of supress are named crocoleap internally,so we might as well give em better names
-            myDef.skillName = $"VoidSurvivorCrushCorruptionScepter";
+            myDef.skillName = $"StandaloneAncientScepter_VoidSurvivorCrushCorruptionScepter";
             (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
@@ -53,7 +55,7 @@ namespace AncientScepter
             dirtySkillDef = oldCtxDef;
             myCtxDef = CloneSkillDef(oldCtxDef);
 
-            myCtxDef.skillName = $"VoidSurvivorCrushHealthScepter";
+            myCtxDef.skillName = $"StandaloneAncientScepter_VoidSurvivorCrushHealthScepter";
             (myCtxDef as ScriptableObject).name = myCtxDef.skillName;
             var corruptedNameToken = "ANCIENTSCEPTER_VOIDSURVIVOR_CORRUPTEDCRUSHCORRUPTIONNAME";
             LanguageAPI.Add(corruptedNameToken, "Forfeited Suppress");

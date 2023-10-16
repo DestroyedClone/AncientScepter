@@ -14,8 +14,8 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Fires twice as many bullets, twice as fast, with twice the accuracy at every enemy within range." +
-            "\nHolding down your primary skill will fire more accurately.</color>";
+        public override string overrideToken => "STANDALONEANCIENTSCEPTER_COMMANDO_BARRAGEOVERRIDE";
+        public override string fullDescToken => "STANDALONEANCIENTSCEPTER_COMMANDO_BARRAGEFULLDESC";
 
         public override string targetBody => "CommandoBody";
         public override SkillSlot targetSlot => SkillSlot.Special;
@@ -26,14 +26,11 @@ namespace AncientScepter
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/CommandoBody/CommandoBodyBarrage");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_COMMANDO_BARRAGENAME";
-            newDescToken = "ANCIENTSCEPTER_COMMANDO_BARRAGEDESC";
-            oldDescToken = oldDef.skillDescriptionToken;
-            var namestr = "Death Blossom";
-            LanguageAPI.Add(nametoken, namestr);
+            var nametoken = "STANDALONEANCIENTSCEPTER_COMMANDO_BARRAGENAME";
+            newDescToken = "STANDALONEANCIENTSCEPTER_COMMANDO_BARRAGEDESC";
             //TODO: fire auto-aim bullets at every enemy in range
 
-            myDef.skillName = $"{oldDef.skillName}Scepter";
+            myDef.skillName = $"StandaloneAncientScepter_{oldDef.skillName}Scepter";
             (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;

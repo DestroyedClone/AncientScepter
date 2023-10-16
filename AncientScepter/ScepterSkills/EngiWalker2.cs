@@ -14,7 +14,8 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Hold and place two more turrets.</color>";
+        public override string overrideToken => "STANDALONEANCIENTSCEPTER_ENGI_WALKEROVERRIDE";
+        public override string fullDescToken => "STANDALONEANCIENTSCEPTER_ENGI_WALKERFULLDESC";
 
         public override string targetBody => "EngiBody";
         public override SkillSlot targetSlot => SkillSlot.Special;
@@ -25,13 +26,11 @@ namespace AncientScepter
             oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/EngiBody/EngiBodyPlaceWalkerTurret");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_ENGI_WALKERNAME";
-            newDescToken = "ANCIENTSCEPTER_ENGI_WALKERDESC";
+            var nametoken = "STANDALONEANCIENTSCEPTER_ENGI_WALKERNAME";
+            newDescToken = "STANDALONEANCIENTSCEPTER_ENGI_WALKERDESC";
             oldDescToken = oldDef.skillDescriptionToken;
-            var namestr = "TR58-C Carbonizer Mini";
-            LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = $"{oldDef.skillName}Scepter";
+            myDef.skillName = $"StandaloneAncientScepter_{oldDef.skillName}Scepter";
             (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;

@@ -53,6 +53,19 @@
 	  </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="language\FR\" />
+    <Folder Include="language\de\" />
+    <Folder Include="language\es-ES\" />
+    <Folder Include="language\IT\" />
+    <Folder Include="language\ja\" />
+    <Folder Include="language\ko\" />
+    <Folder Include="language\zh-CN\" />
+    <Folder Include="language\tr\" />
+    <Folder Include="language\RU\" />
+    <Folder Include="language\pt-BR\" />
+  </ItemGroup>
+
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="if &quot;$(Username)&quot; == &quot;Erikbir&quot; copy /Y &quot;$(TargetPath)&quot; &quot;C:\Program Files (x86)\Steam\steamapps\common\Risk of Rain 2\r2modman\BepInEx\plugins\amogus_lovers-StandaloneAncientScepter\&quot;" />
   </Target>

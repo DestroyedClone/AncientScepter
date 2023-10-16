@@ -12,12 +12,19 @@ namespace AncientScepter
 {
     public class ArtificerFlamethrower2 : ScepterSkill
     {
+        /* =Fire Cloud
+         * Fire Frequency: 1/2 = 0.5s
+         * Lifetime = 10s
+         * Proc: 0.1f
+         * Damage: ?
+         */
         private GameObject projCloud;
         public override SkillDef myDef { get; protected set; }
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Hits leave behind a lingering fire cloud.</color>";
+        public override string overrideToken => "STANDALONEANCIENTSCEPTER_MAGE_FLAMETHROWEROVERRIDE";
+        public override string fullDescToken => "STANDALONEANCIENTSCEPTER_MAGE_FLAMETHROWERFULLDESC";
 
         public override string targetBody => "MageBody";
         public override SkillSlot targetSlot => SkillSlot.Special;
@@ -28,15 +35,12 @@ namespace AncientScepter
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/MageBody/MageBodyFlamethrower");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_MAGE_FLAMETHROWERNAME";
-            newDescToken = "ANCIENTSCEPTER_MAGE_FLAMETHROWERDESC";
+            newDescToken = "STANDALONEANCIENTSCEPTER_MAGE_FLAMETHROWERDESC";
             oldDescToken = oldDef.skillDescriptionToken;
-            var namestr = "Dragon's Breath";
-            LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = $"{oldDef.skillName}Scepter";
+            myDef.skillName = $"StandaloneAncientScepter_{oldDef.skillName}Scepter";
             (myDef as ScriptableObject).name = myDef.skillName;
-            myDef.skillNameToken = nametoken;
+            myDef.skillNameToken = "STANDALONEANCIENTSCEPTER_MAGE_FLAMETHROWERNAME";
             myDef.skillDescriptionToken = newDescToken;
             myDef.icon = Assets.SpriteAssets.ArtificerFlameThrower2;
 
@@ -101,7 +105,7 @@ namespace AncientScepter
         internal void doBetterUI()
         {
             BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("MageBodyFlamethrower"));
-            BetterUI.ProcCoefficientCatalog.AddToSkill(myDef.skillName, "Fire Cloud", 0);
+            BetterUI.ProcCoefficientCatalog.AddToSkill(myDef.skillName, Language.GetString("STANDALONEANCIENTSCEPTER_BETTERUI_MAGE_FIRECLOUD"), 0.1f);
         } 
         internal override void LoadBehavior()
         {

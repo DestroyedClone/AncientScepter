@@ -15,7 +15,8 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: +50% radius and duration. Inflicts burn.</color>";
+        public override string overrideToken => "STANDALONEANCIENTSCEPTER_HUNTRESS_RAINOVERRIDE";
+        public override string fullDescToken => "STANDALONEANCIENTSCEPTER_HUNTRESS_RAINFULLDESC";
 
         public override string targetBody => "HuntressBody";
         public override SkillSlot targetSlot => SkillSlot.Special;
@@ -26,13 +27,11 @@ namespace AncientScepter
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/HuntressBody/HuntressBodyArrowRain");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_HUNTRESS_RAINNAME";
-            newDescToken = "ANCIENTSCEPTER_HUNTRESS_RAINDESC";
+            var nametoken = "STANDALONEANCIENTSCEPTER_HUNTRESS_RAINNAME";
+            newDescToken = "STANDALONEANCIENTSCEPTER_HUNTRESS_RAINDESC";
             oldDescToken = oldDef.skillDescriptionToken;
-            var namestr = "Burning Rain";
-            LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = $"{oldDef.skillName}Scepter";
+            myDef.skillName = $"StandaloneAncientScepter_{oldDef.skillName}Scepter";
             (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
@@ -40,7 +39,7 @@ namespace AncientScepter
 
             ContentAddition.AddSkillDef(myDef);
 
-            projReplacer = Resources.Load<GameObject>("prefabs/projectiles/HuntressArrowRain").InstantiateClone("AncientScepterHuntressRain");
+            projReplacer = Resources.Load<GameObject>("prefabs/projectiles/HuntressArrowRain").InstantiateClone("StandaloneAncientScepterHuntressRain");
             projReplacer.GetComponent<ProjectileDamage>().damageType |= DamageType.IgniteOnHit;
             projReplacer.GetComponent<ProjectileDotZone>().lifetime *= 1.5f;
             projReplacer.transform.localScale = new Vector3(22.5f, 15f, 22.5f);

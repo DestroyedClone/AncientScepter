@@ -18,7 +18,8 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Hold to call down one continuous barrage for 21x500% damage.</color>";
+        public override string overrideToken => "STANDALONEANCIENTSCEPTER_CAPTAIN_AIRSTRIKEOVERRIDE";
+        public override string fullDescToken => "STANDALONEANCIENTSCEPTER_CAPTAIN_AIRSTRIKEFULLDESC";
 
         public override string targetBody => "CaptainBody";
         public override SkillSlot targetSlot => SkillSlot.Utility;
@@ -29,13 +30,11 @@ namespace AncientScepter
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/CaptainBody/PrepAirstrike");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_CAPTAIN_AIRSTRIKENAME";
-            newDescToken = "ANCIENTSCEPTER_CAPTAIN_AIRSTRIKEDESC";
+            var nametoken = "STANDALONEANCIENTSCEPTER_CAPTAIN_AIRSTRIKENAME";
+            newDescToken = "STANDALONEANCIENTSCEPTER_CAPTAIN_AIRSTRIKEDESC";
             oldDescToken = oldDef.skillDescriptionToken;
-            var namestr = "21-Probe Salute";
-            LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = $"{oldDef.skillName}Scepter";
+            myDef.skillName = $"StandaloneAncientScepter_{oldDef.skillName}Scepter";
             (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;

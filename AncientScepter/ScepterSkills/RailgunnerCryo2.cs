@@ -17,9 +17,8 @@ namespace AncientScepter
         public static SkillDef myFireDef { get; protected set; }
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Explodes on contact with a frost blast, dealing 200% damage to all enemies within 6m." +
-            " Hit enemies continue to be slowed by 80% for 20 seconds.</color>";
+        public override string overrideToken => "STANDALONEANCIENTSCEPTER_RAILGUNNER_SNIPECRYOOVERRIDE";
+        public override string fullDescToken => "STANDALONEANCIENTSCEPTER_RAILGUNNER_SNIPECRYOFULLDESC";
 
         public override string targetBody => "RailgunnerBody";
 
@@ -32,13 +31,11 @@ namespace AncientScepter
             var oldDef = Addressables.LoadAssetAsync<RailgunSkillDef>("RoR2/DLC1/Railgunner/RailgunnerBodyChargeSnipeCryo.asset").WaitForCompletion();
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_RAILGUNNER_SNIPECRYONAME";
-            newDescToken = "ANCIENTSCEPTER_RAILGUNNER_SNIPECRYODESC";
+            var nametoken = "STANDALONEANCIENTSCEPTER_RAILGUNNER_SNIPECRYONAME";
+            newDescToken = "STANDALONEANCIENTSCEPTER_RAILGUNNER_SNIPECRYODESC";
             oldDescToken = oldDef.skillDescriptionToken;
-            var namestr = "Permafrosted Cryocharge";
-            LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = $"{oldDef.skillName}Scepter";
+            myDef.skillName = $"StandaloneAncientScepter_{oldDef.skillName}Scepter";
             (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
@@ -48,7 +45,7 @@ namespace AncientScepter
 
             var oldCallDef = Addressables.LoadAssetAsync<RailgunSkillDef>("RoR2/DLC1/Railgunner/RailgunnerBodyFireSnipeCryo.asset").WaitForCompletion();
             myFireDef = CloneSkillDef(oldCallDef);
-            myFireDef.skillName = $"{oldCallDef.skillName}Scepter";
+            myFireDef.skillName = $"StandaloneAncientScepter_{oldCallDef.skillName}Scepter";
             (myFireDef as ScriptableObject).name = myFireDef.skillName;
             myFireDef.skillNameToken = "ANCIENTSCEPTER_RAILGUNNER_FIRESNIPECRYONAME";
             LanguageAPI.Add("ANCIENTSCEPTER_RAILGUNNER_FIRESNIPECRYONAME", "Permafrosted Railgun");

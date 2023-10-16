@@ -18,7 +18,8 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Triple omnidirectional lightning bolts.</color>";
+        public override string overrideToken => "STANDALONEANCIENTSCEPTER_SCEPLOADER_CHARGEZAPFISTFULLDESC";
+        public override string fullDescToken => "STANDALONEANCIENTSCEPTER_SCEPLOADER_CHARGEZAPFISTOVERRIDE";
 
         public override string targetBody => "LoaderBody";
         public override SkillSlot targetSlot => SkillSlot.Utility;
@@ -29,13 +30,11 @@ namespace AncientScepter
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/LoaderBody/ChargeZapFist");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_SCEPLOADER_CHARGEZAPFISTNAME";
-            newDescToken = "ANCIENTSCEPTER_SCEPLOADER_CHARGEZAPFISTDESC";
+            var nametoken = "STANDALONEANCIENTSCEPTER_SCEPLOADER_CHARGEZAPFISTNAME";
+            newDescToken = "STANDALONEANCIENTSCEPTER_SCEPLOADER_CHARGEZAPFISTDESC";
             oldDescToken = oldDef.skillDescriptionToken;
-            var namestr = "Thundercrash";
-            LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = $"{oldDef.skillName}Scepter";
+            myDef.skillName = $"StandaloneAncientScepter_{oldDef.skillName}Scepter";
             (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
@@ -43,7 +42,7 @@ namespace AncientScepter
 
             ContentAddition.AddSkillDef(myDef);
 
-            projReplacer = Resources.Load<GameObject>("prefabs/projectiles/LoaderZapCone").InstantiateClone("AncientScepterLoaderThundercrash");
+            projReplacer = Resources.Load<GameObject>("prefabs/projectiles/LoaderZapCone").InstantiateClone("StandaloneAncientScepterLoaderThundercrash");
             var proxb = projReplacer.GetComponent<ProjectileProximityBeamController>();
             proxb.attackFireCount *= 3;
             proxb.maxAngleFilter = 180f;

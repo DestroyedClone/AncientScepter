@@ -18,7 +18,8 @@ namespace AncientScepter
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
 
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Hits bore permanent holes through flesh, permanently removing 20 armor. Proc Coefficient increased by +0.5.</color>";
+        public override string overrideToken => "STANDALONEANCIENTSCEPTER_RAILGUNNER_SNIPESUPEROVERRIDE";
+        public override string fullDescToken => "STANDALONEANCIENTSCEPTER_RAILGUNNER_SNIPESUPERFULLDESC";
 
         public override string targetBody => "RailgunnerBody";
 
@@ -31,13 +32,11 @@ namespace AncientScepter
             var oldDef = Addressables.LoadAssetAsync<RailgunSkillDef>("RoR2/DLC1/Railgunner/RailgunnerBodyChargeSnipeSuper.asset").WaitForCompletion();
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_RAILGUNNER_SNIPESUPERNAME";
-            newDescToken = "ANCIENTSCEPTER_RAILGUNNER_SNIPESUPERDESC";
+            var nametoken = "STANDALONEANCIENTSCEPTER_RAILGUNNER_SNIPESUPERNAME";
+            newDescToken = "STANDALONEANCIENTSCEPTER_RAILGUNNER_SNIPESUPERDESC";
             oldDescToken = oldDef.skillDescriptionToken;
-            var namestr = "Hypercharge";
-            LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = $"{oldDef.skillName}Scepter";
+            myDef.skillName = $"StandaloneAncientScepter_{oldDef.skillName}Scepter";
             (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
@@ -48,7 +47,7 @@ namespace AncientScepter
 
             var oldCallDef = Addressables.LoadAssetAsync<RailgunSkillDef>("RoR2/DLC1/Railgunner/RailgunnerBodyFireSnipeSuper.asset").WaitForCompletion();
             myFireDef = CloneSkillDef(oldCallDef);
-            myFireDef.skillName = $"RailgunnerBodyFireSnipeSuperScepter";
+            myFireDef.skillName = $"StandaloneAncientScepter_{oldCallDef.skillName}Scepter";
             (myFireDef as ScriptableObject).name = myFireDef.skillName;
             myFireDef.skillNameToken = "ANCIENTSCEPTER_RAILGUNNER_FIRESNIPESUPERNAME";
             //myFireDef.skillDescriptionToken = "ANCIENTSCEPTER_RAILGUNNER_FIRESNIPESUPERDESC";
@@ -69,8 +68,8 @@ namespace AncientScepter
                 //BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("RailgunnerBodyChargeSnipeSuper"));
                 //BetterUI.ProcCoefficientCatalog.AddSkill(myFireDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("RailgunnerBodyFireSnipeSuper"));
 
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, "Projectile", 3.5f);
-                BetterUI.ProcCoefficientCatalog.AddSkill(myFireDef.skillName, "Projectile", 3.5f);
+                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, "STANDALONEANCIENTSCEPTER_BETTERUI_RAILGUNNER_PROJECTILE", 3.5f);
+                BetterUI.ProcCoefficientCatalog.AddSkill(myFireDef.skillName, "STANDALONEANCIENTSCEPTER_BETTERUI_RAILGUNNER_PROJECTILE", 3.5f);
         } 
         internal override void LoadBehavior()
         {

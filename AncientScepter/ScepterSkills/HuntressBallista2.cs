@@ -16,7 +16,8 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Fires quick bursts of five extra projectiles for 2.5x TOTAL damage.</color>";
+        public override string overrideToken => "STANDALONEANCIENTSCEPTER_HUNTRESS_BALLISTAOVERRIDE";
+        public override string fullDescToken => "STANDALONEANCIENTSCEPTER_HUNTRESS_BALLISTAFULLDESC";
 
         public override string targetBody => "HuntressBody";
         public override SkillSlot targetSlot => SkillSlot.Special;
@@ -27,13 +28,11 @@ namespace AncientScepter
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/HuntressBody/AimArrowSnipe");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_HUNTRESS_BALLISTANAME";
-            newDescToken = "ANCIENTSCEPTER_HUNTRESS_BALLISTADESC";
+            var nametoken = "STANDALONEANCIENTSCEPTER_HUNTRESS_BALLISTANAME";
+            newDescToken = "STANDALONEANCIENTSCEPTER_HUNTRESS_BALLISTADESC";
             oldDescToken = oldDef.skillDescriptionToken;
-            var namestr = "Rabauld";
-            LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = $"{oldDef.skillName}Scepter";
+            myDef.skillName = $"StandaloneAncientScepter_{oldDef.skillName}Scepter";
             (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;

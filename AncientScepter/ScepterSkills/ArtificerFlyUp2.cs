@@ -13,7 +13,8 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Double damage, quadruple radius.</color>";
+        public override string overrideToken => "STANDALONEANCIENTSCEPTER_MAGE_FLYUPOVERRIDE";
+        public override string fullDescToken => "STANDALONEANCIENTSCEPTER_MAGE_FLYUPFULLDESC";
 
         public override string targetBody => "MageBody";
         public override SkillSlot targetSlot => SkillSlot.Special;
@@ -24,13 +25,11 @@ namespace AncientScepter
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/MageBody/MageBodyFlyUp");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_MAGE_FLYUPNAME";
-            newDescToken = "ANCIENTSCEPTER_MAGE_FLYUPDESC";
+            var nametoken = "STANDALONEANCIENTSCEPTER_MAGE_FLYUPNAME";
+            newDescToken = "STANDALONEANCIENTSCEPTER_MAGE_FLYUPDESC";
             oldDescToken = oldDef.skillDescriptionToken;
-            var namestr = "Antimatter Surge";
-            LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = $"{oldDef.skillName}Scepter";
+            myDef.skillName = $"StandaloneAncientScepter_{oldDef.skillName}Scepter";
             (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;

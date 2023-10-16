@@ -15,7 +15,8 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Half damage and knockback; throw eight at once.</color>";
+        public override string overrideToken => "STANDALONEANCIENTSCEPTER_COMMANDO_GRENADEOVERRIDE";
+        public override string fullDescToken => "STANDALONEANCIENTSCEPTER_COMMANDO_GRENADEFULLDESC";
 
         public override string targetBody => "CommandoBody";
         public override SkillSlot targetSlot => SkillSlot.Special;
@@ -26,13 +27,11 @@ namespace AncientScepter
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/CommandoBody/ThrowGrenade");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_COMMANDO_GRENADENAME";
-            newDescToken = "ANCIENTSCEPTER_COMMANDO_GRENADEDESC";
+            var nametoken = "STANDALONEANCIENTSCEPTER_COMMANDO_GRENADENAME";
+            newDescToken = "STANDALONEANCIENTSCEPTER_COMMANDO_GRENADEDESC";
             oldDescToken = oldDef.skillDescriptionToken;
-            var namestr = "Carpet Bomb";
-            LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = $"{oldDef.skillName}Scepter";
+            myDef.skillName = $"StandaloneAncientScepter_{oldDef.skillName}Scepter";
             (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;

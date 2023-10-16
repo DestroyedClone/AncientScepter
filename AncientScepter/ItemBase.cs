@@ -62,12 +62,14 @@ namespace AncientScepter
         {
         }
 
+        
         protected void CreateLang()
         {
+            /*
             LanguageAPI.Add("ITEM_" + ItemLangTokenName + "_NAME", ItemName);
             LanguageAPI.Add("ITEM_" + ItemLangTokenName + "_PICKUP", ItemPickupDesc);
             LanguageAPI.Add("ITEM_" + ItemLangTokenName + "_DESCRIPTION", ItemFullDescription);
-            LanguageAPI.Add("ITEM_" + ItemLangTokenName + "_LORE", ItemLore);
+            LanguageAPI.Add("ITEM_" + ItemLangTokenName + "_LORE", ItemLore);*/
         }
 
         public virtual ItemDisplayRuleDict CreateDisplayRules()

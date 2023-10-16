@@ -13,8 +13,8 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Double duration. Kills reset duration." +
-            "\nHold down the special button to leave earlier.</color>";
+        public override string overrideToken => "STANDALONEANCIENTSCEPTER_MERC_EVISOVERRIDE";
+        public override string fullDescToken => "STANDALONEANCIENTSCEPTER_MERC_EVISFULLDESC";
 
         public override string targetBody => "MercBody";
         public override SkillSlot targetSlot => SkillSlot.Special;
@@ -25,13 +25,11 @@ namespace AncientScepter
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/MercBody/MercBodyEvis");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_MERC_EVISNAME";
-            newDescToken = "ANCIENTSCEPTER_MERC_EVISDESC";
+            var nametoken = "STANDALONEANCIENTSCEPTER_MERC_EVISNAME";
+            newDescToken = "STANDALONEANCIENTSCEPTER_MERC_EVISDESC";
             oldDescToken = oldDef.skillDescriptionToken;
-            var namestr = "Massacre";
-            LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = $"{oldDef.skillName}Scepter";
+            myDef.skillName = $"StandaloneAncientScepter_{oldDef.skillName}Scepter";
             (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;

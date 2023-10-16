@@ -11,6 +11,7 @@ namespace AncientScepter
     public class ModCompat
     {
         internal static bool compatBetterUI = false;
+        internal static bool compatRiskOfOptions = false;
 
         public static void Init()
         {
@@ -18,6 +19,15 @@ namespace AncientScepter
             {
                 BetterUICompatInit();
             }
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.rune580.riskofoptions"))
+            {
+                RiskOfOptionsInit();
+            }
+        }
+
+        public static void RiskOfOptionsInit()
+        {
+            compatRiskOfOptions = true;
         }
 
         public static void BetterUICompatInit()

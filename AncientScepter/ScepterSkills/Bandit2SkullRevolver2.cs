@@ -15,17 +15,26 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => $"\n<color=#d299ff>SCEPTER: {ricochetChance}% (+{ricochetChanceStack}% per token) chance to ricochet to another enemy on hit up to {ricochetMax} times within 30m." +
-            $"\n-10% distance & damage per bounce. Unaffected by luck.</color>";
+        public override string overrideToken => "STANDALONEANCIENTSCEPTER_BANDIT2_SKULLREVOLVEROVERRIDE";
+        public override string fullDescToken => "STANDALONEANCIENTSCEPTER_BANDIT2_SKULLREVOLVERFULLDESC";
+        public override object[] overrideTokenParams => new object[]
+        {
+            ricochetChance,
+            ricochetChanceStack,
+            ricochetMax,
+            ricochetRange,
+            (1 - reductionPerBounceMultiplier) * 100
+        };
 
         public override string targetBody => "Bandit2Body";
         public override SkillSlot targetSlot => SkillSlot.Special;
         public override int targetVariantIndex => 1;
 
-        public static float ricochetChance = 25f;
-        public static float ricochetChanceStack = 0.35f;
-        public static int ricochetMax = 8;
-        public static float reductionPerBounceMultiplier = 0.9f;
+        public const float ricochetChance = 25f;
+        public const float ricochetChanceStack = 0.35f;
+        public const int ricochetMax = 8;
+        public const int ricochetRange = 30;
+        public const float reductionPerBounceMultiplier = 0.9f;
 
         public static GameObject bulletTracer = Resources.Load<GameObject>("Prefabs/Effects/Tracers/TracerCommandoDefault");
 
@@ -34,13 +43,11 @@ namespace AncientScepter
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/Bandit2Body/SkullRevolver");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_BANDIT2_SKULLREVOLVERNAME";
-            newDescToken = "ANCIENTSCEPTER_BANDIT2_SKULLREVOLVERDESC";
+            var nametoken = "STANDALONEANCIENTSCEPTER_BANDIT2_SKULLREVOLVERNAME";
+            newDescToken = "STANDALONEANCIENTSCEPTER_BANDIT2_SKULLREVOLVERDESC";
             oldDescToken = oldDef.skillDescriptionToken;
-            var namestr = "Renegade";
-            LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = $"{oldDef.skillName}Scepter";
+            myDef.skillName = $"StandaloneAncientScepter_{oldDef.skillName}Scepter";
             (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
@@ -90,7 +97,7 @@ namespace AncientScepter
                     procCoefficient = damageInfo.procCoefficient,
                     duration = 0.1f,
                     bouncedObjects = new List<HealthComponent>(),
-                    range = 30f,
+                    range = ricochetRange,
                     tracerEffectPrefab = bulletTracer,
                     origin = damageInfo.position
                 };

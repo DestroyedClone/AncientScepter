@@ -12,7 +12,8 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Fires twice.</color>";
+        public override string overrideToken => "STANDALONEANCIENTSCEPTER_BANDIT2_RESETREVOLVEROVERRIDE";
+        public override string fullDescToken => "STANDALONEANCIENTSCEPTER_BANDIT2_RESETREVOLVERFULLDESC";
 
         public override string targetBody => "Bandit2Body";
         public override SkillSlot targetSlot => SkillSlot.Special;
@@ -23,13 +24,11 @@ namespace AncientScepter
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/Bandit2Body/ResetRevolver");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_BANDIT2_RESETREVOLVERNAME";
-            newDescToken = "ANCIENTSCEPTER_BANDIT2_RESETREVOLVERDESC";
+            var nametoken = "STANDALONEANCIENTSCEPTER_BANDIT2_RESETREVOLVERNAME";
+            newDescToken = "STANDALONEANCIENTSCEPTER_BANDIT2_RESETREVOLVERDESC";
             oldDescToken = oldDef.skillDescriptionToken;
-            var namestr = "Assassinate";
-            LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = $"{oldDef.skillName}Scepter";
+            myDef.skillName = $"StandaloneAncientScepter_{oldDef.skillName}Scepter";
             (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;

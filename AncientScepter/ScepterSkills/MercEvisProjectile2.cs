@@ -12,7 +12,8 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Charges four times faster. Hold and fire up to four charges at once.</color>";
+        public override string overrideToken => "STANDALONEANCIENTSCEPTER_MERC_EVISPROJOVERRIDE";
+        public override string fullDescToken => "STANDALONEANCIENTSCEPTER_MERC_EVISPROJFULLDESC";
 
         public override string targetBody => "MercBody";
         public override SkillSlot targetSlot => SkillSlot.Special;
@@ -23,13 +24,11 @@ namespace AncientScepter
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/MercBody/MercBodyEvisProjectile");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_MERC_EVISPROJNAME";
-            newDescToken = "ANCIENTSCEPTER_MERC_EVISPROJDESC";
+            var nametoken = "STANDALONEANCIENTSCEPTER_MERC_EVISPROJNAME";
+            newDescToken = "STANDALONEANCIENTSCEPTER_MERC_EVISPROJDESC";
             oldDescToken = oldDef.skillDescriptionToken;
-            var namestr = "Gale-Force";
-            LanguageAPI.Add(nametoken, namestr);
 
-            myDef.skillName = $"{oldDef.skillName}Scepter";
+            myDef.skillName = $"StandaloneAncientScepter_{oldDef.skillName}Scepter";
             (myDef as ScriptableObject).name = myDef.skillName;
             myDef.skillNameToken = nametoken;
             myDef.skillDescriptionToken = newDescToken;
