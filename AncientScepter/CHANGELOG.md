@@ -1,21 +1,26 @@
 
 ## Changelog
+`1.1.31`
+- 🛠️Fixed any inventory change restocking scepter skills.
+- Batched together transformation notifications to the same item to stop notification flood when given multiple scepters at once.
+- 🛠️Fixed Heretic's Nevermore not having description text.
+
 `1.1.30`
-- Improved handling of SkillOverrides,fixing multiple cases of unexpected behavior.
+- 🛠️Improved handling of SkillOverrides,fixing multiple cases of unexpected behavior.
 - Polished Void Fiend's scepter ability.
 - Moved mod dependencies over to singular r2api modules instead of the legacy one.
 
 `1.1.23`
-- Fixed inverted check on Artificer Flamethrower
+- 🛠️Fixed inverted check on Artificer Flamethrower
 
 `1.1.22`
-- Fixed Handling of cases where upgraded skill states are reused by other bodies.
+- 🛠️Fixed Handling of cases where upgraded skill states are reused by other bodies.
   - Specifically,fixes Incinerator/Flamethrower Drones erroring out on attack.
-- Fixed non-existent/old bodies causing issues when inside Rex's Chaotic Growth
+- 🛠️Fixed non-existent/old bodies causing issues when inside Rex's Chaotic Growth
 
 `1.1.21`
 - Better handling of broken defs from mods + logging
-- Added nullcheck to removeclassicitemsscepter method to  try to fix out of range exception
+- 🛠️Added nullcheck to removeclassicitemsscepter method to  try to fix out of range exception
 
 `1.1.2`
 - Updated to latest libraries

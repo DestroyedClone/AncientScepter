@@ -73,4 +73,4 @@ This refers to compatibility that's included just with this mod, and will not be
 * **TheTimeSweeper** [⚡](https://thunderstore.io/package/TheTimesweeper/)[🐙](https://github.com/TheTimeSweeper) - UnusedMode, Alternate Item Model, Item Displays, Other help
 * **/vm/** ⚡🐙 - Idea for Captain's Lilith Strike
 * **Zenithrium** [⚡](https://thunderstore.io/package/Zenithrium/)[🐙](https://github.com/Zenithrium/) - Nemmando IDR
-* **RandomlyAwesome** [⚡](https://thunderstore.io/package/RandomlyAwesome/)[🐙](https://github.com/yekoc) - BetterUI Compat Fix, Various Scepter Skill fixes
+* **RandomlyAwesome** [⚡](https://thunderstore.io/package/RandomlyAwesome/)[🐙](https://github.com/yekoc) - BetterUI Compat Fix, Various Scepter Skill fixes, Part-time Maintainer

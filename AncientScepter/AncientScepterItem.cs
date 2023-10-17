@@ -537,6 +537,7 @@ namespace AncientScepter
             var Nevermore = new HereticNevermore2();
             Nevermore.SetupAttributes();
             RegisterScepterSkill( Nevermore.myDef,Nevermore.targetBody,UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<SkillDef>("RoR2/Base/Heretic/HereticDefaultAbility.asset").WaitForCompletion());
+            skills.Add(Nevermore);
         }
 
         public void Install()
@@ -598,7 +599,7 @@ namespace AncientScepter
             orig(self,source,skillDef,priority);
             if(!handlingOverride && self.characterBody){
                 handlingOverride = true;
-                ForceCleanScepter(self.characterBody);
+                CleanScepter(self.characterBody,self);
                 HandleScepterSkill(self.characterBody);
                 handlingOverride = false;
             }
@@ -723,14 +724,18 @@ namespace AncientScepter
                     break;
                 case RerollMode.Random:
                     var list = Run.instance.availableTier3DropList.Except(new[] { PickupCatalog.FindPickupIndex(ItemDef.itemIndex) }).ToList(); //todo optimize
+                    var notifylist = new List<ItemIndex>();
                     for (var i = 0; i < count; i++)
                     {
                         self.inventory.RemoveItem(ItemDef, 1);
                         var newItem = PickupCatalog.GetPickupDef(list[UnityEngine.Random.Range(0, list.Count)]).itemIndex;
                         self.inventory.GiveItem(newItem);
-
-                        if (enableSOTVTransforms)
+                        notifylist.Add(newItem);
+                    }
+                    if (enableSOTVTransforms){
+                        foreach(var newItem in notifylist.Distinct()){
                             CharacterMasterNotificationQueue.SendTransformNotification(self.master, ItemDef.itemIndex, newItem, CharacterMasterNotificationQueue.TransformationType.Default);
+                        }
                     }
                     break;
                 case RerollMode.Scrap:
@@ -738,21 +743,27 @@ namespace AncientScepter
                     {
                         self.inventory.RemoveItem(ItemDef, 1);
                         self.inventory.GiveItem(RoR2Content.Items.ScrapRed);
-
-                        if (enableSOTVTransforms)
-                            CharacterMasterNotificationQueue.SendTransformNotification(self.master, ItemDef.itemIndex, RoR2Content.Items.ScrapRed.itemIndex, CharacterMasterNotificationQueue.TransformationType.Default);
                     }
+                    if (enableSOTVTransforms)
+                        CharacterMasterNotificationQueue.SendTransformNotification(self.master, ItemDef.itemIndex, RoR2Content.Items.ScrapRed.itemIndex, CharacterMasterNotificationQueue.TransformationType.Default);
                     break;
             }
         }
 
-        private void ForceCleanScepter(CharacterBody self){
+        private void CleanScepter(CharacterBody self,GenericSkill slot = null,bool force = false){
            var bodyName = BodyCatalog.GetBodyName(self.bodyIndex);
            var repl = scepterReplacers.FindAll(x => x.bodyName == bodyName);
-           foreach(var skill in self.skillLocator.allSkills){
-              if(repl.Any((r) => r.replDef == skill.skillDef)){
-                skill.UnsetSkillOverride(self,skill.skillDef,GenericSkill.SkillOverridePriority.Upgrade);
-              }
+           if(slot){
+               if(repl.Any(r => r.replDef == slot.skillDef && (force || !slot.skillOverrides.Any(s => r.trgtDef == s.skillDef)))){
+                 slot.UnsetSkillOverride(self,slot.skillDef,GenericSkill.SkillOverridePriority.Upgrade);
+               }
+           }
+           else{
+               foreach(var skill in self.skillLocator.allSkills){
+                  if(repl.Any(r => r.replDef == slot.skillDef && (force || !slot.skillOverrides.Any(s => r.trgtDef == s.skillDef)))){
+                    skill.UnsetSkillOverride(self,skill.skillDef,GenericSkill.SkillOverridePriority.Upgrade);
+                  }
+               }
            }
         }
 
@@ -800,7 +811,9 @@ namespace AncientScepter
                         break;
                       }
                     }
-                    if (replVar == null){ return !(stridesInteractionMode == StridesInteractionMode.ScepterRerolls && heresyExists);}
+                    if (replVar == null){ return heresyExists ? stridesInteractionMode != StridesInteractionMode.ScepterRerolls : false;}
+                    var outerOverride = handlingOverride;
+                    handlingOverride = true;
                     if (!forceOff && GetCount(self) > 0)
                     {
                         if (stridesInteractionMode == StridesInteractionMode.ScepterTakesPrecedence && hasHeresyForSlot(targetSlot))
@@ -818,12 +831,11 @@ namespace AncientScepter
                             self.skillLocator.GetSkill(targetSlot).SetSkillOverride(self, heresyDefs[targetSlot], GenericSkill.SkillOverridePriority.Replacement);
                         }
                     }
-
+                    handlingOverride = outerOverride;
                     return true;
                     void UnsetOverrideLater(GenericSkill skill){
                        skill.onSkillChanged -= UnsetOverrideLater;
                        skill.UnsetSkillOverride(self, replVar.replDef,GenericSkill.SkillOverridePriority.Upgrade);
-                       HandleScepterSkill(skill.characterBody);
                     }
                 }
             }
