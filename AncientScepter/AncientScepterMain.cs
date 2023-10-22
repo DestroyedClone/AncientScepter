@@ -32,7 +32,7 @@ namespace AncientScepter
 
     public class AncientScepterMain : BaseUnityPlugin
     {
-        public const string ModVer = "1.1.31";
+        public const string ModVer = "1.1.32";
         public const string ModName = "StandaloneAncientScepter";
         public const string ModGuid = "com.DestroyedClone.AncientScepter";
 

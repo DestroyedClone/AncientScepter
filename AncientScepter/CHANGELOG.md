@@ -1,5 +1,8 @@
 
 ## Changelog
+`1.1.32`
+- 🛠️Fixed any inventory change restocking scepter skills,this time for every character. (Don't forget to change up characters and loadouts between test runs,everyone!)
+
 `1.1.31`
 - 🛠️Fixed any inventory change restocking scepter skills.
 - Batched together transformation notifications to the same item to stop notification flood when given multiple scepters at once.

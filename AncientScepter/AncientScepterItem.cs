@@ -754,13 +754,13 @@ namespace AncientScepter
            var bodyName = BodyCatalog.GetBodyName(self.bodyIndex);
            var repl = scepterReplacers.FindAll(x => x.bodyName == bodyName);
            if(slot){
-               if(repl.Any(r => r.replDef == slot.skillDef && (force || !slot.skillOverrides.Any(s => r.trgtDef == s.skillDef)))){
+               if(repl.Any(r => r.replDef == slot.skillDef && (force || (slot.baseSkill != r.trgtDef && !slot.skillOverrides.Any(s => r.trgtDef == s.skillDef))))){
                  slot.UnsetSkillOverride(self,slot.skillDef,GenericSkill.SkillOverridePriority.Upgrade);
                }
            }
            else{
                foreach(var skill in self.skillLocator.allSkills){
-                  if(repl.Any(r => r.replDef == slot.skillDef && (force || !slot.skillOverrides.Any(s => r.trgtDef == s.skillDef)))){
+               if(repl.Any(r => r.replDef == slot.skillDef && (force || (slot.baseSkill != r.trgtDef && !slot.skillOverrides.Any(s => r.trgtDef == s.skillDef))))){
                     skill.UnsetSkillOverride(self,skill.skillDef,GenericSkill.SkillOverridePriority.Upgrade);
                   }
                }
