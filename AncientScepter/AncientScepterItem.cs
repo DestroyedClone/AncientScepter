@@ -1,25 +1,19 @@
-﻿using BepInEx.Configuration;
+﻿using AncientScepter.Modules;
+using AncientScepter.Modules.Skills;
+using BepInEx.Configuration;
 using R2API;
 using RoR2;
 using RoR2.Skills;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using static AncientScepter.ItemHelpers;
-using static AncientScepter.MiscUtil;
-using static AncientScepter.SkillUtil;
-using AncientScepter.ScepterSkillsMonster;
 using System.Runtime.CompilerServices;
+using UnityEngine;
 
 namespace AncientScepter
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
     public abstract class ScepterSkill
     {
-        public abstract SkillDef myDef { get; protected set; }
-        public abstract string oldDescToken { get; protected set; }
-        public abstract string newDescToken { get; protected set; }
-        public abstract string overrideStr { get; }
+        public abstract SkillDef baseSkillDef { get; protected set; }
 
         internal abstract void SetupAttributes();
 
@@ -31,119 +25,75 @@ namespace AncientScepter
         {
         }
 
-        public abstract string targetBody { get; }
-        public abstract SkillSlot targetSlot { get; }
-        public abstract int targetVariantIndex { get; }
+        public abstract string exclusiveToBodyName { get; }
     }
 
-    public class AncientScepterItem : ItemBase<AncientScepterItem>
+    public class AncientScepterItem
     {
-        public static RerollMode rerollMode;
-        public static UnusedMode unusedMode;
-        public static bool enableMonsterSkills;
-        //public static bool enableBrotherEffects;
-        public static StridesInteractionMode stridesInteractionMode;
-        public static bool altModel;
-        public static bool removeClassicItemsScepterFromPool;
-        public static bool enableSOTVTransforms;
-
-        // Artificer
-        public static bool artiFlamePerformanceMode;
-
-        // Bandit
-
-        // Captain
-        public static bool captainNukeFriendlyFire;
-
-        // Commando
-        //public static bool enableCommandoAutoaim;
-
-        // Croco
-
-        // Engi
-        public static bool engiTurretAdjustCooldown;
-        public static bool engiWalkerAdjustCooldown;
-        public static bool turretBlacklist;
-
-        // Heretic
-
-        // Huntress
-
-        // Loader
-
-        // Merc
-
-        // Railgunner
-
-        // Toolbot
-
-        // Treebot
-
-        // Void Fiend
-
-        //TODO: test w/ stage changes ?
-
-        //Mithrix
-        //public static bool mithrixEnableScepter;
-
         public enum StridesInteractionMode
         {
             HeresyTakesPrecedence, ScepterTakesPrecedence, ScepterRerolls
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public enum RerollMode
         {
-            Disabled, 
-            Random, 
-            Scrap
+            RandomRed,
+            RedScrap,
+            CharacterSpecificOrRandomRed
         }
-        public enum UnusedMode
+
+        /// <summary>
+        /// What to do whenever the scepter ends in an inventory which has no use for it.
+        /// </summary>
+        public enum NoUseMode
         {
+            /// <summary>
+            /// Item will be kept in the inventory.
+            /// </summary>
             Keep,
-            Reroll,
+            /// <summary>
+            /// <see cref="RerollMode"/> will be used.
+            /// </summary>
+            UseRerollMode,
             Metamorphosis,
         }
 
-        public override string ItemName => "Ancient Scepter";
-
-        public override string ItemLangTokenName => "ANCIENT_SCEPTER";
-
-        public override string ItemPickupDesc => "Upgrades one of your skills.";
-
-        public override string ItemFullDescription =>
-            $"Upgrade one of your <style=cIsUtility>skills</style>. <style=cStack>(Unique per character)</style>"
-                        + $" <style=cStack>{(rerollMode != RerollMode.Disabled ? "Extra/Unusable" : "Unusable (but NOT extra)")} pickups will reroll into {(rerollMode == RerollMode.Scrap ? "red scrap" : "other legendary items.")}</style>";
-
-        public override string ItemLore => "Perfected energies. <He> holds it before us. The crystal of foreign elements is not attached physically, yet it does not falter from the staff's structure.\n\nOverwhelming strength. We watch as <His> might splits the ground asunder with a single strike.\n\nWondrous possibilities. <His> knowledge unlocks further pathways of development. We are enlightened by <Him>.\n\nExcellent results. From <His> hands, [Nanga] takes hold. It is as <He> said: The weak are culled.\n\nRisking everything. The crystal destabilizies. [Nanga] is gone, and <He> is forced to wield it once again.\n\nPower comes at a cost. <He> is willing to pay.";
-
-        public override ItemTier Tier => ItemTier.Tier3;
-        public override ItemTag[] ItemTags => EvaluateItemTags();
-
+        /// <summary>
+        /// Asset name to look up to use.
+        /// </summary>
         private string AssetName => altModel ? "AghanimScepter" : "AncientScepter";
 
-        private GameObject itemModel;
-        public override GameObject ItemModel {
-            get {
-                if (itemModel == null) {
+
+        public override GameObject ItemModel
+        {
+            get
+            {
+                if (itemModel == null)
+                {
                     itemModel = Assets.mainAssetBundle.LoadAsset<GameObject>($"mdl{AssetName}Pickup");
                 }
                 return itemModel;
             }
         }
 
-        private GameObject itemDisplay;
-        public override GameObject ItemDisplay
+
+        public GameObject ItemDisplay
         {
             get
             {
-                if (itemDisplay == null)
+                if (_cachedDisplay == null)
                 {
-                    itemDisplay = Assets.mainAssetBundle.LoadAsset<GameObject>($"mdl{AssetName}Display");
+                    _cachedDisplay = Assets.mainAssetBundle.LoadAsset<GameObject>($"mdl{AssetName}Display");
                 }
-                return itemDisplay;
+                return _cachedDisplay;
             }
         }
 
+        private GameObject itemModel;
+        private GameObject _cachedDisplay;
         public override Sprite ItemIcon => Assets.mainAssetBundle.LoadAsset<Sprite>($"tex{AssetName}Icon");
         public override bool TILER2_MimicBlacklisted => true;
 
@@ -157,20 +107,9 @@ namespace AncientScepter
         {
             ancientWispPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/characterbodies/AncientWispBody");
             RegisterSkills();
-            CreateConfig(config);
-            CreateLang();
-            CreateItem();
-            Hooks();
             Install();
-            //InstallLanguage();
-            On.RoR2.UI.MainMenu.MainMenuController.Start += MainMenuController_Start;
         }
 
-        private void MainMenuController_Start(On.RoR2.UI.MainMenu.MainMenuController.orig_Start orig, RoR2.UI.MainMenu.MainMenuController self)
-        {
-            orig(self);
-            On.RoR2.UI.MainMenu.MainMenuController.Start -= MainMenuController_Start;
-        }
 
         private ItemTag[] EvaluateItemTags()
         {
@@ -186,99 +125,6 @@ namespace AncientScepter
             return availableTags.ToArray();
         }
 
-        public override void CreateConfig(ConfigFile config)
-        {
-            string configCategory = "Item: " + ItemName;
-
-            engiTurretAdjustCooldown = 
-                config.Bind("Engineer", 
-                            "TR12-C Gauss Compact Faster Recharge", 
-                            false, 
-                            "If true, TR12-C Gauss Compact will recharge faster to match the additional stock.").Value;
-            engiWalkerAdjustCooldown = 
-                config.Bind("Engineer", 
-                            "TR58-C Carbonizer Mini Faster Recharge", 
-                            false, 
-                            "If true, TR58-C Carbonizer Mini will recharge faster to match the additional stock.").Value;
-            turretBlacklist = 
-                config.Bind("Engineer", 
-                            "Blacklist Turrets", 
-                            false, 
-                            "If true, turrets will be blacklisted from getting the Ancient Scepter." +
-                            "\nIf false, they will get the scepter and will get rerolled depending on the reroll mode.").Value;
-            artiFlamePerformanceMode = 
-                config.Bind("Artificer", 
-                            "ArtiFlamePerformance",
-                            false, 
-                            "If true, Dragon's Breath will use significantly lighter particle effects and no dynamic lighting.").Value;
-            captainNukeFriendlyFire = 
-                config.Bind("Captain", 
-                            "Captain Nuke Friendly Fire", 
-                            false, 
-                            "If true, then Captain's Scepter Nuke will also inflict blight on allies.").Value;
-            rerollMode = 
-                config.Bind(configCategory, 
-                            "Reroll on pickup mode", 
-                            RerollMode.Random, 
-                            "If \"Disabled\", additional stacks will not be rerolled" +
-                            "\nIf \"Random\", any stacks picked up past the first will reroll to other red items." +
-                            "\nIf \"Scrap\", any stacks picked up past the first will reroll into red scrap.").Value;
-            unusedMode =
-                config.Bind(configCategory,
-                            "Unused mode",
-                            UnusedMode.Metamorphosis,
-                            "If \"Keep\", Characters which cannot benefit from the item will still keep it." +
-                            "\nIf \"Reroll\", Characters without any scepter upgrades will reroll according to above pickup mode." +
-                            "\nIf \"Metamorphosis\", Characters without scepter upgrades will only reroll if Artifact of Metamorphosis is not active.").Value;
-            stridesInteractionMode = 
-                config.Bind(configCategory, 
-                            "Strides pickup mode", 
-                            StridesInteractionMode.ScepterRerolls, 
-                            "Changes what happens when a character whose skill is affected by Ancient Scepter has both Ancient Scepter and the corresponding heretic skill replacements (Visions/Hooks/Strides/Essence) at the same time.").Value; //defer until next stage
-            enableMonsterSkills = 
-                config.Bind(configCategory, 
-                            "Enable skills for monsters", 
-                            true, 
-                            "If true, certain monsters get the effects of the Ancient Scepter.").Value;
-            /*mithrixEnableScepter =
-                config.Bind(configCategory,
-                            "Enable Mithrix Lines",
-                            true,
-                            "If true, Mithrix will have additional dialogue when acquiring the Ancient Scepter. Only applies on Commencement. Requires Enable skills for monsters to be enabled.").Value;*/
-            //enableBrotherEffects = config.Bind(configCategory, "Enable Mithrix Lines", true, "If true, Mithrix will have additional dialogue when acquiring the Ancient Scepter.").Value;
-            //enableCommandoAutoaim = config.Bind(configCategory, "Enable Commando Autoaim", true, "This may break compatibiltiy with skills.").Value;
-            altModel =
-                config.Bind(configCategory,
-                            "Alt Model",
-                            false,
-                            "Changes the model as a reference to a certain other scepter that upgrades abilities.").Value;
-            removeClassicItemsScepterFromPool =
-                config.Bind(configCategory,
-                            "CLASSICITEMS: Remove Classic Items Ancient Scepter From Droplist If Installed",
-                            true,
-                            "If true, then the Ancient Scepter from Classic Items will be removed from the drop pool to prevent complications.").Value;
-
-            var engiSkill = skills.First(x => x is EngiTurret2);
-            engiSkill.myDef.baseRechargeInterval = EngiTurret2.oldDef.baseRechargeInterval * (engiTurretAdjustCooldown ? 2f / 3f : 1f);
-            GlobalUpdateSkillDef(engiSkill.myDef);
-
-            var engiSkill2 = skills.First(x => x is EngiWalker2);
-            engiSkill2.myDef.baseRechargeInterval = EngiWalker2.oldDef.baseRechargeInterval / (engiWalkerAdjustCooldown ? 2f : 1f);
-            GlobalUpdateSkillDef(engiSkill2.myDef);
-
-            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.ThinkInvisible.ClassicItems") && removeClassicItemsScepterFromPool)
-            {
-                Run.onRunStartGlobal += RemoveClassicItemsScepter;
-            }
-
-            enableSOTVTransforms =
-                config.Bind(configCategory,
-                "Transformation Notification",
-                true,
-                "If true, then when scepters are re-rolled, then it will be accompanied by a transformation notification like other items.").Value;
-        }
-
-
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         private static void RemoveClassicItemsScepter(Run run)
         {
@@ -291,7 +137,6 @@ namespace AncientScepter
             SetupMaterials(ItemModel);
             ItemDisplay disp = ItemModel.AddComponent<ItemDisplay>();
             disp.rendererInfos = Assets.SetupRendererInfos(ItemModel);
-
 
             displayPrefab = ItemDisplay;
             SetupMaterials(displayPrefab);
@@ -444,7 +289,7 @@ namespace AncientScepter
                 localAngles = new Vector3(353.4687F, 184.4017F, 177.4758F),
                 localScale = new Vector3(0.2235F, 0.2235F, 0.2235F)
             });
-            
+
             rules.Add("mdlNemmando", new ItemDisplayRule
             {
                 childName = "Sword",
@@ -453,7 +298,7 @@ namespace AncientScepter
                 localAngles = new Vector3(1.114511F, 204.2958F, 177.8329F),
                 localScale = new Vector3(0.0026F, 0.0026F, 0.0026F)
             });
-            
+
             rules.Add("mdlHeretic", new ItemDisplayRule
             {
                 childName = "ThighL",
@@ -474,7 +319,7 @@ namespace AncientScepter
             return rules;
         }
 
-        protected override void SetupMaterials(GameObject modelPrefab)
+        internal void SetupMaterials(GameObject modelPrefab)
         {
             purpleFireMaterial = ancientWispPrefab.transform.Find("Model Base?/mdlAncientWisp/AncientWispArmature/chest/Fire, Main").GetComponent<ParticleSystemRenderer>().material;
             modelPrefab.GetComponentInChildren<Renderer>().material = Assets.CreateMaterial($"mat{AssetName}", 1, Color.white, 1);
@@ -485,7 +330,7 @@ namespace AncientScepter
         }
 
         internal List<ScepterSkill> skills = new List<ScepterSkill>();
-        
+
         public AncientScepterItem()
         {
             skills.Add(new ArtificerFlamethrower2());
@@ -531,12 +376,12 @@ namespace AncientScepter
             foreach (var skill in skills)
             {
                 skill.SetupAttributes();
-                RegisterScepterSkill(skill.myDef, skill.targetBody, skill.targetSlot, skill.targetVariantIndex);
+                RegisterScepterSkill(skill.baseSkillDef, skill.exclusiveToBodyName, skill.targetSlot, skill.targetVariantIndex);
             }
-            RegisterScepterSkill(VoidFiendCrush.myCtxDef,"VoidSurvivorBody",VoidFiendCrush.dirtySkillDef);
+            RegisterScepterSkill(VoidFiendCrush.myCtxDef, "VoidSurvivorBody", VoidFiendCrush.dirtySkillDef);
             var Nevermore = new HereticNevermore2();
             Nevermore.SetupAttributes();
-            RegisterScepterSkill( Nevermore.myDef,Nevermore.targetBody,UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<SkillDef>("RoR2/Base/Heretic/HereticDefaultAbility.asset").WaitForCompletion());
+            RegisterScepterSkill(Nevermore.baseSkillDef, Nevermore.exclusiveToBodyName, UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<SkillDef>("RoR2/Base/Heretic/HereticDefaultAbility.asset").WaitForCompletion());
             skills.Add(Nevermore);
         }
 
@@ -574,32 +419,33 @@ namespace AncientScepter
 
         private bool handlingOverride = false;
 
-        private void On_GSUnsetSkillOverride(On.RoR2.GenericSkill.orig_UnsetSkillOverride orig, GenericSkill self,object source , SkillDef skillDef,GenericSkill.SkillOverridePriority priority)
+        private void On_GSUnsetSkillOverride(On.RoR2.GenericSkill.orig_UnsetSkillOverride orig, GenericSkill self, object source, SkillDef skillDef, GenericSkill.SkillOverridePriority priority)
         {
-         /*   bool skillDefIsNotHeresy()
-            {
-                return (skillDef != CharacterBody.CommonAssets.lunarPrimaryReplacementSkillDef
-                    || skillDef != CharacterBody.CommonAssets.lunarSecondaryReplacementSkillDef
-                    || skillDef != CharacterBody.CommonAssets.lunarUtilityReplacementSkillDef
-                    || skillDef != CharacterBody.CommonAssets.lunarSpecialReplacementSkillDef);
-            }
-            var body = self.characterBody;
+            /*   bool skillDefIsNotHeresy()
+               {
+                   return (skillDef != CharacterBody.CommonAssets.lunarPrimaryReplacementSkillDef
+                       || skillDef != CharacterBody.CommonAssets.lunarSecondaryReplacementSkillDef
+                       || skillDef != CharacterBody.CommonAssets.lunarUtilityReplacementSkillDef
+                       || skillDef != CharacterBody.CommonAssets.lunarSpecialReplacementSkillDef);
+               }
+               var body = self.characterBody;
 
-            if ((stridesInteractionMode != StridesInteractionMode.ScepterTakesPrecedence
-                && !skillDefIsNotHeresy())
-                || body?.inventory.GetItemCount(ItemDef) < 1
-                || handlingOverride)
-                orig(self, skillDef);
-            else
+               if ((stridesInteractionMode != StridesInteractionMode.ScepterTakesPrecedence
+                   && !skillDefIsNotHeresy())
+                   || body?.inventory.GetItemCount(ItemDef) < 1
+                   || handlingOverride)
+                   orig(self, skillDef);
+               else
+               {
+                   handlingOverride = true;
+                   HandleScepterSkill(body);
+                   handlingOverride = false;
+               }*/
+            orig(self, source, skillDef, priority);
+            if (!handlingOverride && self.characterBody)
             {
                 handlingOverride = true;
-                HandleScepterSkill(body);
-                handlingOverride = false;
-            }*/
-            orig(self,source,skillDef,priority);
-            if(!handlingOverride && self.characterBody){
-                handlingOverride = true;
-                CleanScepter(self.characterBody,self);
+                CleanScepter(self.characterBody, self);
                 HandleScepterSkill(self.characterBody);
                 handlingOverride = false;
             }
@@ -611,9 +457,9 @@ namespace AncientScepter
             if (slot != DeployableSlot.EngiTurret) return retv;
             var sp = self.GetBody()?.skillLocator?.special;
             if (!sp) return retv;
-            if (sp.skillDef == skills.First(x => x is EngiTurret2).myDef)
+            if (sp.skillDef == skills.First(x => x is EngiTurret2).baseSkillDef)
                 return retv + 1;
-            if (sp.skillDef == skills.First(x => x is EngiWalker2).myDef)
+            if (sp.skillDef == skills.First(x => x is EngiWalker2).baseSkillDef)
                 return retv + 2;
             return retv;
         }
@@ -628,7 +474,8 @@ namespace AncientScepter
         }
 
         private readonly List<ScepterReplacer> scepterReplacers = new List<ScepterReplacer>();
-        private readonly Dictionary<SkillSlot,SkillDef> heresyDefs = new Dictionary<SkillSlot,SkillDef>();
+        private readonly Dictionary<SkillSlot, SkillDef> heresyDefs = new Dictionary<SkillSlot, SkillDef>();
+
         public bool RegisterScepterSkill(SkillDef replacingDef, string targetBodyName, SkillSlot targetSlot, int targetVariant)
         {
             if (targetVariant < 0)
@@ -656,26 +503,30 @@ namespace AncientScepter
                 scepterReplacers.Remove(firstMatch);
             }
             AncientScepterMain._logger.LogMessage($"Adding scepter skill for \"{targetBodyName}\" ({replacingDef.skillName})");
-            scepterReplacers.Add(new ScepterReplacer { bodyName = targetBodyName, slotIndex = SkillSlot.None, variantIndex = -1, replDef = replacingDef,trgtDef = targetDef });
+            scepterReplacers.Add(new ScepterReplacer { bodyName = targetBodyName, slotIndex = SkillSlot.None, variantIndex = -1, replDef = replacingDef, trgtDef = targetDef });
             return true;
         }
 
-        private void On_RunStartGlobal(Run run){
-            heresyDefs.Add(SkillSlot.Primary,CharacterBody.CommonAssets.lunarPrimaryReplacementSkillDef);
-            heresyDefs.Add(SkillSlot.Secondary,CharacterBody.CommonAssets.lunarSecondaryReplacementSkillDef);
-            heresyDefs.Add(SkillSlot.Utility,CharacterBody.CommonAssets.lunarUtilityReplacementSkillDef);
-            heresyDefs.Add(SkillSlot.Special,CharacterBody.CommonAssets.lunarSpecialReplacementSkillDef);
-            foreach(ScepterReplacer repdef in scepterReplacers.Where(x => x.trgtDef == null)){
+        private void On_RunStartGlobal(Run run)
+        {
+            heresyDefs.Add(SkillSlot.Primary, CharacterBody.CommonAssets.lunarPrimaryReplacementSkillDef);
+            heresyDefs.Add(SkillSlot.Secondary, CharacterBody.CommonAssets.lunarSecondaryReplacementSkillDef);
+            heresyDefs.Add(SkillSlot.Utility, CharacterBody.CommonAssets.lunarUtilityReplacementSkillDef);
+            heresyDefs.Add(SkillSlot.Special, CharacterBody.CommonAssets.lunarSpecialReplacementSkillDef);
+            foreach (ScepterReplacer repdef in scepterReplacers.Where(x => x.trgtDef == null))
+            {
                 var prefab = BodyCatalog.FindBodyPrefab(repdef.bodyName);
                 var locator = prefab?.GetComponent<SkillLocator>();
-                if(locator && repdef.slotIndex != SkillSlot.None && repdef.variantIndex >= 0){
-                  var variants = locator.GetSkill(repdef.slotIndex).skillFamily.variants;
-                  if(variants.Length <= repdef.variantIndex){
-                    AncientScepterMain._logger.LogError($"Invalid Scepter Replacement for body:{repdef.bodyName},slot:{repdef.slotIndex},with skill:{repdef.replDef.skillNameToken}");
-                    repdef.trgtDef = null;
-                    continue;
-                  }
-                  repdef.trgtDef = variants[repdef.variantIndex].skillDef;
+                if (locator && repdef.slotIndex != SkillSlot.None && repdef.variantIndex >= 0)
+                {
+                    var variants = locator.GetSkill(repdef.slotIndex).skillFamily.variants;
+                    if (variants.Length <= repdef.variantIndex)
+                    {
+                        AncientScepterMain._logger.LogError($"Invalid Scepter Replacement for body:{repdef.bodyName},slot:{repdef.slotIndex},with skill:{repdef.replDef.skillNameToken}");
+                        repdef.trgtDef = null;
+                        continue;
+                    }
+                    repdef.trgtDef = variants[repdef.variantIndex].skillDef;
                 }
             }
             Run.onRunStartGlobal -= On_RunStartGlobal;
@@ -683,22 +534,24 @@ namespace AncientScepter
 
         private bool handlingInventory = false;
 
-        private void On_CBInventoryChangedGlobal(CharacterBody body){
-          if(!handlingInventory){
-            handlingInventory = true;
-            if (!HandleScepterSkill(body) && RerollUnused())
+        private void On_CBInventoryChangedGlobal(CharacterBody body)
+        {
+            if (!handlingInventory)
             {
-                if (GetCount(body) > 0)
+                handlingInventory = true;
+                if (!HandleScepterSkill(body) && RerollUnused())
                 {
-                    Reroll(body, GetCount(body));
+                    if (GetCount(body) > 0)
+                    {
+                        Reroll(body, GetCount(body));
+                    }
                 }
+                else if (GetCount(body) > 1 && rerollMode != RerollMode.Disabled)
+                {
+                    Reroll(body, GetCount(body) - 1);
+                }
+                handlingInventory = false;
             }
-            else if (GetCount(body) > 1 && rerollMode != RerollMode.Disabled)
-            {
-                Reroll(body, GetCount(body) - 1);
-            } 
-            handlingInventory = false;
-          }
         }
 
         private bool RerollUnused()
@@ -706,11 +559,13 @@ namespace AncientScepter
             switch (unusedMode)
             {
                 default:
-                case UnusedMode.Reroll:
+                case NoUseMode.Reroll:
                     return true;
-                case UnusedMode.Keep:
+
+                case NoUseMode.Keep:
                     return false;
-                case UnusedMode.Metamorphosis:
+
+                case NoUseMode.Metamorphosis:
                     return !RunArtifactManager.instance.IsArtifactEnabled(RoR2Content.Artifacts.randomSurvivorOnRespawnArtifactDef);
             }
         }
@@ -722,7 +577,8 @@ namespace AncientScepter
             {
                 case RerollMode.Disabled:
                     break;
-                case RerollMode.Random:
+
+                case RerollMode.RandomRed:
                     var list = Run.instance.availableTier3DropList.Except(new[] { PickupCatalog.FindPickupIndex(ItemDef.itemIndex) }).ToList(); //todo optimize
                     var notifylist = new List<ItemIndex>();
                     for (var i = 0; i < count; i++)
@@ -732,13 +588,16 @@ namespace AncientScepter
                         self.inventory.GiveItem(newItem);
                         notifylist.Add(newItem);
                     }
-                    if (enableSOTVTransforms){
-                        foreach(var newItem in notifylist.Distinct()){
+                    if (enableSOTVTransforms)
+                    {
+                        foreach (var newItem in notifylist.Distinct())
+                        {
                             CharacterMasterNotificationQueue.SendTransformNotification(self.master, ItemDef.itemIndex, newItem, CharacterMasterNotificationQueue.TransformationType.Default);
                         }
                     }
                     break;
-                case RerollMode.Scrap:
+
+                case RerollMode.RedScrap:
                     for (var i = 0; i < count; i++)
                     {
                         self.inventory.RemoveItem(ItemDef, 1);
@@ -750,21 +609,27 @@ namespace AncientScepter
             }
         }
 
-        private void CleanScepter(CharacterBody self,GenericSkill slot = null,bool force = false){
-           var bodyName = BodyCatalog.GetBodyName(self.bodyIndex);
-           var repl = scepterReplacers.FindAll(x => x.bodyName == bodyName);
-           if(slot){
-               if(repl.Any(r => r.replDef == slot.skillDef && (force || (slot.baseSkill != r.trgtDef && !slot.skillOverrides.Any(s => r.trgtDef == s.skillDef))))){
-                 slot.UnsetSkillOverride(self,slot.skillDef,GenericSkill.SkillOverridePriority.Upgrade);
-               }
-           }
-           else{
-               foreach(var skill in self.skillLocator.allSkills){
-               if(repl.Any(r => r.replDef == slot.skillDef && (force || (slot.baseSkill != r.trgtDef && !slot.skillOverrides.Any(s => r.trgtDef == s.skillDef))))){
-                    skill.UnsetSkillOverride(self,skill.skillDef,GenericSkill.SkillOverridePriority.Upgrade);
-                  }
-               }
-           }
+        private void CleanScepter(CharacterBody self, GenericSkill slot = null, bool force = false)
+        {
+            var bodyName = BodyCatalog.GetBodyName(self.bodyIndex);
+            var repl = scepterReplacers.FindAll(x => x.bodyName == bodyName);
+            if (slot)
+            {
+                if (repl.Any(r => r.replDef == slot.skillDef && (force || (slot.baseSkill != r.trgtDef && !slot.skillOverrides.Any(s => r.trgtDef == s.skillDef)))))
+                {
+                    slot.UnsetSkillOverride(self, slot.skillDef, GenericSkill.SkillOverridePriority.Upgrade);
+                }
+            }
+            else
+            {
+                foreach (var skill in self.skillLocator.allSkills)
+                {
+                    if (repl.Any(r => r.replDef == slot.skillDef && (force || (slot.baseSkill != r.trgtDef && !slot.skillOverrides.Any(s => r.trgtDef == s.skillDef)))))
+                    {
+                        skill.UnsetSkillOverride(self, skill.skillDef, GenericSkill.SkillOverridePriority.Upgrade);
+                    }
+                }
+            }
         }
 
         private bool HandleScepterSkill(CharacterBody self, bool forceOff = false)
@@ -775,10 +640,13 @@ namespace AncientScepter
                 {
                     case SkillSlot.Primary:
                         return self.inventory.GetItemCount(RoR2Content.Items.LunarPrimaryReplacement) > 0;
+
                     case SkillSlot.Secondary:
                         return self.inventory.GetItemCount(RoR2Content.Items.LunarSecondaryReplacement) > 0;
+
                     case SkillSlot.Utility:
                         return self.inventory.GetItemCount(RoR2Content.Items.LunarUtilityReplacement) > 0;
+
                     case SkillSlot.Special:
                         return self.inventory.GetItemCount(RoR2Content.Items.LunarSpecialReplacement) > 0;
                 }
@@ -791,27 +659,31 @@ namespace AncientScepter
                 var repl = scepterReplacers.FindAll(x => x.bodyName == bodyName);
                 if (repl.Count > 0)
                 {
-                    if(repl.Select(x => x.replDef).Intersect(self.skillLocator.allSkills.Select(x => x.skillDef)).Any() && GetCount(self) > 0){return true;}
+                    if (repl.Select(x => x.replDef).Intersect(self.skillLocator.allSkills.Select(x => x.skillDef)).Any() && GetCount(self) > 0) { return true; }
                     GenericSkill targetSkill = null;
                     SkillSlot targetSlot = SkillSlot.None;
                     ScepterReplacer replVar = null;
                     bool heresyExists = false;
-                    foreach(var replacement in repl){
-                      foreach(var skill in self.skillLocator.allSkills.Reverse().ToList().FindAll((s) => s.skillDef == replacement.trgtDef || s.baseSkill == replacement.trgtDef)){
-                          targetSkill = skill;
-                          targetSlot = (replacement.slotIndex == SkillSlot.None)? self.skillLocator.FindSkillSlot(targetSkill) : replacement.slotIndex;
-                          if((stridesInteractionMode != StridesInteractionMode.ScepterTakesPrecedence || bodyName == "HereticBody" ) && hasHeresyForSlot(targetSlot) && replacement.trgtDef != heresyDefs[targetSlot]){
-                            heresyExists = true;
-                            continue;
-                          }
-                          replVar = replacement;
-                          break;
-                      }
-                      if(replVar != null && targetSkill && replVar.trgtDef == targetSkill.skillDef){
-                        break;
-                      }
+                    foreach (var replacement in repl)
+                    {
+                        foreach (var skill in self.skillLocator.allSkills.Reverse().ToList().FindAll((s) => s.skillDef == replacement.trgtDef || s.baseSkill == replacement.trgtDef))
+                        {
+                            targetSkill = skill;
+                            targetSlot = (replacement.slotIndex == SkillSlot.None) ? self.skillLocator.FindSkillSlot(targetSkill) : replacement.slotIndex;
+                            if ((stridesInteractionMode != StridesInteractionMode.ScepterTakesPrecedence || bodyName == "HereticBody") && hasHeresyForSlot(targetSlot) && replacement.trgtDef != heresyDefs[targetSlot])
+                            {
+                                heresyExists = true;
+                                continue;
+                            }
+                            replVar = replacement;
+                            break;
+                        }
+                        if (replVar != null && targetSkill && replVar.trgtDef == targetSkill.skillDef)
+                        {
+                            break;
+                        }
                     }
-                    if (replVar == null){ return heresyExists ? stridesInteractionMode != StridesInteractionMode.ScepterRerolls : false;}
+                    if (replVar == null) { return heresyExists ? stridesInteractionMode != StridesInteractionMode.ScepterRerolls : false; }
                     var outerOverride = handlingOverride;
                     handlingOverride = true;
                     if (!forceOff && GetCount(self) > 0)
@@ -833,14 +705,14 @@ namespace AncientScepter
                     }
                     handlingOverride = outerOverride;
                     return true;
-                    void UnsetOverrideLater(GenericSkill skill){
-                       skill.onSkillChanged -= UnsetOverrideLater;
-                       skill.UnsetSkillOverride(self, replVar.replDef,GenericSkill.SkillOverridePriority.Upgrade);
+                    void UnsetOverrideLater(GenericSkill skill)
+                    {
+                        skill.onSkillChanged -= UnsetOverrideLater;
+                        skill.UnsetSkillOverride(self, replVar.replDef, GenericSkill.SkillOverridePriority.Upgrade);
                     }
                 }
             }
             return false;
-
         }
     }
 }
