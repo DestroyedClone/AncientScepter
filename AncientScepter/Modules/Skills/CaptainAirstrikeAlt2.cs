@@ -1,25 +1,24 @@
-﻿using EntityStates.Captain.Weapon;
-using MonoMod.Cil;
+﻿using AncientScepter.Modules.ModCompatibility;
+using EntityStates.Captain.Weapon;
 using R2API;
 using RoR2;
 using RoR2.Projectile;
 using RoR2.Skills;
-using System;
 using UnityEngine;
-using static AncientScepter.SkillUtil;
 using static R2API.DamageAPI;
 
 namespace AncientScepter.Modules.Skills
 {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
-    public class CaptainAirstrikeAlt2 : ScepterSkill
+    public class CaptainAirstrikeAlt2 : ClonedScepterSkill
     {
-        public override SkillDef baseSkillDef { get; protected set; }
+        public override SkillDef skillDefToClone { get; protected set; }
         public static SkillDef myCallDef { get; private set; }
         public static GameObject airstrikePrefab { get; private set; }
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
+
         public override string overrideStr => "\n<color=#d299ff>SCEPTER: 1.5x wait time, 2x blast radius, 100,000% damage" +
             "\nBlights everything within sight.</color>";
 
@@ -31,10 +30,10 @@ namespace AncientScepter.Modules.Skills
         public static float blastSizeMultiplier = 2f;
         public static float airstrikeDuration = 30f;
 
-        internal override void SetupAttributes()
+        internal override void Setup()
         {
             var oldDef = Resources.Load<SkillDef>("skilldefs/captainbody/PrepAirstrikeAlt");
-            baseSkillDef = CloneSkillDef(oldDef);
+            skillDefToClone = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_CAPTAIN_AIRSTRIKEALTNAME";
             newDescToken = "ANCIENTSCEPTER_CAPTAIN_AIRSTRIKEALTDESC";
@@ -42,14 +41,14 @@ namespace AncientScepter.Modules.Skills
             var namestr = "PHN-8300 'Lilith' Strike";
             LanguageAPI.Add(nametoken, namestr);
 
-            baseSkillDef.skillName = $"{oldDef.skillName}Scepter";
-            (baseSkillDef as ScriptableObject).name = baseSkillDef.skillName;
-            baseSkillDef.skillNameToken = nametoken;
-            baseSkillDef.skillDescriptionToken = newDescToken;
-            baseSkillDef.baseRechargeInterval = airstrikeDuration * 2f;
-            baseSkillDef.icon = Assets.SpriteAssets.CaptainAirstrikeAlt2;
+            skillDefToClone.skillName = $"{oldDef.skillName}Scepter";
+            (skillDefToClone as ScriptableObject).name = skillDefToClone.skillName;
+            skillDefToClone.skillNameToken = nametoken;
+            skillDefToClone.skillDescriptionToken = newDescToken;
+            skillDefToClone.baseRechargeInterval = airstrikeDuration * 2f;
+            skillDefToClone.icon = Assets.SpriteAssets.CaptainAirstrikeAlt2;
 
-            ContentAddition.AddSkillDef(baseSkillDef);
+            ContentAddition.AddSkillDef(skillDefToClone);
 
             var oldCallDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/CaptainBody/CallAirstrikeAlt");
             myCallDef = CloneSkillDef(oldCallDef);
@@ -61,7 +60,6 @@ namespace AncientScepter.Modules.Skills
             myCallDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texCapU2");
 
             ContentAddition.AddSkillDef(myCallDef);
-
 
             var oldGhost = Resources.Load<GameObject>("prefabs/projectileghosts/CaptainAirstrikeAltGhost");
             var airstrikeGhostPrefab = oldGhost.InstantiateClone("ScepterCaptainAirstrikeAltGhost", false);
@@ -126,7 +124,7 @@ namespace AncientScepter.Modules.Skills
             ContentAddition.AddProjectile(irradiateProjectile);
             ContentAddition.AddProjectile(airstrikePrefab);
 
-            if (ModCompat.compatBetterUI)
+            if (BetterUICompatibility.compatBetterUI)
             {
                 doBetterUI();
             }
@@ -135,11 +133,12 @@ namespace AncientScepter.Modules.Skills
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
         internal void doBetterUI()
         {
-            BetterUI.ProcCoefficientCatalog.AddSkill(baseSkillDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CallAirstrikeAlt"));
-            BetterUI.ProcCoefficientCatalog.AddToSkill(baseSkillDef.skillName, "Irradiate", 0);
+            BetterUI.ProcCoefficientCatalog.AddSkill(skillDefToClone.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CallAirstrikeAlt"));
+            BetterUI.ProcCoefficientCatalog.AddToSkill(skillDefToClone.skillName, "Irradiate", 0);
             BetterUI.ProcCoefficientCatalog.AddSkill(myCallDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CallAirstrikeAlt"));
             BetterUI.ProcCoefficientCatalog.AddToSkill(myCallDef.skillName, "Irradiate", 0);
         }
+
         internal override void LoadBehavior()
         {
             On.EntityStates.Captain.Weapon.SetupAirstrike.OnEnter += On_SetupAirstrikeStateEnter;
@@ -153,7 +152,6 @@ namespace AncientScepter.Modules.Skills
 
         public class ScepterAirstrikeMarker : MonoBehaviour
         {
-
         }
 
         private void ProjectileExplosion_DetonateServer(On.RoR2.Projectile.ProjectileExplosion.orig_DetonateServer orig, ProjectileExplosion self)
@@ -226,7 +224,7 @@ namespace AncientScepter.Modules.Skills
         private void CallAirstrikeAlt_ModifyProjectile(On.EntityStates.Captain.Weapon.CallAirstrikeAlt.orig_ModifyProjectile orig, CallAirstrikeAlt self, ref FireProjectileInfo fireProjectileInfo)
         {
             orig(self, ref fireProjectileInfo);
-            bool isScepter = self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef;
+            bool isScepter = self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone;
             if (isScepter)
             {
                 fireProjectileInfo.projectilePrefab = airstrikePrefab;
@@ -238,14 +236,14 @@ namespace AncientScepter.Modules.Skills
             orig(self, damageInfo, victim);
             if (damageInfo.HasModdedDamageType(CustomDamageTypes.ScepterCaptainNukeDT))
             {
-                AncientScepterMain.AddBuffAndDot(RoR2Content.Buffs.Blight, 20, 5, victim.GetComponent<CharacterBody>() ?? null);
+                AncientScepterPlugin.AddBuffAndDot(RoR2Content.Buffs.Blight, 20, 5, victim.GetComponent<CharacterBody>() ?? null);
             }
         }
 
         private void On_CallAirstrikeBaseEnter(On.EntityStates.Captain.Weapon.CallAirstrikeBase.orig_OnEnter orig, CallAirstrikeBase self)
         {
             orig(self);
-            bool isScepter = self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef
+            bool isScepter = self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone
                 && self is CallAirstrikeAlt;
             if (isScepter)
             {
@@ -256,7 +254,7 @@ namespace AncientScepter.Modules.Skills
         private void On_SetupAirstrikeStateEnter(On.EntityStates.Captain.Weapon.SetupAirstrike.orig_OnEnter orig, SetupAirstrike self) //exc
         {
             var origOverride = SetupAirstrike.primarySkillDef;
-            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef)
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone)
             {
                 SetupAirstrike.primarySkillDef = myCallDef;
             }
@@ -270,10 +268,12 @@ namespace AncientScepter.Modules.Skills
                 self.primarySkillSlot.UnsetSkillOverride(self, myCallDef, GenericSkill.SkillOverridePriority.Contextual);
             orig(self);
         }
+
         public class NukeBehaviour : MonoBehaviour
         {
             public ProjectileController projectileController;
-            bool hasIrradiated = false;
+            private bool hasIrradiated = false;
+
             public void Start()
             {
                 if (!hasIrradiated)

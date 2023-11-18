@@ -1,19 +1,19 @@
-﻿using EntityStates.Commando.CommandoWeapon;
+﻿using AncientScepter.Modules.ModCompatibility;
+using EntityStates.Commando.CommandoWeapon;
 using R2API;
 using RoR2;
 using RoR2.Skills;
 using UnityEngine;
-using static AncientScepter.SkillUtil;
-using UnityEngine.Networking;
 
 namespace AncientScepter.Modules.Skills
 {
-    public class CommandoBarrage2 : ScepterSkill
+    public class CommandoBarrage2 : ClonedScepterSkill
     {
-        public override SkillDef baseSkillDef { get; protected set; }
+        public override SkillDef skillDefToClone { get; protected set; }
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
+
         public override string overrideStr => "\n<color=#d299ff>SCEPTER: Fires twice as many bullets, twice as fast, with twice the accuracy at every enemy within range." +
             "\nHolding down your primary skill will fire more accurately.</color>";
 
@@ -21,10 +21,10 @@ namespace AncientScepter.Modules.Skills
         public override SkillSlot targetSlot => SkillSlot.Special;
         public override int targetVariantIndex => 0;
 
-        internal override void SetupAttributes()
+        internal override void Setup()
         {
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/CommandoBody/CommandoBodyBarrage");
-            baseSkillDef = CloneSkillDef(oldDef);
+            skillDefToClone = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_COMMANDO_BARRAGENAME";
             newDescToken = "ANCIENTSCEPTER_COMMANDO_BARRAGEDESC";
@@ -33,28 +33,28 @@ namespace AncientScepter.Modules.Skills
             LanguageAPI.Add(nametoken, namestr);
             //TODO: fire auto-aim bullets at every enemy in range
 
-            baseSkillDef.skillName = $"{oldDef.skillName}Scepter";
-            (baseSkillDef as ScriptableObject).name = baseSkillDef.skillName;
-            baseSkillDef.skillNameToken = nametoken;
-            baseSkillDef.skillDescriptionToken = newDescToken;
-            baseSkillDef.icon = Assets.SpriteAssets.CommandoBarrage2;
+            skillDefToClone.skillName = $"{oldDef.skillName}Scepter";
+            (skillDefToClone as ScriptableObject).name = skillDefToClone.skillName;
+            skillDefToClone.skillNameToken = nametoken;
+            skillDefToClone.skillDescriptionToken = newDescToken;
+            skillDefToClone.icon = Assets.SpriteAssets.CommandoBarrage2;
             //if (AncientScepterItem.enableCommandoAutoaim)
             //myDef.activationState = new EntityStates.SerializableEntityStateType(typeof(FireSweepBarrage));
 
-            ContentAddition.AddSkillDef(baseSkillDef);
+            ContentAddition.AddSkillDef(skillDefToClone);
 
-            if (ModCompat.compatBetterUI)
+            if (BetterUICompatibility.compatBetterUI)
             {
                 doBetterUI();
             }
         }
 
-
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
         internal void doBetterUI()
         {
-            BetterUI.ProcCoefficientCatalog.AddSkill(baseSkillDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CommandoBodyBarrage"));
+            BetterUI.ProcCoefficientCatalog.AddSkill(skillDefToClone.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CommandoBodyBarrage"));
         }
+
         internal override void LoadBehavior()
         {
             On.EntityStates.Commando.CommandoWeapon.FireBarrage.OnEnter += On_FireBarrage_Enter;
@@ -71,7 +71,7 @@ namespace AncientScepter.Modules.Skills
 
         private void FireSweepBarrage_FixedUpdate(On.EntityStates.Commando.CommandoWeapon.FireSweepBarrage.orig_FixedUpdate orig, FireSweepBarrage self)
         {
-            if (self.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef)
+            if (self.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone)
             {
                 self.FixedUpdate();
                 self.fireTimer -= Time.fixedDeltaTime;
@@ -99,7 +99,7 @@ namespace AncientScepter.Modules.Skills
 
         private void FireSweepBarrage_Fire(On.EntityStates.Commando.CommandoWeapon.FireSweepBarrage.orig_Fire orig, FireSweepBarrage self)
         {
-            if (self.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef)
+            if (self.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone)
             {
                 if (self.totalBulletsFired < self.totalBulletsToFire)
                 {
@@ -180,7 +180,7 @@ namespace AncientScepter.Modules.Skills
         private void FireSweepBarrage_OnEnter(On.EntityStates.Commando.CommandoWeapon.FireSweepBarrage.orig_OnEnter orig, FireSweepBarrage self)
         {
             orig(self);
-            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef)
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone)
             {
                 if (self.targetHurtboxes.Count == 0)
                 {
@@ -202,7 +202,7 @@ namespace AncientScepter.Modules.Skills
         private void On_FireBarrage_Enter(On.EntityStates.Commando.CommandoWeapon.FireBarrage.orig_OnEnter orig, FireBarrage self)
         {
             orig(self);
-            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef)
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone)
             {
                 self.durationBetweenShots /= 2f;
                 self.bulletCount *= 2;
@@ -211,7 +211,7 @@ namespace AncientScepter.Modules.Skills
 
         private void On_FireBarrage_FireBullet(On.EntityStates.Commando.CommandoWeapon.FireBarrage.orig_FireBullet orig, FireBarrage self)
         {
-            bool hasScep = self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef;
+            bool hasScep = self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone;
             var origAmp = FireBarrage.recoilAmplitude;
             var origRadius = FireBarrage.bulletRadius;
             if (hasScep)

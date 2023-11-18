@@ -1,4 +1,5 @@
-﻿using Mono.Cecil.Cil;
+﻿using AncientScepter.Modules.ModCompatibility;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API;
 using RoR2;
@@ -9,10 +10,10 @@ using UnityEngine;
 
 namespace AncientScepter.Modules.Skills
 {
-    public class ArtificerFlamethrower2 : ScepterSkill
+    public class ArtificerFlamethrower2 : ClonedScepterSkill
     {
         private GameObject projCloud;
-        public override SkillDef baseSkillDef { get; protected set; }
+        public override SkillDef skillDefToClone { get; protected set; }
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
@@ -22,10 +23,10 @@ namespace AncientScepter.Modules.Skills
         public override SkillSlot targetSlot => SkillSlot.Special;
         public override int targetVariantIndex => 0;
 
-        internal override void SetupAttributes()
+        internal override void Setup()
         {
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/MageBody/MageBodyFlamethrower");
-            baseSkillDef = CloneSkillDef(oldDef);
+            skillDefToClone = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_MAGE_FLAMETHROWERNAME";
             newDescToken = "ANCIENTSCEPTER_MAGE_FLAMETHROWERDESC";
@@ -33,13 +34,13 @@ namespace AncientScepter.Modules.Skills
             var namestr = "Dragon's Breath";
             LanguageAPI.Add(nametoken, namestr);
 
-            baseSkillDef.skillName = $"{oldDef.skillName}Scepter";
-            (baseSkillDef as ScriptableObject).name = baseSkillDef.skillName;
-            baseSkillDef.skillNameToken = nametoken;
-            baseSkillDef.skillDescriptionToken = newDescToken;
-            baseSkillDef.icon = Assets.SpriteAssets.ArtificerFlameThrower2;
+            skillDefToClone.skillName = $"{oldDef.skillName}Scepter";
+            (skillDefToClone as ScriptableObject).name = skillDefToClone.skillName;
+            skillDefToClone.skillNameToken = nametoken;
+            skillDefToClone.skillDescriptionToken = newDescToken;
+            skillDefToClone.icon = Assets.SpriteAssets.ArtificerFlameThrower2;
 
-            ContentAddition.AddSkillDef(baseSkillDef);
+            ContentAddition.AddSkillDef(skillDefToClone);
 
             projCloud = LegacyResourcesAPI.Load<GameObject>("prefabs/projectiles/BeetleQueenAcid").InstantiateClone("AncientScepterMageFlamethrowerCloud");
             var pdz = projCloud.GetComponent<ProjectileDotZone>();
@@ -90,7 +91,7 @@ namespace AncientScepter.Modules.Skills
 
             ContentAddition.AddProjectile(projCloud);
 
-            if (ModCompat.compatBetterUI)
+            if (BetterUICompatibility.compatBetterUI)
             {
                 doBetterUI();
             }
@@ -99,9 +100,10 @@ namespace AncientScepter.Modules.Skills
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
         internal void doBetterUI()
         {
-            BetterUI.ProcCoefficientCatalog.AddSkill(baseSkillDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("MageBodyFlamethrower"));
-            BetterUI.ProcCoefficientCatalog.AddToSkill(baseSkillDef.skillName, "Fire Cloud", 0);
+            BetterUI.ProcCoefficientCatalog.AddSkill(skillDefToClone.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("MageBodyFlamethrower"));
+            BetterUI.ProcCoefficientCatalog.AddToSkill(skillDefToClone.skillName, "Fire Cloud", 0);
         }
+
         internal override void LoadBehavior()
         {
             IL.EntityStates.Mage.Weapon.Flamethrower.FireGauntlet += IL_FlamethrowerFireGauntlet;
@@ -124,7 +126,7 @@ namespace AncientScepter.Modules.Skills
                 c.EmitDelegate<Func<BulletAttack, global::EntityStates.Mage.Weapon.Flamethrower, BulletAttack>>((origAttack, state) =>
                 {
                     var skill = state.outer.commonComponents.characterBody?.skillLocator?.GetSkill(targetSlot);
-                    if (!skill || skill.skillDef != baseSkillDef) return origAttack;
+                    if (!skill || skill.skillDef != skillDefToClone) return origAttack;
                     origAttack.hitCallback = (BulletAttack self, ref BulletAttack.BulletHit h) =>
                     {
                         ProjectileManager.instance.FireProjectile(new FireProjectileInfo

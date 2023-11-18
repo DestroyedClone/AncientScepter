@@ -1,5 +1,4 @@
 ﻿using BepInEx.Configuration;
-using static AncientScepter.AncientScepterItem;
 
 namespace AncientScepter.Modules
 {
@@ -8,13 +7,14 @@ namespace AncientScepter.Modules
         public static ConfigEntry<RerollMode> rerollMode;
         public static ConfigEntry<NoUseMode> noUseMode;
         public static ConfigEntry<bool> enableMonsterSkills;
+        public static ConfigEntry<string> scepterItemTags;
 
         //public static bool enableBrotherEffects;
-        public static StridesInteractionMode stridesInteractionMode;
+        public static ConfigEntry<LunarReplacementBehavior> lunarReplacementPriority;
 
-        public static bool altModel;
-        public static bool removeClassicItemsScepterFromPool;
-        public static bool enableSOTVTransforms;
+        public static ConfigEntry<bool> alternativeModel;
+        public static ConfigEntry<bool> removeClassicItemsScepterFromPool;
+        public static ConfigEntry<bool> showItemTransformNotification;
 
         // Character Specific configuration.
         // Artificer
@@ -51,36 +51,39 @@ namespace AncientScepter.Modules
                             "\nIf \"Reroll\", Characters without any scepter upgrades will reroll according to above pickup mode." +
                             "\nIf \"Metamorphosis\", Characters without scepter upgrades will only reroll if Artifact of Metamorphosis is not active.");
 
+            lunarReplacementPriority =
+                config.Bind("General Settings",
+                            "Lunar Replacement Behavior",
+                            LunarReplacementBehavior.DoNoUseMode,
+                            "Changes what happens when a character whose skill is affected by Ancient Scepter has both Ancient Scepter and the corresponding lunar skill replacements (Visions/Hooks/Strides/Essence) at the same time."); //defer until next stage
+
+            enableMonsterSkills =
+                config.Bind("General Settings",
+                            "Enable skills for monsters",
+                            true,
+                            "If true, certain monsters get the effects of the Ancient Scepter.");
+
             engiTurretAdjustCooldown =
-                config.Bind("Engineer",
+                config.Bind("Survivors - Engineer",
                             "TR12-C Gauss Compact Faster Recharge",
                             false,
                             "If true, TR12-C Gauss Compact will recharge faster to match the additional stock.").Value;
             engiWalkerAdjustCooldown =
-                config.Bind("Engineer",
+                config.Bind("Survivors - Engineer",
                             "TR58-C Carbonizer Mini Faster Recharge",
                             false,
                             "If true, TR58-C Carbonizer Mini will recharge faster to match the additional stock.").Value;
             artiFlamePerformanceMode =
-                config.Bind("Artificer",
+                config.Bind("Survivors - Artificer",
                             "ArtiFlamePerformance",
                             false,
                             "If true, Dragon's Breath will use significantly lighter particle effects and no dynamic lighting.").Value;
             captainNukeFriendlyFire =
-                config.Bind("Captain",
+                config.Bind("Survivors - Captain",
                             "Captain Nuke Friendly Fire",
                             false,
                             "If true, then Captain's Scepter Nuke will also inflict blight on allies.").Value;
-            stridesInteractionMode =
-                config.Bind(configCategory,
-                            "Strides pickup mode",
-                            StridesInteractionMode.ScepterRerolls,
-                            "Changes what happens when a character whose skill is affected by Ancient Scepter has both Ancient Scepter and the corresponding heretic skill replacements (Visions/Hooks/Strides/Essence) at the same time.").Value; //defer until next stage
-            enableMonsterSkills =
-                config.Bind(configCategory,
-                            "Enable skills for monsters",
-                            true,
-                            "If true, certain monsters get the effects of the Ancient Scepter.").Value;
+
             /*mithrixEnableScepter =
                 config.Bind(configCategory,
                             "Enable Mithrix Lines",
@@ -88,16 +91,18 @@ namespace AncientScepter.Modules
                             "If true, Mithrix will have additional dialogue when acquiring the Ancient Scepter. Only applies on Commencement. Requires Enable skills for monsters to be enabled.").Value;*/
             //enableBrotherEffects = config.Bind(configCategory, "Enable Mithrix Lines", true, "If true, Mithrix will have additional dialogue when acquiring the Ancient Scepter.").Value;
             //enableCommandoAutoaim = config.Bind(configCategory, "Enable Commando Autoaim", true, "This may break compatibiltiy with skills.").Value;
-            altModel =
-                config.Bind(configCategory,
+
+            alternativeModel =
+                config.Bind("Miscellaneous",
                             "Alt Model",
                             false,
-                            "Changes the model as a reference to a certain other scepter that upgrades abilities.").Value;
+                            "Changes the model as a reference to a certain other scepter that upgrades abilities.");
+
             removeClassicItemsScepterFromPool =
-                config.Bind(configCategory,
+                config.Bind("Miscellaneous",
                             "CLASSICITEMS: Remove Classic Items Ancient Scepter From Droplist If Installed",
                             true,
-                            "If true, then the Ancient Scepter from Classic Items will be removed from the drop pool to prevent complications.").Value;
+                            "If true, then the Ancient Scepter from Classic Items will be removed from the drop pool to prevent complications.");
 
             var engiSkill = skills.First(x => x is EngiTurret2);
             engiSkill.myDef.baseRechargeInterval = EngiTurret2.oldDef.baseRechargeInterval * (engiTurretAdjustCooldown ? 2f / 3f : 1f);
@@ -112,7 +117,7 @@ namespace AncientScepter.Modules
                 Run.onRunStartGlobal += RemoveClassicItemsScepter;
             }
 
-            enableSOTVTransforms =
+            showItemTransformNotification =
                 config.Bind(configCategory,
                 "Transformation Notification",
                 true,

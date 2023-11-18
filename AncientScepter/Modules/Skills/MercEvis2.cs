@@ -1,18 +1,19 @@
-﻿using EntityStates.Merc;
+﻿using AncientScepter.Modules.ModCompatibility;
+using EntityStates.Merc;
 using R2API;
 using RoR2;
 using RoR2.Skills;
 using UnityEngine;
-using static AncientScepter.SkillUtil;
 
 namespace AncientScepter.Modules.Skills
 {
-    public class MercEvis2 : ScepterSkill
+    public class MercEvis2 : ClonedScepterSkill
     {
-        public override SkillDef baseSkillDef { get; protected set; }
+        public override SkillDef skillDefToClone { get; protected set; }
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
+
         public override string overrideStr => "\n<color=#d299ff>SCEPTER: Double duration. Kills reset duration." +
             "\nHold down the special button to leave earlier.</color>";
 
@@ -20,10 +21,10 @@ namespace AncientScepter.Modules.Skills
         public override SkillSlot targetSlot => SkillSlot.Special;
         public override int targetVariantIndex => 0;
 
-        internal override void SetupAttributes()
+        internal override void Setup()
         {
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/MercBody/MercBodyEvis");
-            baseSkillDef = CloneSkillDef(oldDef);
+            skillDefToClone = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_MERC_EVISNAME";
             newDescToken = "ANCIENTSCEPTER_MERC_EVISDESC";
@@ -31,15 +32,15 @@ namespace AncientScepter.Modules.Skills
             var namestr = "Massacre";
             LanguageAPI.Add(nametoken, namestr);
 
-            baseSkillDef.skillName = $"{oldDef.skillName}Scepter";
-            (baseSkillDef as ScriptableObject).name = baseSkillDef.skillName;
-            baseSkillDef.skillNameToken = nametoken;
-            baseSkillDef.skillDescriptionToken = newDescToken;
-            baseSkillDef.icon = Assets.SpriteAssets.MercEvis2;
+            skillDefToClone.skillName = $"{oldDef.skillName}Scepter";
+            (skillDefToClone as ScriptableObject).name = skillDefToClone.skillName;
+            skillDefToClone.skillNameToken = nametoken;
+            skillDefToClone.skillDescriptionToken = newDescToken;
+            skillDefToClone.icon = Assets.SpriteAssets.MercEvis2;
 
-            ContentAddition.AddSkillDef(baseSkillDef);
+            ContentAddition.AddSkillDef(skillDefToClone);
 
-            if (ModCompat.compatBetterUI)
+            if (BetterUICompatibility.compatBetterUI)
             {
                 doBetterUI();
             }
@@ -48,8 +49,9 @@ namespace AncientScepter.Modules.Skills
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
         internal void doBetterUI()
         {
-            BetterUI.ProcCoefficientCatalog.AddSkill(baseSkillDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("MercBodyEvis"));
+            BetterUI.ProcCoefficientCatalog.AddSkill(skillDefToClone.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("MercBodyEvis"));
         }
+
         internal override void LoadBehavior()
         {
             GlobalEventManager.onCharacterDeathGlobal += Evt_GEMOnCharacterDeathGlobal;
@@ -65,7 +67,7 @@ namespace AncientScepter.Modules.Skills
         private void Evt_GEMOnCharacterDeathGlobal(DamageReport rep)
         {
             var attackerState = rep.attackerBody?.GetComponent<EntityStateMachine>()?.state;
-            if (attackerState is Evis asEvis && rep.attackerBody.skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef
+            if (attackerState is Evis asEvis && rep.attackerBody.skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone
                 && Vector3.Distance(rep.attackerBody.transform.position, rep.victim.transform.position) < Evis.maxRadius)
             {
                 if (rep.attackerBody.inputBank.skill4.down == false)
@@ -82,7 +84,7 @@ namespace AncientScepter.Modules.Skills
         private void On_EvisFixedUpdate(On.EntityStates.Merc.Evis.orig_FixedUpdate orig, Evis self)
         {
             var origDuration = Evis.duration;
-            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef) Evis.duration *= 2f;
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone) Evis.duration *= 2f;
             orig(self);
             Evis.duration = origDuration;
         }

@@ -1,29 +1,27 @@
-﻿using EntityStates.Treebot.TreebotFlower;
+﻿using AncientScepter.Modules.ModCompatibility;
+using EntityStates.Treebot.TreebotFlower;
 using R2API;
 using RoR2;
 using RoR2.Projectile;
 using RoR2.Skills;
 using UnityEngine;
-using static AncientScepter.SkillUtil;
 
 namespace AncientScepter.Modules.Skills
 {
-    public class TreebotFlower2_2 : ScepterSkill
+    public class TreebotFlower2_2 : ClonedScepterSkill
     {
-        public override SkillDef baseSkillDef { get; protected set; }
+        public override SkillDef skillDefToClone { get; protected set; }
 
-        public override string oldDescToken { get; protected set; }
-        public override string newDescToken { get; protected set; }
         public override string overrideStr => "\n<color=#d299ff>SCEPTER: Double radius. Pulses random debuffs.</color>";
 
         public override string exclusiveToBodyName => "TreebotBody";
         public override SkillSlot targetSlot => SkillSlot.Special;
         public override int targetVariantIndex => 1;
 
-        internal override void SetupAttributes()
+        internal override void Setup()
         {
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/TreebotBody/TreebotBodyFireFlower2");
-            baseSkillDef = CloneSkillDef(oldDef);
+            skillDefToClone = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_TREEBOT_FLOWER2NAME";
             newDescToken = "ANCIENTSCEPTER_TREEBOT_FLOWER2DESC";
@@ -31,15 +29,15 @@ namespace AncientScepter.Modules.Skills
             var namestr = "Chaotic Growth";
             LanguageAPI.Add(nametoken, namestr);
 
-            baseSkillDef.skillName = $"{oldDef.skillName}Scepter";
-            (baseSkillDef as ScriptableObject).name = baseSkillDef.skillName;
-            baseSkillDef.skillNameToken = nametoken;
-            baseSkillDef.skillDescriptionToken = newDescToken;
-            baseSkillDef.icon = Assets.SpriteAssets.TreebotFlower2_2;
+            skillDefToClone.skillName = $"{oldDef.skillName}Scepter";
+            (skillDefToClone as ScriptableObject).name = skillDefToClone.skillName;
+            skillDefToClone.skillNameToken = nametoken;
+            skillDefToClone.skillDescriptionToken = newDescToken;
+            skillDefToClone.icon = Assets.SpriteAssets.TreebotFlower2_2;
 
-            ContentAddition.AddSkillDef(baseSkillDef);
+            ContentAddition.AddSkillDef(skillDefToClone);
 
-            if (ModCompat.compatBetterUI)
+            if (BetterUICompatibility.compatBetterUI)
             {
                 doBetterUI();
             }
@@ -48,8 +46,9 @@ namespace AncientScepter.Modules.Skills
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
         internal void doBetterUI()
         {
-            BetterUI.ProcCoefficientCatalog.AddSkill(baseSkillDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("TreebotBodyFireFlower2"));
+            BetterUI.ProcCoefficientCatalog.AddSkill(skillDefToClone.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("TreebotBodyFireFlower2"));
         }
+
         internal override void LoadBehavior()
         {
             On.EntityStates.Treebot.TreebotFlower.TreebotFlower2Projectile.RootPulse += On_TreebotFlower2RootPulse;
@@ -66,14 +65,14 @@ namespace AncientScepter.Modules.Skills
         {
             var owner = self.outer.GetComponent<ProjectileController>()?.owner;
             var origRadius = TreebotFlower2Projectile.radius;
-            if (owner.GetComponent<CharacterBody>().skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef) TreebotFlower2Projectile.radius *= 2f;
+            if (owner.GetComponent<CharacterBody>().skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone) TreebotFlower2Projectile.radius *= 2f;
             orig(self);
             TreebotFlower2Projectile.radius = origRadius;
         }
 
         private void On_TreebotFlower2RootPulse(On.EntityStates.Treebot.TreebotFlower.TreebotFlower2Projectile.orig_RootPulse orig, TreebotFlower2Projectile self)
         {
-            var isBoosted = self.owner?.GetComponent<CharacterBody>().skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef;
+            var isBoosted = self.owner?.GetComponent<CharacterBody>().skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone;
             var origRadius = TreebotFlower2Projectile.radius;
             if (isBoosted) TreebotFlower2Projectile.radius *= 2f;
             orig(self);

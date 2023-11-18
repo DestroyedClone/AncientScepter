@@ -1,16 +1,16 @@
-﻿using EntityStates.Loader;
+﻿using AncientScepter.Modules.ModCompatibility;
+using EntityStates.Loader;
 using R2API;
 using RoR2;
 using RoR2.Skills;
 using UnityEngine;
-using static AncientScepter.SkillUtil;
 
 namespace AncientScepter.Modules.Skills
 {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
-    public class LoaderChargeFist2 : ScepterSkill
+    public class LoaderChargeFist2 : ClonedScepterSkill
     {
-        public override SkillDef baseSkillDef { get; protected set; }
+        public override SkillDef skillDefToClone { get; protected set; }
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
@@ -20,10 +20,10 @@ namespace AncientScepter.Modules.Skills
         public override SkillSlot targetSlot => SkillSlot.Utility;
         public override int targetVariantIndex => 0;
 
-        internal override void SetupAttributes()
+        internal override void Setup()
         {
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/LoaderBody/ChargeFist");
-            baseSkillDef = CloneSkillDef(oldDef);
+            skillDefToClone = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_LOADER_CHARGEFISTNAME";
             newDescToken = "ANCIENTSCEPTER_LOADER_CHARGEFISTDESC";
@@ -31,15 +31,15 @@ namespace AncientScepter.Modules.Skills
             var namestr = "Megaton Punch";
             LanguageAPI.Add(nametoken, namestr);
 
-            baseSkillDef.skillName = $"{oldDef.skillName}Scepter";
-            (baseSkillDef as ScriptableObject).name = baseSkillDef.skillName;
-            baseSkillDef.skillNameToken = nametoken;
-            baseSkillDef.skillDescriptionToken = newDescToken;
-            baseSkillDef.icon = Assets.SpriteAssets.LoaderChargeFist2;
+            skillDefToClone.skillName = $"{oldDef.skillName}Scepter";
+            (skillDefToClone as ScriptableObject).name = skillDefToClone.skillName;
+            skillDefToClone.skillNameToken = nametoken;
+            skillDefToClone.skillDescriptionToken = newDescToken;
+            skillDefToClone.icon = Assets.SpriteAssets.LoaderChargeFist2;
 
-            ContentAddition.AddSkillDef(baseSkillDef);
+            ContentAddition.AddSkillDef(skillDefToClone);
 
-            if (ModCompat.compatBetterUI)
+            if (BetterUICompatibility.compatBetterUI)
             {
                 doBetterUI();
             }
@@ -48,8 +48,9 @@ namespace AncientScepter.Modules.Skills
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
         internal void doBetterUI()
         {
-            BetterUI.ProcCoefficientCatalog.AddSkill(baseSkillDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("BigPunch"));
+            BetterUI.ProcCoefficientCatalog.AddSkill(skillDefToClone.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("BigPunch"));
         }
+
         internal override void LoadBehavior()
         {
             On.EntityStates.Loader.BaseSwingChargedFist.OnEnter += on_BaseSwingChargedFistEnter;
@@ -66,7 +67,7 @@ namespace AncientScepter.Modules.Skills
         {
             orig(self);
             if (!(self is SwingChargedFist)) return;
-            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef)
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone)
             {
                 self.minPunchForce *= 7f;
                 self.maxPunchForce *= 7f;
@@ -78,7 +79,7 @@ namespace AncientScepter.Modules.Skills
 
         private void BaseSwingChargedFist_OnMeleeHitAuthority(On.EntityStates.Loader.BaseSwingChargedFist.orig_OnMeleeHitAuthority orig, BaseSwingChargedFist self)
         {
-            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef != baseSkillDef) return;
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef != skillDefToClone) return;
             var mTsf = self.outer.commonComponents.modelLocator?.modelTransform?.GetComponent<ChildLocator>()?.FindChild(self.swingEffectMuzzleString);
             EffectManager.SpawnEffect(Resources.Load<GameObject>("prefabs/effects/omnieffect/OmniExplosionVFXCommandoGrenade"),
                 new EffectData

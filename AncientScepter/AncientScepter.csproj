@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Modules\ScepterSkillsMonster\BrotherFistSlam2.cs" />
-    <Compile Remove="Modules\ScepterEntityStates\CommandoDeathBlossom.cs" />
-    <Compile Remove="Modules\ScepterEntityStates\ShatteringFistSlam.cs" />
-    <Compile Remove="Modules\ScepterSkills\CaptainAirstrikeAlt2z.cs" />
-    <Compile Remove="Modules\ScepterSkills\HereticRuin2.cs" />
+    <Compile Remove="Modules\SkillsMonster\BrotherFistSlam2.cs" />
+    <Compile Remove="Modules\EntityStates\CommandoDeathBlossom.cs" />
+    <Compile Remove="Modules\EntityStates\ShatteringFistSlam.cs" />
+    <Compile Remove="Modules\Skills\CaptainAirstrikeAlt2z.cs" />
+    <Compile Remove="Modules\Skills\HereticRuin2.cs" />
   </ItemGroup>
 	
   <ItemGroup>

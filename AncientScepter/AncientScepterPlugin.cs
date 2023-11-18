@@ -1,16 +1,13 @@
 ﻿using AncientScepter.Modules;
+using AncientScepter.Modules.ModCompatibility;
 using BepInEx;
 using R2API;
-using R2API.Utils;
 using RoR2;
+using RoR2.ContentManagement;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Security;
 using System.Security.Permissions;
 using UnityEngine;
-using UnityEngine.Networking;
 
 [module: UnverifiableCode]
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -18,51 +15,38 @@ using UnityEngine.Networking;
 #pragma warning restore CS0618 // Type or member is obsolete
 
 [assembly: HG.Reflection.SearchableAttribute.OptIn]
+
 namespace AncientScepter
 {
     [BepInPlugin(ModGuid, ModName, ModVer)]
     [BepInDependency(R2API.R2API.PluginGUID, R2API.R2API.PluginVersion)]
-    [BepInDependency(R2API.PrefabAPI.PluginGUID,R2API.PrefabAPI.PluginVersion)]
-    [BepInDependency(R2API.DamageAPI.PluginGUID,R2API.DamageAPI.PluginVersion)]
-    [BepInDependency(R2API.OrbAPI.PluginGUID,R2API.OrbAPI.PluginVersion)]
-    [BepInDependency(R2API.ContentManagement.R2APIContentManager.PluginGUID,R2API.ContentManagement.R2APIContentManager.PluginVersion)]
+    [BepInDependency(R2API.PrefabAPI.PluginGUID, R2API.PrefabAPI.PluginVersion)]
+    [BepInDependency(R2API.DamageAPI.PluginGUID, R2API.DamageAPI.PluginVersion)]
+    [BepInDependency(R2API.OrbAPI.PluginGUID, R2API.OrbAPI.PluginVersion)]
     [BepInDependency("com.xoxfaby.BetterUI", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.ThinkInvisible.TILER2", BepInDependency.DependencyFlags.SoftDependency)]
-
-    public class AncientScepterMain : BaseUnityPlugin
+    public class AncientScepterPlugin : BaseUnityPlugin
     {
         public const string ModVer = "1.1.32";
         public const string ModName = "StandaloneAncientScepter";
         public const string ModGuid = "com.DestroyedClone.AncientScepter";
+
         public static BaseUnityPlugin instance;
 
-        internal static BepInEx.Logging.ManualLogSource _logger = null;
-
-        public List<ItemBase> Items = new List<ItemBase>();
-        public static Dictionary<ItemBase, bool> ItemStatusDictionary = new Dictionary<ItemBase, bool>();
-
-        public static BuffDef perishSongDebuff;
+        internal static BepInEx.Logging.ManualLogSource _logger;
 
         public void Awake()
         {
             _logger = Logger;
             instance = this;
 
-            ModCompat.Init();
+            ContentManager.collectContentPackProviders += (addContentPackProvider) => addContentPackProvider(new AncientScepterContent());
+
+            BetterUICompatibility.Init();
             CustomDamageTypes.SetupDamageTypes();
             SetupBuffs();
             Assets.PopulateAssets();
             Assets.SpriteAssets.InitializeAssets();
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
-        public static void doBetterUI()
-        {
-            BetterUI.Buffs.RegisterBuffInfo(AncientScepterMain.perishSongDebuff,
-                "STANDALONEANCIENTSCEPTER_BUFF_PERISHSONG_NAME",
-                "STANDALONEANCIENTSCEPTER_BUFF_PERISHSONG_DESC");
-            LanguageAPI.Add("STANDALONEANCIENTSCEPTER_BUFF_PERISHSONG_NAME", "Perish Song");
-            LanguageAPI.Add("STANDALONEANCIENTSCEPTER_BUFF_PERISHSONG_DESC", "After 30 seconds, take 5000% damage from the Heretic that inflicted you.");
         }
 
         public static void SetupBuffs()
@@ -79,9 +63,9 @@ namespace AncientScepter
             {
                 _logger.LogWarning($"Buff '{nameof(perishSongDebuff)}' failed to be added.");
             }
-            if (ModCompat.compatBetterUI)
+            if (BetterUICompatibility.compatBetterUI)
             {
-               doBetterUI();
+                doBetterUI();
             }
         }
 

@@ -1,12 +1,33 @@
 ﻿using R2API;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using RoR2;
+using RoR2.ContentManagement;
+using RoR2.Skills;
+using System.Collections;
 
 namespace AncientScepter.Modules
 {
-    internal class AncientScepterContent
+    /// <summary>
+    /// Based on <see cref="RoR2.ContentManagement.SimpleContentPackProvider"/>
+    /// </summary>
+    internal class AncientScepterContent : IContentPackProvider
     {
+        public string identifier => throw new System.NotImplementedException();
+
+        public IEnumerator FinalizeAsync(FinalizeAsyncArgs args)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IEnumerator GenerateContentPackAsync(GetContentPackAsyncArgs args)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IEnumerator LoadStaticContentAsync(LoadStaticContentAsyncArgs args)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public static class CustomDamageTypes
         {
             internal static DamageAPI.ModdedDamageType ScepterFruitDT;
@@ -25,5 +46,20 @@ namespace AncientScepter.Modules
             }
         }
 
+        public static class Items
+        {
+            public static ItemDef ancientScepter;
+        }
+        public static class Skills
+        {
+            public static SkillDef thing;
+            public static SkillDef EngiTurret2;
+            public static SkillDef EngiWalker2;
+        }
+
+        public static class Buffs
+        {
+            public static BuffDef perishSongDebuff;
+        }
     }
 }

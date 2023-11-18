@@ -1,20 +1,15 @@
-﻿using EntityStates.Mage;
+﻿using AncientScepter.Modules.ModCompatibility;
 using R2API;
 using RoR2;
 using RoR2.Skills;
-using UnityEngine;
-using static AncientScepter.SkillUtil;
 using System.Collections.Generic;
-using System.Linq;
-using System;
-using HG;
-using AncientScepter.Modules.ScepterSkillStates;
+using UnityEngine;
 
 namespace AncientScepter.Modules.Skills
 {
-    public class HereticNevermore2 : ScepterSkill
+    public class HereticNevermore2 : ClonedScepterSkill
     {
-        public override SkillDef baseSkillDef { get; protected set; }
+        public override SkillDef skillDefToClone { get; protected set; }
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
@@ -24,14 +19,13 @@ namespace AncientScepter.Modules.Skills
         public override SkillSlot targetSlot => SkillSlot.None;
         public override int targetVariantIndex => 0;
 
-
         public static float perishSongDamageCoefficient = 50;
         public static bool bypassOSP = true;
 
-        internal override void SetupAttributes()
+        internal override void Setup()
         {
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/HereticBody/HereticDefaultAbility");
-            baseSkillDef = CloneSkillDef(oldDef);
+            skillDefToClone = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_HERETIC_SQUAWKNAME";
             newDescToken = "ANCIENTSCEPTER_HERETIC_SQUAWKDESC";
@@ -39,29 +33,29 @@ namespace AncientScepter.Modules.Skills
             var namestr = "Perish Song";
             LanguageAPI.Add(nametoken, namestr);
 
-            baseSkillDef.skillName = $"{oldDef.skillName}Scepter";
-            (baseSkillDef as ScriptableObject).name = baseSkillDef.skillName;
-            baseSkillDef.skillNameToken = nametoken;
-            baseSkillDef.skillDescriptionToken = newDescToken;
-            baseSkillDef.baseRechargeInterval = 40f;
-            baseSkillDef.icon = Assets.SpriteAssets.HereticNevermore2;
-            baseSkillDef.activationState = new global::EntityStates.SerializableEntityStateType(typeof(HereticPerishSong));
+            skillDefToClone.skillName = $"{oldDef.skillName}Scepter";
+            (skillDefToClone as ScriptableObject).name = skillDefToClone.skillName;
+            skillDefToClone.skillNameToken = nametoken;
+            skillDefToClone.skillDescriptionToken = newDescToken;
+            skillDefToClone.baseRechargeInterval = 40f;
+            skillDefToClone.icon = Assets.SpriteAssets.HereticNevermore2;
+            skillDefToClone.activationState = new global::EntityStates.SerializableEntityStateType(typeof(HereticPerishSong));
 
-            ContentAddition.AddSkillDef(baseSkillDef);
+            ContentAddition.AddSkillDef(skillDefToClone);
 
-            if (ModCompat.compatBetterUI)
+            if (BetterUICompatibility.compatBetterUI)
             {
                 doBetterUI();
             }
-
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
         internal void doBetterUI()
         {
-            BetterUI.ProcCoefficientCatalog.AddSkill(baseSkillDef.skillName, "Sing", 0);
-            BetterUI.ProcCoefficientCatalog.AddSkill(baseSkillDef.skillName, "Perish Song Activation", 0);
+            BetterUI.ProcCoefficientCatalog.AddSkill(skillDefToClone.skillName, "Sing", 0);
+            BetterUI.ProcCoefficientCatalog.AddSkill(skillDefToClone.skillName, "Perish Song Activation", 0);
         }
+
         public static float GetEstimatedDamageForPerishSong()
         {
             return 18 + 3.6f * TeamManager.instance.GetTeamLevel(TeamIndex.Player);
@@ -74,10 +68,10 @@ namespace AncientScepter.Modules.Skills
 
         private void CharacterBody_UpdateBuffs(On.RoR2.CharacterBody.orig_UpdateBuffs orig, CharacterBody self, float deltaTime)
         {
-            var currentPerishSongStack = self.GetBuffCount(AncientScepterMain.perishSongDebuff);
+            var currentPerishSongStack = self.GetBuffCount(AncientScepterPlugin.perishSongDebuff);
             orig(self, deltaTime);
 
-            if (self.GetBuffCount(AncientScepterMain.perishSongDebuff) < currentPerishSongStack && self.healthComponent && self.healthComponent.body && self.healthComponent.alive)
+            if (self.GetBuffCount(AncientScepterPlugin.perishSongDebuff) < currentPerishSongStack && self.healthComponent && self.healthComponent.body && self.healthComponent.alive)
             {
                 var marker = self.GetComponent<ScepterPerishSongMarker>();
                 CharacterBody attacker = null;

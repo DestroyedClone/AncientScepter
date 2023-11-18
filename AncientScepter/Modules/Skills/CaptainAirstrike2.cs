@@ -1,18 +1,18 @@
-﻿using EntityStates.Captain.Weapon;
+﻿using AncientScepter.Modules.ModCompatibility;
+using EntityStates.Captain.Weapon;
 using MonoMod.Cil;
 using R2API;
 using RoR2;
 using RoR2.Skills;
 using System;
 using UnityEngine;
-using static AncientScepter.SkillUtil;
 
 namespace AncientScepter.Modules.Skills
 {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
-    public class CaptainAirstrike2 : ScepterSkill
+    public class CaptainAirstrike2 : ClonedScepterSkill
     {
-        public override SkillDef baseSkillDef { get; protected set; }
+        public override SkillDef skillDefToClone { get; protected set; }
         public static SkillDef myCallDef { get; private set; }
         public static GameObject airstrikePrefab { get; private set; }
 
@@ -24,10 +24,10 @@ namespace AncientScepter.Modules.Skills
         public override SkillSlot targetSlot => SkillSlot.Utility;
         public override int targetVariantIndex => 0;
 
-        internal override void SetupAttributes()
+        internal override void Setup()
         {
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/CaptainBody/PrepAirstrike");
-            baseSkillDef = CloneSkillDef(oldDef);
+            skillDefToClone = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_CAPTAIN_AIRSTRIKENAME";
             newDescToken = "ANCIENTSCEPTER_CAPTAIN_AIRSTRIKEDESC";
@@ -35,13 +35,13 @@ namespace AncientScepter.Modules.Skills
             var namestr = "21-Probe Salute";
             LanguageAPI.Add(nametoken, namestr);
 
-            baseSkillDef.skillName = $"{oldDef.skillName}Scepter";
-            (baseSkillDef as ScriptableObject).name = baseSkillDef.skillName;
-            baseSkillDef.skillNameToken = nametoken;
-            baseSkillDef.skillDescriptionToken = newDescToken;
-            baseSkillDef.icon = Assets.SpriteAssets.CaptainAirstrike2;
+            skillDefToClone.skillName = $"{oldDef.skillName}Scepter";
+            (skillDefToClone as ScriptableObject).name = skillDefToClone.skillName;
+            skillDefToClone.skillNameToken = nametoken;
+            skillDefToClone.skillDescriptionToken = newDescToken;
+            skillDefToClone.icon = Assets.SpriteAssets.CaptainAirstrike2;
 
-            ContentAddition.AddSkillDef(baseSkillDef);
+            ContentAddition.AddSkillDef(skillDefToClone);
 
             var oldCallDef = LegacyResourcesAPI.Load<SkillDef>("skilldefs/captainbody/CallAirstrike");
             myCallDef = CloneSkillDef(oldCallDef);
@@ -56,17 +56,16 @@ namespace AncientScepter.Modules.Skills
 
             ContentAddition.AddSkillDef(myCallDef);
 
-            if (ModCompat.compatBetterUI)
+            if (BetterUICompatibility.compatBetterUI)
             {
                 doBetterUI();
             }
         }
 
-
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
         internal void doBetterUI()
         {
-            BetterUI.ProcCoefficientCatalog.AddSkill(baseSkillDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CallAirstrike"));
+            BetterUI.ProcCoefficientCatalog.AddSkill(skillDefToClone.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CallAirstrike"));
             BetterUI.ProcCoefficientCatalog.AddSkill(myCallDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CallAirstrike"));
         }
 
@@ -95,7 +94,7 @@ namespace AncientScepter.Modules.Skills
             var isAirstrike = self is CallAirstrike1
                 || self is CallAirstrike2
                 || self is CallAirstrike3;
-            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef && isAirstrike) return false;
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone && isAirstrike) return false;
             return orig(self);
         }
 
@@ -123,7 +122,7 @@ namespace AncientScepter.Modules.Skills
                 || self is CallAirstrike2
                 || self is CallAirstrike3;
 
-            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef && isAirstrike)
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone && isAirstrike)
             {
                 self.damageCoefficient = 5f;
                 self.AddRecoil(-1f, 1f, -1f, 1f);
@@ -133,7 +132,7 @@ namespace AncientScepter.Modules.Skills
         private void On_SetupAirstrikeStateEnter(On.EntityStates.Captain.Weapon.SetupAirstrike.orig_OnEnter orig, SetupAirstrike self) //exc
         {
             var origOverride = SetupAirstrike.primarySkillDef;
-            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef)
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone)
             {
                 SetupAirstrike.primarySkillDef = myCallDef;
             }

@@ -1,8 +1,6 @@
 ﻿using AncientScepter.Modules.Skills;
 using RoR2;
 using RoR2.Orbs;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -88,7 +86,7 @@ namespace AncientScepter.Modules
                             damageColorIndex = damageColorIndex,
                             damageType = damageType
                         };
-                        R2API.DamageAPI.AddModdedDamageType(damageInfo, CustomDamageTypes.ScepterBandit2SkullDT);
+                        R2API.DamageAPI.AddModdedDamageType(damageInfo, AncientScepterContent.CustomDamageTypes.ScepterBandit2SkullDT);
                         healthComponent.TakeDamage(damageInfo);
                         GlobalEventManager.instance.OnHitEnemy(damageInfo, healthComponent.gameObject);
                         GlobalEventManager.instance.OnHitAll(damageInfo, healthComponent.gameObject);
@@ -166,6 +164,5 @@ namespace AncientScepter.Modules
             }
             return hurtBox;
         }
-
     }
 }

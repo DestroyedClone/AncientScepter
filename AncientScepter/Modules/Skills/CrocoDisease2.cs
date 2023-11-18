@@ -1,4 +1,5 @@
-﻿using R2API;
+﻿using AncientScepter.Modules.ModCompatibility;
+using R2API;
 using RoR2;
 using RoR2.Orbs;
 using RoR2.Skills;
@@ -6,15 +7,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 using UnityEngine.Networking;
-using static AncientScepter.SkillUtil;
 
 namespace AncientScepter.Modules.Skills
 {
-    public class CrocoDisease2 : ScepterSkill
+    public class CrocoDisease2 : ClonedScepterSkill
     {
         private static GameObject diseaseWardPrefab;
 
-        public override SkillDef baseSkillDef { get; protected set; }
+        public override SkillDef skillDefToClone { get; protected set; }
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
@@ -24,10 +24,10 @@ namespace AncientScepter.Modules.Skills
         public override SkillSlot targetSlot => SkillSlot.Special;
         public override int targetVariantIndex => 0;
 
-        internal override void SetupAttributes()
+        internal override void Setup()
         {
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/CrocoBody/CrocoDisease");
-            baseSkillDef = CloneSkillDef(oldDef);
+            skillDefToClone = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_CROCO_DISEASENAME";
             newDescToken = "ANCIENTSCEPTER_CROCO_DISEASEDESC";
@@ -35,13 +35,13 @@ namespace AncientScepter.Modules.Skills
             var namestr = "Plague";
             LanguageAPI.Add(nametoken, namestr);
 
-            baseSkillDef.skillName = $"{oldDef.skillName}Scepter";
-            (baseSkillDef as ScriptableObject).name = baseSkillDef.skillName;
-            baseSkillDef.skillNameToken = nametoken;
-            baseSkillDef.skillDescriptionToken = newDescToken;
-            baseSkillDef.icon = Assets.SpriteAssets.CrocoDisease2;
+            skillDefToClone.skillName = $"{oldDef.skillName}Scepter";
+            (skillDefToClone as ScriptableObject).name = skillDefToClone.skillName;
+            skillDefToClone.skillNameToken = nametoken;
+            skillDefToClone.skillDescriptionToken = newDescToken;
+            skillDefToClone.icon = Assets.SpriteAssets.CrocoDisease2;
 
-            ContentAddition.AddSkillDef(baseSkillDef);
+            ContentAddition.AddSkillDef(skillDefToClone);
 
             var mshPrefab = Resources.Load<GameObject>("Prefabs/NetworkedObjects/MushroomWard");
 
@@ -57,7 +57,7 @@ namespace AncientScepter.Modules.Skills
             diseaseWardPrefab = dwPrefabPrefab.InstantiateClone("AncientScepterDiseaseWardAuraPrefab");
             Object.Destroy(dwPrefabPrefab);
 
-            if (ModCompat.compatBetterUI)
+            if (BetterUICompatibility.compatBetterUI)
             {
                 doBetterUI();
             }
@@ -66,8 +66,9 @@ namespace AncientScepter.Modules.Skills
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
         internal void doBetterUI()
         {
-            BetterUI.ProcCoefficientCatalog.AddSkill(baseSkillDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CrocoDisease"));
+            BetterUI.ProcCoefficientCatalog.AddSkill(skillDefToClone.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CrocoDisease"));
         }
+
         internal override void LoadBehavior()
         {
             On.RoR2.Orbs.LightningOrb.OnArrival += On_LightningOrbArrival;
@@ -81,7 +82,7 @@ namespace AncientScepter.Modules.Skills
         private void On_LightningOrbArrival(On.RoR2.Orbs.LightningOrb.orig_OnArrival orig, LightningOrb self)
         {
             orig(self);
-            if (self.lightningType != LightningOrb.LightningType.CrocoDisease || self.attacker?.GetComponent<CharacterBody>().skillLocator.GetSkill(targetSlot)?.skillDef != baseSkillDef) return;
+            if (self.lightningType != LightningOrb.LightningType.CrocoDisease || self.attacker?.GetComponent<CharacterBody>().skillLocator.GetSkill(targetSlot)?.skillDef != skillDefToClone) return;
             if (!self.target || !self.target.healthComponent) return;
 
             var cpt = self.target.healthComponent.gameObject.GetComponentInChildren<DiseaseWard>()?.gameObject;

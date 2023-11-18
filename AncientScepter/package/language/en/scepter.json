@@ -1,9 +1,8 @@
- {
-	strings:
-	{
-		"ITEM_ANCIENTSCEPTER_NAME" : "Ancient Scepter",
-		"ITEM_ANCIENTSCEPTER_PICKUP" : "Upgrades one of your skills.",
-		"ITEM_ANCIENTSCEPTER_DESC" : "Upgrade one of your <style=cIsUtility>skills</style>. <style=cStack>(Unique per character)</style>",
-		"ITEM_ANCIENTSCEPTER_LORE" : "Perfected energies. <He> holds it before us. The crystal of foreign elements is not attached physically, yet it does not falter from the staff's structure.\n\nOverwhelming strength. We watch as <His> might splits the ground asunder with a single strike.\n\nWondrous possibilities. <His> knowledge unlocks further pathways of development. We are enlightened by <Him>.\n\nExcellent results. From <His> hands, [Nanga] takes hold. It is as <He> said: The weak are culled.\n\nRisking everything. The crystal destabilizies. [Nanga] is gone, and <He> is forced to wield it once again.\n\nPower comes at a cost. <He> is willing to pay."
-	}
- }
+{
+  strings: {
+    "ITEM_ANCIENTSCEPTER_NAME": "Ancient Scepter",
+    "ITEM_ANCIENTSCEPTER_PICKUP": "Upgrades one of your skills.",
+    "ITEM_ANCIENTSCEPTER_DESC": "Upgrade one of your <style=cIsUtility>skills</style>. <style=cStack>(Unique per character)</style>",
+    "ITEM_ANCIENTSCEPTER_LORE": "Perfected energies. <He> holds it before us. The crystal of foreign elements is not attached physically, yet it does not falter from the staff's structure.\n\nOverwhelming strength. We watch as <His> might splits the ground asunder with a single strike.\n\nWondrous possibilities. <His> knowledge unlocks further pathways of development. We are enlightened by <Him>.\n\nExcellent results. From <His> hands, [Nanga] takes hold. It is as <He> said: The weak are culled.\n\nRisking everything. The crystal destabilizies. [Nanga] is gone, and <He> is forced to wield it once again.\n\nPower comes at a cost. <He> is willing to pay."
+  }
+}

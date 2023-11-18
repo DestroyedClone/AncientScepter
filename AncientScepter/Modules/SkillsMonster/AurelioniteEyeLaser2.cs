@@ -1,18 +1,14 @@
-﻿using Mono.Cecil.Cil;
-using MonoMod.Cil;
-using EntityStates.TitanMonster;
+﻿using EntityStates.TitanMonster;
 using R2API;
 using RoR2;
-using RoR2.Projectile;
 using RoR2.Skills;
-using System;
 using UnityEngine;
 
 namespace AncientScepter.Modules.SkillsMonster
 {
-    public class AurelioniteEyeLaser2 : ScepterSkill
+    public class AurelioniteEyeLaser2 : ClonedScepterSkill
     {
-        public override SkillDef baseSkillDef { get; protected set; }
+        public override SkillDef skillDefToClone { get; protected set; }
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
@@ -22,10 +18,10 @@ namespace AncientScepter.Modules.SkillsMonster
         public override SkillSlot targetSlot => SkillSlot.Special;
         public override int targetVariantIndex => 0;
 
-        internal override void SetupAttributes()
+        internal override void Setup()
         {
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/TitanGoldBody/ChargeGoldLaser");
-            baseSkillDef = CloneSkillDef(oldDef);
+            skillDefToClone = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_TITANGOLD_MEGALASERNAME";
             newDescToken = "ANCIENTSCEPTER_TITANGOLD_MEGALASERDESC";
@@ -33,13 +29,13 @@ namespace AncientScepter.Modules.SkillsMonster
             var namestr = "Piercing Eye Laser";
             LanguageAPI.Add(nametoken, namestr);
 
-            baseSkillDef.skillName = $"{oldDef.skillName}Scepter";
-            (baseSkillDef as ScriptableObject).name = baseSkillDef.skillName;
-            baseSkillDef.skillNameToken = nametoken;
-            baseSkillDef.skillDescriptionToken = newDescToken;
-            baseSkillDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texArtiR1");
+            skillDefToClone.skillName = $"{oldDef.skillName}Scepter";
+            (skillDefToClone as ScriptableObject).name = skillDefToClone.skillName;
+            skillDefToClone.skillNameToken = nametoken;
+            skillDefToClone.skillDescriptionToken = newDescToken;
+            skillDefToClone.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texArtiR1");
 
-            ContentAddition.AddSkillDef(baseSkillDef);
+            ContentAddition.AddSkillDef(skillDefToClone);
         }
 
         internal override void LoadBehavior()

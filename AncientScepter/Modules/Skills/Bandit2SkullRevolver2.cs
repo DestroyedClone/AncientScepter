@@ -1,20 +1,21 @@
-﻿using R2API;
+﻿using AncientScepter.Modules.ModCompatibility;
+using R2API;
 using RoR2;
+using RoR2.Orbs;
 using RoR2.Skills;
-using UnityEngine;
-using static AncientScepter.SkillUtil;
 using System.Collections.Generic;
 using System.Linq;
-using RoR2.Orbs;
+using UnityEngine;
 
 namespace AncientScepter.Modules.Skills
 {
-    public class Bandit2SkullRevolver2 : ScepterSkill
+    public class Bandit2SkullRevolver2 : ClonedScepterSkill
     {
-        public override SkillDef baseSkillDef { get; protected set; }
+        public override SkillDef skillDefToClone { get; protected set; }
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
+
         public override string overrideStr => $"\n<color=#d299ff>SCEPTER: {ricochetChance}% (+{ricochetChanceStack}% per token) chance to ricochet to another enemy on hit up to {ricochetMax} times within 30m." +
             $"\n-10% distance & damage per bounce. Unaffected by luck.</color>";
 
@@ -29,10 +30,10 @@ namespace AncientScepter.Modules.Skills
 
         public static GameObject bulletTracer = Resources.Load<GameObject>("Prefabs/Effects/Tracers/TracerCommandoDefault");
 
-        internal override void SetupAttributes()
+        internal override void Setup()
         {
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/Bandit2Body/SkullRevolver");
-            baseSkillDef = CloneSkillDef(oldDef);
+            skillDefToClone = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_BANDIT2_SKULLREVOLVERNAME";
             newDescToken = "ANCIENTSCEPTER_BANDIT2_SKULLREVOLVERDESC";
@@ -40,25 +41,24 @@ namespace AncientScepter.Modules.Skills
             var namestr = "Renegade";
             LanguageAPI.Add(nametoken, namestr);
 
-            baseSkillDef.skillName = $"{oldDef.skillName}Scepter";
-            (baseSkillDef as ScriptableObject).name = baseSkillDef.skillName;
-            baseSkillDef.skillNameToken = nametoken;
-            baseSkillDef.skillDescriptionToken = newDescToken;
-            baseSkillDef.icon = Assets.SpriteAssets.Bandit2SkullRevolver2;
+            skillDefToClone.skillName = $"{oldDef.skillName}Scepter";
+            (skillDefToClone as ScriptableObject).name = skillDefToClone.skillName;
+            skillDefToClone.skillNameToken = nametoken;
+            skillDefToClone.skillDescriptionToken = newDescToken;
+            skillDefToClone.icon = Assets.SpriteAssets.Bandit2SkullRevolver2;
 
-            ContentAddition.AddSkillDef(baseSkillDef);
+            ContentAddition.AddSkillDef(skillDefToClone);
 
-            if (ModCompat.compatBetterUI)
+            if (BetterUICompatibility.compatBetterUI)
             {
                 doBetterUI();
             }
         }
 
-
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
         internal void doBetterUI()
         {
-            BetterUI.ProcCoefficientCatalog.AddSkill(baseSkillDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("SkullRevolver"));
+            BetterUI.ProcCoefficientCatalog.AddSkill(skillDefToClone.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("SkullRevolver"));
         }
 
         internal override void LoadBehavior()
@@ -105,7 +105,6 @@ namespace AncientScepter.Modules.Skills
             }
         }
 
-
         public static bool GetRicochetChance(CharacterBody characterBody, float modifier = 1f)
         {
             if (!characterBody) return false;
@@ -121,7 +120,6 @@ namespace AncientScepter.Modules.Skills
 
             if ((damageInfo.damageType & DamageType.GiveSkullOnKill) == DamageType.GiveSkullOnKill)
             {
-
                 var instancesList = CharacterBody.instancesList;
                 List<CharacterBody> bodies = new List<CharacterBody>();
                 BullseyeSearch bullseyeSearch = new BullseyeSearch()
@@ -145,7 +143,6 @@ namespace AncientScepter.Modules.Skills
                     isCrit = damageInfo.crit,
                     procCoefficient = damageInfo.procCoefficient,
                 };
-
 
                 HurtBox hurtBox = bullseyeSearch.GetResults().FirstOrDefault();
                 if (hurtBox)
@@ -178,17 +175,15 @@ namespace AncientScepter.Modules.Skills
 
                 foreach (var body in bodies)
                 {
-
                 }
             }
-
         }
 
         private void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo damageInfo)
         {
             if ((damageInfo.damageType & DamageType.GiveSkullOnKill) == DamageType.GiveSkullOnKill)
             {
-                if (self.body && self.body.master && damageInfo.attacker && damageInfo.attacker.GetComponent<HealthComponent>() && damageInfo.attacker.GetComponent<CharacterBody>().skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef)
+                if (self.body && self.body.master && damageInfo.attacker && damageInfo.attacker.GetComponent<HealthComponent>() && damageInfo.attacker.GetComponent<CharacterBody>().skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone)
                 {
                     var attackerHC = damageInfo.attacker.GetComponent<HealthComponent>();
                     var baseAI = self.body.master.GetComponent<RoR2.CharacterAI.BaseAI>();

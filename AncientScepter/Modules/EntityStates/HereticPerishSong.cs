@@ -1,15 +1,12 @@
-﻿using System;
+﻿using AncientScepter.Modules.Skills;
+using EntityStates;
 using RoR2;
 using UnityEngine;
-using EntityStates;
-using System.Collections.Generic;
-using AncientScepter.Modules.Skills;
 
 namespace AncientScepter.Modules.EntityStates
 {
     public class HereticPerishSong : BaseSkillState
     {
-
         [SerializeField]
         public string soundName = "Play_heretic_squawk";
 
@@ -19,7 +16,7 @@ namespace AncientScepter.Modules.EntityStates
 
         public int index = 0;
         public int count = 0;
-        HurtBox[] hurtBoxes;
+        private HurtBox[] hurtBoxes;
 
         public override void OnEnter()
         {
@@ -61,7 +58,7 @@ namespace AncientScepter.Modules.EntityStates
             {
                 if (isAuthority)
                 {
-                    victimBody.AddTimedBuff(AncientScepterMain.perishSongDebuff, 30f);
+                    victimBody.AddTimedBuff(AncientScepterPlugin.perishSongDebuff, 30f);
                     //victimBody.AddTimedBuff(RoR2Content.Buffs.DeathMark, 0.5f);
 
                     var marker = victimBody.GetComponent<HereticNevermore2.ScepterPerishSongMarker>();
@@ -77,6 +74,5 @@ namespace AncientScepter.Modules.EntityStates
         {
             return InterruptPriority.Death;
         }
-
     }
 }

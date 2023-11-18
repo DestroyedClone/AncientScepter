@@ -1,14 +1,14 @@
-﻿using R2API;
+﻿using AncientScepter.Modules.ModCompatibility;
+using R2API;
 using RoR2;
 using RoR2.Skills;
 using UnityEngine;
-using static AncientScepter.SkillUtil;
 
 namespace AncientScepter.Modules.Skills
 {
-    public class MercEvisProjectile2 : ScepterSkill
+    public class MercEvisProjectile2 : ClonedScepterSkill
     {
-        public override SkillDef baseSkillDef { get; protected set; }
+        public override SkillDef skillDefToClone { get; protected set; }
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
@@ -18,10 +18,10 @@ namespace AncientScepter.Modules.Skills
         public override SkillSlot targetSlot => SkillSlot.Special;
         public override int targetVariantIndex => 1;
 
-        internal override void SetupAttributes()
+        internal override void Setup()
         {
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/MercBody/MercBodyEvisProjectile");
-            baseSkillDef = CloneSkillDef(oldDef);
+            skillDefToClone = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_MERC_EVISPROJNAME";
             newDescToken = "ANCIENTSCEPTER_MERC_EVISPROJDESC";
@@ -29,17 +29,17 @@ namespace AncientScepter.Modules.Skills
             var namestr = "Gale-Force";
             LanguageAPI.Add(nametoken, namestr);
 
-            baseSkillDef.skillName = $"{oldDef.skillName}Scepter";
-            (baseSkillDef as ScriptableObject).name = baseSkillDef.skillName;
-            baseSkillDef.skillNameToken = nametoken;
-            baseSkillDef.skillDescriptionToken = newDescToken;
-            baseSkillDef.icon = Assets.SpriteAssets.MercEvis2Projectile;
-            baseSkillDef.baseMaxStock *= 4;
-            baseSkillDef.baseRechargeInterval /= 4f;
+            skillDefToClone.skillName = $"{oldDef.skillName}Scepter";
+            (skillDefToClone as ScriptableObject).name = skillDefToClone.skillName;
+            skillDefToClone.skillNameToken = nametoken;
+            skillDefToClone.skillDescriptionToken = newDescToken;
+            skillDefToClone.icon = Assets.SpriteAssets.MercEvis2Projectile;
+            skillDefToClone.baseMaxStock *= 4;
+            skillDefToClone.baseRechargeInterval /= 4f;
 
-            ContentAddition.AddSkillDef(baseSkillDef);
+            ContentAddition.AddSkillDef(skillDefToClone);
 
-            if (ModCompat.compatBetterUI)
+            if (BetterUICompatibility.compatBetterUI)
             {
                 doBetterUI();
             }
@@ -48,8 +48,9 @@ namespace AncientScepter.Modules.Skills
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
         internal void doBetterUI()
         {
-            BetterUI.ProcCoefficientCatalog.AddSkill(baseSkillDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("MercBodyEvisProjectile"));
+            BetterUI.ProcCoefficientCatalog.AddSkill(skillDefToClone.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("MercBodyEvisProjectile"));
         }
+
         internal override void LoadBehavior()
         {
             On.EntityStates.GenericProjectileBaseState.OnEnter += On_FireFMJEnter;
@@ -63,7 +64,7 @@ namespace AncientScepter.Modules.Skills
         private void On_FireFMJEnter(On.EntityStates.GenericProjectileBaseState.orig_OnEnter orig, global::EntityStates.GenericProjectileBaseState self)
         {
             orig(self);
-            if (!(self is global::EntityStates.Merc.Weapon.ThrowEvisProjectile) || self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef != baseSkillDef) return;
+            if (!(self is global::EntityStates.Merc.Weapon.ThrowEvisProjectile) || self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef != skillDefToClone) return;
             if (!self.outer.commonComponents.skillLocator?.special) return;
             var fireCount = self.outer.commonComponents.skillLocator.special.stock;
             self.outer.commonComponents.skillLocator.special.stock = 0;

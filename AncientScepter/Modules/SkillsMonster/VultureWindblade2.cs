@@ -1,21 +1,15 @@
-﻿using Mono.Cecil.Cil;
-using MonoMod.Cil;
-using EntityStates.TitanMonster;
+﻿using EntityStates.Vulture.Weapon;
 using R2API;
 using RoR2;
 using RoR2.Projectile;
 using RoR2.Skills;
-using System;
 using UnityEngine;
-using static AncientScepter.SkillUtil;
-using EntityStates.Vulture.Weapon;
-
 
 namespace AncientScepter.Modules.SkillsMonster
 {
-    public class VultureWindblade2 : ScepterSkill
+    public class VultureWindblade2 : ClonedScepterSkill
     {
-        public override SkillDef baseSkillDef { get; protected set; }
+        public override SkillDef skillDefToClone { get; protected set; }
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
@@ -25,10 +19,10 @@ namespace AncientScepter.Modules.SkillsMonster
         public override SkillSlot targetSlot => SkillSlot.Primary;
         public override int targetVariantIndex => 0;
 
-        internal override void SetupAttributes()
+        internal override void Setup()
         {
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/VultureBody/ChargeWindblade");
-            baseSkillDef = CloneSkillDef(oldDef);
+            skillDefToClone = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_VULTURE_WINDBLADENAME";
             newDescToken = "ANCIENTSCEPTER_VULTURE_WINDBLADEDESC";
@@ -36,13 +30,13 @@ namespace AncientScepter.Modules.SkillsMonster
             var namestr = "Repeated Windblade";
             LanguageAPI.Add(nametoken, namestr);
 
-            baseSkillDef.skillName = $"{oldDef.skillName}Scepter";
-            (baseSkillDef as ScriptableObject).name = baseSkillDef.skillName;
-            baseSkillDef.skillNameToken = nametoken;
-            baseSkillDef.skillDescriptionToken = newDescToken;
-            baseSkillDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texArtiR1");
+            skillDefToClone.skillName = $"{oldDef.skillName}Scepter";
+            (skillDefToClone as ScriptableObject).name = skillDefToClone.skillName;
+            skillDefToClone.skillNameToken = nametoken;
+            skillDefToClone.skillDescriptionToken = newDescToken;
+            skillDefToClone.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texArtiR1");
 
-            ContentAddition.AddSkillDef(baseSkillDef);
+            ContentAddition.AddSkillDef(skillDefToClone);
         }
 
         internal override void LoadBehavior()

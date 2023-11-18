@@ -1,19 +1,15 @@
-﻿using Mono.Cecil.Cil;
-using MonoMod.Cil;
+﻿using AncientScepter.Modules.ModCompatibility;
 using R2API;
 using RoR2;
-using RoR2.Projectile;
 using RoR2.Skills;
-using System;
 using UnityEngine;
-using static AncientScepter.SkillUtil;
 using UnityEngine.AddressableAssets;
 
 namespace AncientScepter.Modules.Skills
 {
-    public class RailgunnerSuper2 : ScepterSkill
+    public class RailgunnerSuper2 : ClonedScepterSkill
     {
-        public override SkillDef baseSkillDef { get; protected set; }
+        public override SkillDef skillDefToClone { get; protected set; }
         public static SkillDef myFireDef { get; protected set; }
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
@@ -26,10 +22,10 @@ namespace AncientScepter.Modules.Skills
 
         public override int targetVariantIndex => 0;
 
-        internal override void SetupAttributes()
+        internal override void Setup()
         {
             var oldDef = Addressables.LoadAssetAsync<RailgunSkillDef>("RoR2/DLC1/Railgunner/RailgunnerBodyChargeSnipeSuper.asset").WaitForCompletion();
-            baseSkillDef = CloneSkillDef(oldDef);
+            skillDefToClone = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_RAILGUNNER_SNIPESUPERNAME";
             newDescToken = "ANCIENTSCEPTER_RAILGUNNER_SNIPESUPERDESC";
@@ -37,14 +33,13 @@ namespace AncientScepter.Modules.Skills
             var namestr = "Hypercharge";
             LanguageAPI.Add(nametoken, namestr);
 
-            baseSkillDef.skillName = $"{oldDef.skillName}Scepter";
-            (baseSkillDef as ScriptableObject).name = baseSkillDef.skillName;
-            baseSkillDef.skillNameToken = nametoken;
-            baseSkillDef.skillDescriptionToken = newDescToken;
-            baseSkillDef.icon = Assets.SpriteAssets.RailgunnerSupercharge2;
+            skillDefToClone.skillName = $"{oldDef.skillName}Scepter";
+            (skillDefToClone as ScriptableObject).name = skillDefToClone.skillName;
+            skillDefToClone.skillNameToken = nametoken;
+            skillDefToClone.skillDescriptionToken = newDescToken;
+            skillDefToClone.icon = Assets.SpriteAssets.RailgunnerSupercharge2;
 
-            ContentAddition.AddSkillDef(baseSkillDef);
-
+            ContentAddition.AddSkillDef(skillDefToClone);
 
             var oldCallDef = Addressables.LoadAssetAsync<RailgunSkillDef>("RoR2/DLC1/Railgunner/RailgunnerBodyFireSnipeSuper.asset").WaitForCompletion();
             myFireDef = CloneSkillDef(oldCallDef);
@@ -57,7 +52,7 @@ namespace AncientScepter.Modules.Skills
 
             ContentAddition.AddSkillDef(myFireDef);
 
-            if (ModCompat.compatBetterUI)
+            if (BetterUICompatibility.compatBetterUI)
             {
                 doBetterUI();
             }
@@ -69,9 +64,10 @@ namespace AncientScepter.Modules.Skills
             //BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("RailgunnerBodyChargeSnipeSuper"));
             //BetterUI.ProcCoefficientCatalog.AddSkill(myFireDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("RailgunnerBodyFireSnipeSuper"));
 
-            BetterUI.ProcCoefficientCatalog.AddSkill(baseSkillDef.skillName, "Projectile", 3.5f);
+            BetterUI.ProcCoefficientCatalog.AddSkill(skillDefToClone.skillName, "Projectile", 3.5f);
             BetterUI.ProcCoefficientCatalog.AddSkill(myFireDef.skillName, "Projectile", 3.5f);
         }
+
         internal override void LoadBehavior()
         {
             On.EntityStates.Railgunner.Weapon.BaseFireSnipe.ModifyBullet += BaseFireSnipe_ModifyBullet;
@@ -84,7 +80,7 @@ namespace AncientScepter.Modules.Skills
         private void BaseCharged_OnEnter(On.EntityStates.Railgunner.Backpack.BaseCharged.orig_OnEnter orig, global::EntityStates.Railgunner.Backpack.BaseCharged self)
         {
             var cachedOverride = self.primaryOverride;
-            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef)
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone)
             {
                 if (self is global::EntityStates.Railgunner.Backpack.ChargedSuper)
                 {
@@ -102,7 +98,7 @@ namespace AncientScepter.Modules.Skills
         private void BaseCharged_OnExit(On.EntityStates.Railgunner.Backpack.BaseCharged.orig_OnExit orig, global::EntityStates.Railgunner.Backpack.BaseCharged self)
         {
             var cachedOverride = self.primaryOverride;
-            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef)
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone)
             {
                 if (self is global::EntityStates.Railgunner.Backpack.ChargedSuper)
                 {
@@ -115,13 +111,12 @@ namespace AncientScepter.Modules.Skills
             }
             orig(self);
             self.primaryOverride = cachedOverride;
-
         }
 
         private void Offline_OnEnter(On.EntityStates.Railgunner.Backpack.Offline.orig_OnEnter orig, global::EntityStates.Railgunner.Backpack.Offline self)
         {
             var origDuration = self.baseDuration;
-            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef)
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone)
             {
                 self.baseDuration = Mathf.Max(0, self.baseDuration - 1);
             }
@@ -153,7 +148,7 @@ namespace AncientScepter.Modules.Skills
         private void BaseFireSnipe_ModifyBullet(On.EntityStates.Railgunner.Weapon.BaseFireSnipe.orig_ModifyBullet orig, global::EntityStates.Railgunner.Weapon.BaseFireSnipe self, BulletAttack bulletAttack)
         {
             //var cachedProcCoefficient = bulletAttack.procCoefficient;
-            if (self is global::EntityStates.Railgunner.Weapon.FireSnipeSuper && self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef)
+            if (self is global::EntityStates.Railgunner.Weapon.FireSnipeSuper && self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone)
             {
                 bulletAttack.AddModdedDamageType(CustomDamageTypes.ScepterDestroy10ArmorDT);
                 bulletAttack.procCoefficient += 0.5f;

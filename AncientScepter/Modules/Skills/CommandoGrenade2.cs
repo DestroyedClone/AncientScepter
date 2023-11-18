@@ -1,17 +1,17 @@
-﻿using EntityStates.Commando.CommandoWeapon;
+﻿using AncientScepter.Modules.ModCompatibility;
+using EntityStates.Commando.CommandoWeapon;
 using R2API;
 using RoR2;
 using RoR2.Projectile;
 using RoR2.Skills;
 using UnityEngine;
-using static AncientScepter.SkillUtil;
 
 namespace AncientScepter.Modules.Skills
 {
-    public class CommandoGrenade2 : ScepterSkill
+    public class CommandoGrenade2 : ClonedScepterSkill
     {
         private static GameObject projReplacer;
-        public override SkillDef baseSkillDef { get; protected set; }
+        public override SkillDef skillDefToClone { get; protected set; }
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
@@ -21,10 +21,10 @@ namespace AncientScepter.Modules.Skills
         public override SkillSlot targetSlot => SkillSlot.Special;
         public override int targetVariantIndex => 1;
 
-        internal override void SetupAttributes()
+        internal override void Setup()
         {
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/CommandoBody/ThrowGrenade");
-            baseSkillDef = CloneSkillDef(oldDef);
+            skillDefToClone = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_COMMANDO_GRENADENAME";
             newDescToken = "ANCIENTSCEPTER_COMMANDO_GRENADEDESC";
@@ -32,13 +32,13 @@ namespace AncientScepter.Modules.Skills
             var namestr = "Carpet Bomb";
             LanguageAPI.Add(nametoken, namestr);
 
-            baseSkillDef.skillName = $"{oldDef.skillName}Scepter";
-            (baseSkillDef as ScriptableObject).name = baseSkillDef.skillName;
-            baseSkillDef.skillNameToken = nametoken;
-            baseSkillDef.skillDescriptionToken = newDescToken;
-            baseSkillDef.icon = Assets.SpriteAssets.CommandoGrenade2;
+            skillDefToClone.skillName = $"{oldDef.skillName}Scepter";
+            (skillDefToClone as ScriptableObject).name = skillDefToClone.skillName;
+            skillDefToClone.skillNameToken = nametoken;
+            skillDefToClone.skillDescriptionToken = newDescToken;
+            skillDefToClone.icon = Assets.SpriteAssets.CommandoGrenade2;
 
-            ContentAddition.AddSkillDef(baseSkillDef);
+            ContentAddition.AddSkillDef(skillDefToClone);
 
             projReplacer = Resources.Load<GameObject>("prefabs/projectiles/CommandoGrenadeProjectile").InstantiateClone("CIScepCommandoGrenade");
             var pie = projReplacer.GetComponent<ProjectileImpactExplosion>();
@@ -47,7 +47,7 @@ namespace AncientScepter.Modules.Skills
 
             ContentAddition.AddProjectile(projReplacer);
 
-            if (ModCompat.compatBetterUI)
+            if (BetterUICompatibility.compatBetterUI)
             {
                 doBetterUI();
             }
@@ -56,8 +56,9 @@ namespace AncientScepter.Modules.Skills
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
         internal void doBetterUI()
         {
-            BetterUI.ProcCoefficientCatalog.AddSkill(baseSkillDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("ThrowGrenade"));
+            BetterUI.ProcCoefficientCatalog.AddSkill(skillDefToClone.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("ThrowGrenade"));
         }
+
         internal override void LoadBehavior()
         {
             On.EntityStates.GenericProjectileBaseState.FireProjectile += On_FireFMJFire;
@@ -73,7 +74,7 @@ namespace AncientScepter.Modules.Skills
             var cc = self.outer.commonComponents;
             bool isBoosted = self is ThrowGrenade
                 && Util.HasEffectiveAuthority(self.outer.networkIdentity)
-                && cc.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef;
+                && cc.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone;
             if (isBoosted) self.projectilePrefab = projReplacer;
             orig(self);
             if (isBoosted)

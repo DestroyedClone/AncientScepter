@@ -1,16 +1,16 @@
-﻿using R2API;
+﻿using AncientScepter.Modules.ModCompatibility;
+using R2API;
 using RoR2;
 using RoR2.Skills;
 using System;
 using UnityEngine;
 using UnityEngine.Networking;
-using static AncientScepter.SkillUtil;
 
 namespace AncientScepter.Modules.Skills
 {
-    public class TreebotFireFruitSeed2 : ScepterSkill
+    public class TreebotFireFruitSeed2 : ClonedScepterSkill
     {
-        public override SkillDef baseSkillDef { get; protected set; }
+        public override SkillDef skillDefToClone { get; protected set; }
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
@@ -22,10 +22,10 @@ namespace AncientScepter.Modules.Skills
 
         public static GameObject ScepterTreebotFruitPackPrefab;
 
-        internal override void SetupAttributes()
+        internal override void Setup()
         {
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/TreebotBody/TreebotBodyFireFruitSeed");
-            baseSkillDef = CloneSkillDef(oldDef);
+            skillDefToClone = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_TREEBOT_FRUIT2NAME";
             newDescToken = "ANCIENTSCEPTER_TREEBOT_FRUIT2DESC";
@@ -33,26 +33,28 @@ namespace AncientScepter.Modules.Skills
             var namestr = "COMMAND: REAP";
             LanguageAPI.Add(nametoken, namestr);
 
-            baseSkillDef.skillName = $"{oldDef.skillName}Scepter";
-            (baseSkillDef as ScriptableObject).name = baseSkillDef.skillName;
-            baseSkillDef.skillNameToken = nametoken;
-            baseSkillDef.skillDescriptionToken = newDescToken;
-            baseSkillDef.icon = Assets.SpriteAssets.TreebotFireFruitSeed2;
+            skillDefToClone.skillName = $"{oldDef.skillName}Scepter";
+            (skillDefToClone as ScriptableObject).name = skillDefToClone.skillName;
+            skillDefToClone.skillNameToken = nametoken;
+            skillDefToClone.skillDescriptionToken = newDescToken;
+            skillDefToClone.icon = Assets.SpriteAssets.TreebotFireFruitSeed2;
 
             //var a = Resources.Load<GameObject>("prefabs/networkedobjects/HealPack");
 
             #region Fruitpack
+
             ScepterTreebotFruitPackPrefab = Resources.Load<GameObject>("Prefabs/NetworkedObjects/TreebotFruitPack").InstantiateClone("ScepterTreebotFruitPack");
             ScepterTreebotFruitPackPrefab.transform.Find("PickupTrigger").gameObject.AddComponent<FruitScepterMarker>();
             //var healthPickup = ScepterTreebotFruitPackPrefab.transform.Find("PickupTrigger").gameObject.GetComponent<HealthPickup>();
 
             //ScepterTreebotFruitPackPrefab.transform.Find("VFX/PulseGlow").GetComponent<ParticleSystemRenderer>().material = a.transform.Find("HealthOrbEffect/VFX/PulseGlow").GetComponent<ParticleSystemRenderer>().material;
             ScepterTreebotFruitPackPrefab.transform.Find("VFX/PulseGlow").transform.localScale *= 2f;
-            #endregion
 
-            ContentAddition.AddSkillDef(baseSkillDef);
+            #endregion Fruitpack
 
-            if (ModCompat.compatBetterUI)
+            ContentAddition.AddSkillDef(skillDefToClone);
+
+            if (BetterUICompatibility.compatBetterUI)
             {
                 doBetterUI();
             }
@@ -61,8 +63,9 @@ namespace AncientScepter.Modules.Skills
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
         internal void doBetterUI()
         {
-            BetterUI.ProcCoefficientCatalog.AddSkill(baseSkillDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("TreebotBodyFireFruitSeed"));
+            BetterUI.ProcCoefficientCatalog.AddSkill(skillDefToClone.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("TreebotBodyFireFruitSeed"));
         }
+
         internal override void LoadBehavior()
         {
             On.RoR2.HealthPickup.OnTriggerStay += HealthPickup_OnTriggerStay;
@@ -73,7 +76,7 @@ namespace AncientScepter.Modules.Skills
         {
             if (!NetworkServer.active) return;
             if (!damageReport.victimBody) return;
-            if (damageReport.attackerBody && damageReport.attackerBody.skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef)
+            if (damageReport.attackerBody && damageReport.attackerBody.skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone)
             {
                 var victimBody = damageReport.victimBody;
                 GameObject gameObject = damageReport.victim.gameObject;
@@ -135,7 +138,6 @@ namespace AncientScepter.Modules.Skills
 
         public class FruitScepterMarker : MonoBehaviour
         {
-
         }
 
         internal override void UnloadBehavior()

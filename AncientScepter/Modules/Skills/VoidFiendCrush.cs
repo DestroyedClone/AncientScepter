@@ -1,4 +1,5 @@
-﻿using R2API;
+﻿using AncientScepter.Modules.ModCompatibility;
+using R2API;
 using RoR2;
 using RoR2.Skills;
 using System.Collections.Generic;
@@ -6,13 +7,12 @@ using System.Collections.ObjectModel;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Networking;
-using static AncientScepter.SkillUtil;
 
 namespace AncientScepter.Modules.Skills
 {
-    public class VoidFiendCrush : ScepterSkill
+    public class VoidFiendCrush : ClonedScepterSkill
     {
-        public override SkillDef baseSkillDef { get; protected set; }
+        public override SkillDef skillDefToClone { get; protected set; }
         public static SkillDef myCtxDef { get; private set; }
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
@@ -29,10 +29,10 @@ namespace AncientScepter.Modules.Skills
         public static VoidSurvivorSkillDef cleanSkillDef;
         public static SkillDef dirtySkillDef;
 
-        internal override void SetupAttributes()
+        internal override void Setup()
         {
             var oldDef = Addressables.LoadAssetAsync<VoidSurvivorSkillDef>("RoR2/DLC1/VoidSurvivor/CrushCorruption.asset").WaitForCompletion();
-            baseSkillDef = CloneSkillDef(oldDef);
+            skillDefToClone = CloneSkillDef(oldDef);
             cleanSkillDef = oldDef;
 
             var nametoken = "ANCIENTSCEPTER_VOIDSURVIVOR_CRUSHCORRUPTIONNAME";
@@ -42,12 +42,12 @@ namespace AncientScepter.Modules.Skills
             LanguageAPI.Add(nametoken, namestr);
 
             //Both variants of supress are named crocoleap internally,so we might as well give em better names
-            baseSkillDef.skillName = $"VoidSurvivorCrushCorruptionScepter";
-            (baseSkillDef as ScriptableObject).name = baseSkillDef.skillName;
-            baseSkillDef.skillNameToken = nametoken;
-            baseSkillDef.skillDescriptionToken = newDescToken;
-            baseSkillDef.icon = Assets.SpriteAssets.VoidFiendSuppress2;
-            ContentAddition.AddSkillDef(baseSkillDef);
+            skillDefToClone.skillName = $"VoidSurvivorCrushCorruptionScepter";
+            (skillDefToClone as ScriptableObject).name = skillDefToClone.skillName;
+            skillDefToClone.skillNameToken = nametoken;
+            skillDefToClone.skillDescriptionToken = newDescToken;
+            skillDefToClone.icon = Assets.SpriteAssets.VoidFiendSuppress2;
+            ContentAddition.AddSkillDef(skillDefToClone);
 
             var oldCtxDef = Addressables.LoadAssetAsync<SkillDef>("RoR2/DLC1/VoidSurvivor/CrushHealth.asset").WaitForCompletion();
             dirtySkillDef = oldCtxDef;
@@ -63,7 +63,7 @@ namespace AncientScepter.Modules.Skills
             myCtxDef.icon = Assets.SpriteAssets.VoidFiendCorruptedSuppress2;
             ContentAddition.AddSkillDef(myCtxDef);
 
-            if (ModCompat.compatBetterUI)
+            if (BetterUICompatibility.compatBetterUI)
             {
                 doBetterUI();
             }
@@ -74,7 +74,7 @@ namespace AncientScepter.Modules.Skills
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
         internal void doBetterUI()
         {
-            BetterUI.ProcCoefficientCatalog.AddSkill(baseSkillDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CrushCorruption"));
+            BetterUI.ProcCoefficientCatalog.AddSkill(skillDefToClone.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CrushCorruption"));
             BetterUI.ProcCoefficientCatalog.AddSkill(myCtxDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CrushHealth"));
         }
 
@@ -89,7 +89,7 @@ namespace AncientScepter.Modules.Skills
         private void CorruptMode_OnExit(On.EntityStates.VoidSurvivor.CorruptMode.CorruptMode.orig_OnExit orig, global::EntityStates.VoidSurvivor.CorruptMode.CorruptMode self)
         {
             var cachedSkillDef = self.specialOverrideSkillDef;
-            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef)
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone)
             {
                 self.specialOverrideSkillDef = myCtxDef;
                 self.characterBody.skillLocator.special.UnsetSkillOverride(self, cachedSkillDef, GenericSkill.SkillOverridePriority.Upgrade);
@@ -101,7 +101,7 @@ namespace AncientScepter.Modules.Skills
         private void CorruptMode_OnEnter(On.EntityStates.VoidSurvivor.CorruptMode.CorruptMode.orig_OnEnter orig, global::EntityStates.VoidSurvivor.CorruptMode.CorruptMode self)
         {
             var cachedSkillDef = self.specialOverrideSkillDef;
-            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef)
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone)
             {
                 self.specialOverrideSkillDef = myCtxDef;
                 self.characterBody.skillLocator.special.UnsetSkillOverride(self, cachedSkillDef, GenericSkill.SkillOverridePriority.Upgrade);
@@ -169,7 +169,7 @@ namespace AncientScepter.Modules.Skills
         //From HealingWard.cs
         private void HealNearby(HealthComponent healthComponent, float healAmount, ProcChainMask procChainMask)
         {
-            if (procChainMask.HasProc(ProcType.VoidSurvivorCrush) && healthComponent.body.skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef)
+            if (procChainMask.HasProc(ProcType.VoidSurvivorCrush) && healthComponent.body.skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone)
             {
                 ReadOnlyCollection<TeamComponent> teamMembers = TeamComponent.GetTeamMembers(healthComponent.body.teamComponent.teamIndex);
                 float num = 25 * 25;

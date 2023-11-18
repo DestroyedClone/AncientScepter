@@ -1,17 +1,17 @@
-﻿using EntityStates.Huntress;
+﻿using AncientScepter.Modules.ModCompatibility;
+using EntityStates.Huntress;
 using R2API;
 using RoR2;
 using RoR2.Projectile;
 using RoR2.Skills;
 using UnityEngine;
-using static AncientScepter.SkillUtil;
 
 namespace AncientScepter.Modules.Skills
 {
-    public class HuntressRain2 : ScepterSkill
+    public class HuntressRain2 : ClonedScepterSkill
     {
         private static GameObject projReplacer;
-        public override SkillDef baseSkillDef { get; protected set; }
+        public override SkillDef skillDefToClone { get; protected set; }
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
@@ -21,10 +21,10 @@ namespace AncientScepter.Modules.Skills
         public override SkillSlot targetSlot => SkillSlot.Special;
         public override int targetVariantIndex => 0;
 
-        internal override void SetupAttributes()
+        internal override void Setup()
         {
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/HuntressBody/HuntressBodyArrowRain");
-            baseSkillDef = CloneSkillDef(oldDef);
+            skillDefToClone = CloneSkillDef(oldDef);
 
             var nametoken = "ANCIENTSCEPTER_HUNTRESS_RAINNAME";
             newDescToken = "ANCIENTSCEPTER_HUNTRESS_RAINDESC";
@@ -32,13 +32,13 @@ namespace AncientScepter.Modules.Skills
             var namestr = "Burning Rain";
             LanguageAPI.Add(nametoken, namestr);
 
-            baseSkillDef.skillName = $"{oldDef.skillName}Scepter";
-            (baseSkillDef as ScriptableObject).name = baseSkillDef.skillName;
-            baseSkillDef.skillNameToken = nametoken;
-            baseSkillDef.skillDescriptionToken = newDescToken;
-            baseSkillDef.icon = Assets.SpriteAssets.HuntressRain2;
+            skillDefToClone.skillName = $"{oldDef.skillName}Scepter";
+            (skillDefToClone as ScriptableObject).name = skillDefToClone.skillName;
+            skillDefToClone.skillNameToken = nametoken;
+            skillDefToClone.skillDescriptionToken = newDescToken;
+            skillDefToClone.icon = Assets.SpriteAssets.HuntressRain2;
 
-            ContentAddition.AddSkillDef(baseSkillDef);
+            ContentAddition.AddSkillDef(skillDefToClone);
 
             projReplacer = Resources.Load<GameObject>("prefabs/projectiles/HuntressArrowRain").InstantiateClone("AncientScepterHuntressRain");
             projReplacer.GetComponent<ProjectileDamage>().damageType |= DamageType.IgniteOnHit;
@@ -62,7 +62,7 @@ namespace AncientScepter.Modules.Skills
 
             ContentAddition.AddProjectile(projReplacer);
 
-            if (ModCompat.compatBetterUI)
+            if (BetterUICompatibility.compatBetterUI)
             {
                 doBetterUI();
             }
@@ -71,8 +71,9 @@ namespace AncientScepter.Modules.Skills
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
         internal void doBetterUI()
         {
-            BetterUI.ProcCoefficientCatalog.AddSkill(baseSkillDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("HuntressBodyArrowRain"));
+            BetterUI.ProcCoefficientCatalog.AddSkill(skillDefToClone.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("HuntressBodyArrowRain"));
         }
+
         internal override void LoadBehavior()
         {
             On.EntityStates.Huntress.ArrowRain.DoFireArrowRain += On_ArrowRain_DoFireArrowRain;
@@ -86,7 +87,7 @@ namespace AncientScepter.Modules.Skills
         private void On_ArrowRain_DoFireArrowRain(On.EntityStates.Huntress.ArrowRain.orig_DoFireArrowRain orig, ArrowRain self)
         {
             var origPrefab = ArrowRain.projectilePrefab;
-            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == baseSkillDef) ArrowRain.projectilePrefab = projReplacer;
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == skillDefToClone) ArrowRain.projectilePrefab = projReplacer;
             orig(self);
             ArrowRain.projectilePrefab = origPrefab;
         }
