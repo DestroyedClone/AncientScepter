@@ -36,7 +36,7 @@ namespace AncientScepter
         }
 
         /// <summary>
-        /// Checks if this is "reserving a slot" for a character, meaning that this mod won't automatically replace skills, but so <see cref="NoUseMode"/> doesn't apply.
+        /// Checks if this is "reserving a slot" for a character, meaning that this mod won't automatically replace skills, so <see cref="NoUseMode"/> doesn't apply.
         /// </summary>
         /// <returns>Returns true if <see cref="skillDefToReplace"/> and <see cref="replacementSkillDef"/> are null, and <see cref="exclusiveToBodyName"/> contains something.</returns>
         public bool ReservesASlotNoImplementation()

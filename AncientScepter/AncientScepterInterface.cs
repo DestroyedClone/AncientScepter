@@ -6,11 +6,17 @@ namespace AncientScepter
     /// This class exposes methods and values for third party mods.
     /// </summary>
 
-    // YES I JUST NAMED IT INTERFACE TO AVD THE WORD "API"
+    // YES I JUST NAMED IT INTERFACE TO AVOID THE WORD "API"
+    //NO THIS DOESN'T BREAK NAMING CONVENTIONS BECAUSE ACTUAL INTERFACES ARE "IWhatever"
     public static class AncientScepterInterface
     {
         private static List<ScepterReplacement> scepterReplacements;
 
+        /// <summary>
+        /// Register a <see cref="ScepterReplacement"/> which the mod will take care to figure out what to do with the skills and the Scepter item.
+        /// </summary>
+        /// <param name="scepterReplacement"></param>
+        /// <returns>True if it has been successfully registered.</returns>
         public static bool RegisterScepterSkill(ScepterReplacement scepterReplacement)
         {
             if (!scepterReplacement.IsValid())

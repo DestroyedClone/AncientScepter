@@ -648,7 +648,6 @@ namespace AncientScepter
                 if (_instance == null)
                 {
                     _instance = new AncientScepterItem();
-                    // Initialize any other necessary properties or methods here
                 }
                 return _instance;
             }
