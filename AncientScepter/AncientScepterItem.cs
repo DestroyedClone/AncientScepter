@@ -29,6 +29,8 @@ namespace AncientScepter
         public virtual object[] overrideTokenParams { get; }
         public virtual string fullDescToken { get; protected set; }
 
+        public virtual string overrideFormatToken { get; } = "ITEM_STANDALONEANCIENTSCEPTER_FORMATSCEPTER";
+
         internal abstract void SetupAttributes();
 
         internal virtual void LoadBehavior()
@@ -301,9 +303,13 @@ namespace AncientScepter
             engiSkill2.myDef.baseRechargeInterval = EngiWalker2.oldDef.baseRechargeInterval / (engiWalkerAdjustCooldown ? 2f : 1f);
             GlobalUpdateSkillDef(engiSkill2.myDef);
 
-            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.ThinkInvisible.ClassicItems") && removeClassicItemsScepterFromPool)
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey("com.ThinkInvisible.ClassicItems"))
             {
-                Run.onRunStartGlobal += RemoveClassicItemsScepter;
+                //Reset subscription
+                Run.onRunStartGlobal -= RemoveClassicItemsScepter;
+
+                if (removeClassicItemsScepterFromPool)
+                    Run.onRunStartGlobal += RemoveClassicItemsScepter;
             }
 
             cfgEnableSOTVTransforms =

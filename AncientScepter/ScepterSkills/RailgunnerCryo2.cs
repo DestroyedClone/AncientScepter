@@ -47,8 +47,7 @@ namespace AncientScepter
             myFireDef = CloneSkillDef(oldCallDef);
             myFireDef.skillName = $"StandaloneAncientScepter_{oldCallDef.skillName}Scepter";
             (myFireDef as ScriptableObject).name = myFireDef.skillName;
-            myFireDef.skillNameToken = "ANCIENTSCEPTER_RAILGUNNER_FIRESNIPECRYONAME";
-            LanguageAPI.Add("ANCIENTSCEPTER_RAILGUNNER_FIRESNIPECRYONAME", "Permafrosted Railgun");
+            myFireDef.skillNameToken = "STANDALONEANCIENTSCEPTER_RAILGUNNER_FIRESNIPECRYONAME";
             myFireDef.icon = Assets.SpriteAssets.RailgunnerFireCryocharge2;
 
             ContentAddition.AddSkillDef(myFireDef);
@@ -70,6 +69,29 @@ namespace AncientScepter
             On.EntityStates.Railgunner.Weapon.FireSnipeCryo.ModifyBullet += FireSnipeCryo_ModifyBullet;
             //On.EntityStates.Railgunner.Weapon.BaseFireSnipe.OnExit += BaseFireSnipe_OnExit;
             On.RoR2.GlobalEventManager.OnHitEnemy += GlobalEventManager_OnHitEnemy;
+            On.EntityStates.Railgunner.Backpack.BaseCharged.OnEnter += BaseCharged_OnEnter;
+            On.EntityStates.Railgunner.Backpack.BaseCharged.OnExit += BaseCharged_OnExit;
+        }
+
+        private void BaseCharged_OnEnter(On.EntityStates.Railgunner.Backpack.BaseCharged.orig_OnEnter orig, EntityStates.Railgunner.Backpack.BaseCharged self)
+        {
+            orig(self);
+            var sloc = self.outer.commonComponents.skillLocator;
+            if (!sloc || !sloc.primary) return;
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == myDef)
+            {
+                sloc.primary.UnsetSkillOverride(self, self.primaryOverride, GenericSkill.SkillOverridePriority.Contextual);
+                sloc.primary.SetSkillOverride(self, myFireDef, GenericSkill.SkillOverridePriority.Contextual);
+            }
+        }
+
+        private void BaseCharged_OnExit(On.EntityStates.Railgunner.Backpack.BaseCharged.orig_OnExit orig, EntityStates.Railgunner.Backpack.BaseCharged self)
+        {
+            orig(self);
+            var sloc = self.outer.commonComponents.skillLocator;
+            if (!sloc || !sloc.primary) return;
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == myDef)
+                sloc.primary.UnsetSkillOverride(self, myFireDef, GenericSkill.SkillOverridePriority.Contextual);
         }
 
         private void GlobalEventManager_OnHitEnemy(On.RoR2.GlobalEventManager.orig_OnHitEnemy orig, GlobalEventManager self, DamageInfo damageInfo, GameObject victim)

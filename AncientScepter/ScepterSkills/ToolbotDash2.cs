@@ -25,8 +25,8 @@ namespace AncientScepter
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/ToolbotBody/ToolbotBodyToolbotDash");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "ANCIENTSCEPTER_TOOLBOT_DASHNAME";
-            newDescToken = "ANCIENTSCEPTER_TOOLBOT_DASHDESC";
+            var nametoken = "STANDALONEANCIENTSCEPTER_TOOLBOT_DASHNAME";
+            newDescToken = "STANDALONEANCIENTSCEPTER_TOOLBOT_DASHDESC";
             oldDescToken = oldDef.skillDescriptionToken;
 
             myDef.skillName = $"StandaloneAncientScepter_{oldDef.skillName}Scepter";

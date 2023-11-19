@@ -35,21 +35,27 @@ namespace AncientScepter
         {
             compatRiskOfOptions = true;
 
-            RiskOfOptions.ModSettingsManager.SetModDescription("Adds the Ancient Scepter from Classic Items, but Standalone!", "com.DestroyedClone.AncientScepter", "StandaloneAncientScepter");
+            //comments:
+            //run = Defer until run is ended
+            //stg = Defer until stage is complete
+            //char = Defer until character is dead
+            //RiskOfOptions.ModSettingsManager.SetModDescription("Adds the Ancient Scepter from Classic Items, but Standalone!", "com.DestroyedClone.AncientScepter", "StandaloneAncientScepter");
 
-            RiskOfOptions.ModSettingsManager.AddOption(new RiskOfOptions.Options.ChoiceOption(AncientScepterItem.cfgRerollMode));
-            RiskOfOptions.ModSettingsManager.AddOption(new RiskOfOptions.Options.ChoiceOption(AncientScepterItem.cfgUnusedMode));
-            ModSettingsManager.AddOption(new CheckBoxOption(AncientScepterItem.cfgEnableMonsterSkills));
-            ModSettingsManager.AddOption(new ChoiceOption(AncientScepterItem.cfgStridesInteractionMode));
-            ModSettingsManager.AddOption(new CheckBoxOption(AncientScepterItem.cfgAltModel));
-            ModSettingsManager.AddOption(new CheckBoxOption(AncientScepterItem.cfgRemoveClassicItemsScepterFromPool));
-            ModSettingsManager.AddOption(new CheckBoxOption(AncientScepterItem.cfgEnableSOTVTransforms));
-            ModSettingsManager.AddOption(new CheckBoxOption(AncientScepterItem.cfgUseFullReplacementDescriptions));
-            ModSettingsManager.AddOption(new CheckBoxOption(AncientScepterItem.cfgArtiFlamePerformanceMode));
-            ModSettingsManager.AddOption(new CheckBoxOption(AncientScepterItem.cfgCaptainNukeFriendlyFire));
-            ModSettingsManager.AddOption(new CheckBoxOption(AncientScepterItem.cfgEngiTurretAdjustCooldown));
+            /*RiskOfOptions.ModSettingsManager.AddOption(new RiskOfOptions.Options.ChoiceOption(AncientScepterItem.cfgRerollMode)); //stage
+            RiskOfOptions.ModSettingsManager.AddOption(new RiskOfOptions.Options.ChoiceOption(AncientScepterItem.cfgUnusedMode)); //stage
+            ModSettingsManager.AddOption(new CheckBoxOption(AncientScepterItem.cfgEnableMonsterSkills, true)); //cant
+            ModSettingsManager.AddOption(new ChoiceOption(AncientScepterItem.cfgStridesInteractionMode, true)); //stage
+            ModSettingsManager.AddOption(new CheckBoxOption(AncientScepterItem.cfgAltModel)); //run, IDRS setup
+            ModSettingsManager.AddOption(new CheckBoxOption(AncientScepterItem.cfgRemoveClassicItemsScepterFromPool)); //run, handled by config
+            ModSettingsManager.AddOption(new CheckBoxOption(AncientScepterItem.cfgEnableSOTVTransforms)); //handled in reroll, host only
+            ModSettingsManager.AddOption(new CheckBoxOption(AncientScepterItem.cfgUseFullReplacementDescriptions)); 
+            //ModSettingsManager.AddOption(new CheckBoxOption(AncientScepterItem.cfgArtiFlamePerformanceMode)); //needs to be disabled not deleted where its impl., todo yada yada
+            //ModSettingsManager.AddOption(new CheckBoxOption(AncientScepterItem.cfgCaptainNukeFriendlyFire)); //handled in blastattack, defer to not grief? am i the arbritrator?
+            ModSettingsManager.AddOption(new CheckBoxOption(AncientScepterItem.cfgEngiTurretAdjustCooldown)); //
             ModSettingsManager.AddOption(new CheckBoxOption(AncientScepterItem.cfgEngiWalkerAdjustCooldown));
-            ModSettingsManager.AddOption(new CheckBoxOption(AncientScepterItem.cfgTurretBlacklist));
+            //ModSettingsManager.AddOption(new CheckBoxOption(AncientScepterItem.cfgTurretBlacklist)); itemtag, run*/
+
+
         }
 
         public static void BetterUICompatInit()

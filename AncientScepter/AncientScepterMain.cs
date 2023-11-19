@@ -105,7 +105,7 @@ namespace AncientScepter
         private void MainMenuController_Start(On.RoR2.UI.MainMenu.MainMenuController.orig_Start orig, RoR2.UI.MainMenu.MainMenuController self)
         {
             orig(self);
-            InstallLanguage();
+            //InstallLanguage();
             On.RoR2.UI.MainMenu.MainMenuController.Start -= MainMenuController_Start;
         }
 
@@ -118,6 +118,43 @@ namespace AncientScepter
 
         public void InstallLanguage()
         {
+            foreach (var overlay in languageOverlays)
+            {
+                if (overlay == null)
+                    continue;
+                overlay.Remove();
+            }
+            languageOverlays.Clear();
+
+            #region Item Description
+            var rerollModeEnabled = AncientScepterItem.rerollMode != AncientScepterItem.RerollMode.Disabled;
+            var scrapModeIsScrap = AncientScepterItem.rerollMode == AncientScepterItem.RerollMode.Scrap;
+
+            string item_token;
+            if (rerollModeEnabled)
+            {
+                if (scrapModeIsScrap)
+                    item_token = "ITEM_STANDALONEANCIENTSCEPTER_DESCRIPTION_REROLL_SCRAP";
+                else
+                    item_token = "ITEM_STANDALONEANCIENTSCEPTER_DESCRIPTION_REROLL_ITEMS";
+            }
+            else
+            {
+                if (scrapModeIsScrap)
+                    item_token = "ITEM_STANDALONEANCIENTSCEPTER_DESCRIPTION_REROLLDISABLED_SCRAP";
+                else
+                    item_token = "ITEM_STANDALONEANCIENTSCEPTER_DESCRIPTION_REROLLDISABLED_ITEMS";
+            }
+            string secondDesc = Language.GetString(item_token);
+            string newDesc = Language.GetStringFormatted("ITEM_STANDALONEANCIENTSCEPTER_DESCRIPTION_1", secondDesc);
+            _logger.LogMessage($"Old {Language.GetString("ITEM_STANDALONEANCIENTSCEPTER_DESCRIPTION")}");
+            var itemDescOverlay = LanguageAPI.AddOverlay("ITEM_STANDALONEANCIENTSCEPTER_DESCRIPTION", newDesc, Language.currentLanguageName ?? "en");
+            _logger.LogMessage($"New? {Language.GetString("ITEM_STANDALONEANCIENTSCEPTER_DESCRIPTION")}");
+            languageOverlays.Add(itemDescOverlay);
+
+            #endregion
+
+
             foreach (var skill in AncientScepterItem.instance.skills)
             {
                 if (skill.oldDescToken == null)
@@ -129,13 +166,42 @@ namespace AncientScepter
                 //Debug.Log($"{skill.oldDescToken} : {Language.GetString(skill.oldDescToken)}");
                 //Debug.Log($"{skill.overrideStr}");
 
-                var overlayToken = skill.overrideToken.IsNullOrWhiteSpace() 
-                    ? Language.GetStringFormatted(skill.overrideToken, skill.overrideTokenParams) : skill.overrideStr;
-                var languageOverlay = LanguageAPI.AddOverlay(skill.newDescToken, Language.GetString(skill.oldDescToken) + overlayToken, Language.currentLanguageName ?? "en");
+                var skillNewDescToken = skill.newDescToken;
+                // Language.GetString(skill.fullDescToken) != skill.fullDescToken
+                // is to check if the language is filled out or not for that token
+                if (AncientScepterItem.useFullReplacementDescriptions && !skill.fullDescToken.IsNullOrWhiteSpace())
+                {
+                    string fullDescToken = skill.fullDescToken;
+                    string fullDescTokenOutput = Language.GetString(fullDescToken);
+                    if (fullDescTokenOutput == fullDescToken)
+                    {
+                        fullDescTokenOutput = Language.GetString(fullDescToken, "en");
+                    }
 
-                //Debug.Log($"{skill.newDescToken}");
+                    LanguageAPI.LanguageOverlay languageOverlay = LanguageAPI.AddOverlay(skillNewDescToken, fullDescTokenOutput, Language.currentLanguageName ?? "en");
+                    //_logger.LogMessage($"{skillNewDescToken} => {Language.GetString(skill.fullDescToken)}");
+                    //_logger.LogMessage($"{languageOverlay.readOnlyOverlays[0].key} = {languageOverlay.readOnlyOverlays[0].value}");
+                    languageOverlays.Add(languageOverlay);
+                } else
+                {
+                    string newTokenValue;
+                    if (skill.overrideToken.IsNullOrWhiteSpace())
+                    {
+                        var overrideTokenValue = Language.GetString(skill.overrideToken);
+                        var resultingValue = Language.GetStringFormatted(skill.overrideFormatToken, overrideTokenValue);
+                        newTokenValue = resultingValue;
+                    } else
+                    {
+                        newTokenValue = skill.overrideStr;
+                    }
 
-                languageOverlays.Add(languageOverlay);
+                    LanguageAPI.LanguageOverlay languageOverlay = LanguageAPI.AddOverlay(skillNewDescToken, Language.GetString(skill.oldDescToken) + newTokenValue, Language.currentLanguageName ?? "en");
+
+                    //_logger.LogMessage($"{skillNewDescToken} => {Language.GetString(skill.oldDescToken) + newTokenValue}");
+                    //Debug.Log($"{skill.newDescToken}");
+
+                    languageOverlays.Add(languageOverlay);
+                }
             }
         }
 

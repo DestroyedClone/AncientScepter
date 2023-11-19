@@ -18,7 +18,7 @@ namespace AncientScepter
         public override string newDescToken { get; protected set; }
 
         public override string overrideStr => "\n<color=#d299ff>SCEPTER: Suppresses nearby enemies or allies within 25m. Corrupted Supress has +2 charges.</color>";
-        public override string overrideToken => "";
+        public override string overrideToken => "STANDALONEANCIENTSCEPTER_VOIDSURVIVOR_CRUSHCORRUPTIONOVERRIDE";
         public override string fullDescToken => "";
 
         public override string targetBody => "VoidSurvivorBody";
@@ -37,11 +37,9 @@ namespace AncientScepter
             myDef = CloneSkillDef(oldDef);
             cleanSkillDef = oldDef;
 
-            var nametoken = "ANCIENTSCEPTER_VOIDSURVIVOR_CRUSHCORRUPTIONNAME";
-            newDescToken = "ANCIENTSCEPTER_VOIDSURVIVOR_CRUSHCORRUPTIONDESC";
+            var nametoken = "STANDALONEANCIENTSCEPTER_VOIDSURVIVOR_CRUSHCORRUPTIONNAME";
+            newDescToken = "STANDALONEANCIENTSCEPTER_VOIDSURVIVOR_CRUSHCORRUPTIONDESC";
             oldDescToken = oldDef.skillDescriptionToken;
-            var namestr = "Reclaimed Suppress";
-            LanguageAPI.Add(nametoken, namestr);
 
             //Both variants of supress are named crocoleap internally,so we might as well give em better names
             myDef.skillName = $"StandaloneAncientScepter_VoidSurvivorCrushCorruptionScepter";
@@ -57,10 +55,8 @@ namespace AncientScepter
 
             myCtxDef.skillName = $"StandaloneAncientScepter_VoidSurvivorCrushHealthScepter";
             (myCtxDef as ScriptableObject).name = myCtxDef.skillName;
-            var corruptedNameToken = "ANCIENTSCEPTER_VOIDSURVIVOR_CORRUPTEDCRUSHCORRUPTIONNAME";
-            LanguageAPI.Add(corruptedNameToken, "Forfeited Suppress");
-            myCtxDef.skillNameToken = corruptedNameToken;
-            myCtxDef.skillDescriptionToken = newDescToken;
+            myCtxDef.skillNameToken = "STANDALONEANCIENTSCEPTER_VOIDSURVIVOR_CORRUPTEDCRUSHCORRUPTIONNAME";
+            myCtxDef.skillDescriptionToken = "STANDALONEANCIENTSCEPTER_VOIDSURVIVOR_CORRUPTEDCRUSHCORRUPTIONDESC";
             myCtxDef.baseMaxStock += 2;
             myCtxDef.icon = Assets.SpriteAssets.VoidFiendCorruptedSuppress2;
             ContentAddition.AddSkillDef(myCtxDef);

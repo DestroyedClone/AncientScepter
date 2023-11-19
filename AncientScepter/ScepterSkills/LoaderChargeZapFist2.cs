@@ -18,8 +18,8 @@ namespace AncientScepter
 
         public override string oldDescToken { get; protected set; }
         public override string newDescToken { get; protected set; }
-        public override string overrideToken => "STANDALONEANCIENTSCEPTER_SCEPLOADER_CHARGEZAPFISTFULLDESC";
-        public override string fullDescToken => "STANDALONEANCIENTSCEPTER_SCEPLOADER_CHARGEZAPFISTOVERRIDE";
+        public override string overrideToken => "STANDALONEANCIENTSCEPTER_LOADER_CHARGEZAPFISTFULLDESC";
+        public override string fullDescToken => "STANDALONEANCIENTSCEPTER_LOADER_CHARGEZAPFISTOVERRIDE";
 
         public override string targetBody => "LoaderBody";
         public override SkillSlot targetSlot => SkillSlot.Utility;
@@ -30,8 +30,8 @@ namespace AncientScepter
             var oldDef = LegacyResourcesAPI.Load<SkillDef>("SkillDefs/LoaderBody/ChargeZapFist");
             myDef = CloneSkillDef(oldDef);
 
-            var nametoken = "STANDALONEANCIENTSCEPTER_SCEPLOADER_CHARGEZAPFISTNAME";
-            newDescToken = "STANDALONEANCIENTSCEPTER_SCEPLOADER_CHARGEZAPFISTDESC";
+            var nametoken = "STANDALONEANCIENTSCEPTER_LOADER_CHARGEZAPFISTNAME";
+            newDescToken = "STANDALONEANCIENTSCEPTER_LOADER_CHARGEZAPFISTDESC";
             oldDescToken = oldDef.skillDescriptionToken;
 
             myDef.skillName = $"StandaloneAncientScepter_{oldDef.skillName}Scepter";
