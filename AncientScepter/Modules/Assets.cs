@@ -45,21 +45,6 @@ namespace AncientScepter.Modules
             return mat;
         }
 
-        public static Material CreateMaterial(string materialName)
-        {
-            return CreateMaterial(materialName, 0f);
-        }
-
-        public static Material CreateMaterial(string materialName, float emission)
-        {
-            return CreateMaterial(materialName, emission, Color.black);
-        }
-
-        public static Material CreateMaterial(string materialName, float emission, Color emissionColor)
-        {
-            return CreateMaterial(materialName, emission, emissionColor, 0f);
-        }
-
         public static CharacterModel.RendererInfo[] SetupRendererInfos(GameObject obj)
         {
             Renderer[] meshes = obj.GetComponentsInChildren<Renderer>();

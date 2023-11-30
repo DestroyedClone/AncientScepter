@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace AncientScepter.Modules
+namespace AncientScepter.Modules.Other
 {
     //https://github.com/Mico27/RoR2-TTGL-Mod/blob/bfd3da0322ebde6376f879a081c117b11ebf299c/src/Orbs/CritRicochetOrb.cs
     public class BanditRicochetOrb : Orb

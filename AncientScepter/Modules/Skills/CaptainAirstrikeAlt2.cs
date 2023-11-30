@@ -9,7 +9,6 @@ using static R2API.DamageAPI;
 
 namespace AncientScepter.Modules.Skills
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
     public class CaptainAirstrikeAlt2 : ClonedScepterSkill
     {
         public override SkillDef skillDefToClone { get; protected set; }

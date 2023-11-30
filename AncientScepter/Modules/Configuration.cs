@@ -1,4 +1,6 @@
 ﻿using BepInEx.Configuration;
+using RoR2;
+using System.Runtime.CompilerServices;
 
 namespace AncientScepter.Modules
 {
@@ -122,6 +124,15 @@ namespace AncientScepter.Modules
                 "Transformation Notification",
                 true,
                 "If true, then when scepters are re-rolled, then it will be accompanied by a transformation notification like other items.").Value;
+        }
+
+
+
+        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+        private static void RemoveClassicItemsScepter(Run run)
+        {
+            if (ThinkInvisible.ClassicItems.Scepter.instance.itemDef?.itemIndex > ItemIndex.None)
+                Run.instance.DisableItemDrop(ThinkInvisible.ClassicItems.Scepter.instance.itemDef.itemIndex);
         }
     }
 }

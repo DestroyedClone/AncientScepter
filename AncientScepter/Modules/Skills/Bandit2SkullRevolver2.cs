@@ -1,4 +1,5 @@
 ﻿using AncientScepter.Modules.ModCompatibility;
+using AncientScepter.Modules.Other;
 using R2API;
 using RoR2;
 using RoR2.Orbs;

@@ -1,10 +1,17 @@
 ﻿using RoR2;
 using RoR2.Skills;
 
-namespace AncientScepter
+namespace AncientScepter.Modules
 {
     public struct ScepterReplacement
     {
+        //public delegate void ScepterReplacementDelegate();
+
+        /// <summary>
+        /// Delegate that will be constantly evaluating in a FixedUpdate to see if <see cref="skillDefToReplace"/> should be replaced by <see cref="replacementSkillDef"/>
+        /// </summary>
+        //public ScepterReplacementDelegate CanBeReplacingSkill;
+
         /// <summary>
         /// <see cref="SkillDef"/> to replace with <see cref="replacementSkillDef"/>.
         /// </summary>
@@ -26,6 +33,7 @@ namespace AncientScepter
         /// </summary>
         public SkillSlot exclusiveToSkillSlot;
 
+
         /// <summary>
         /// Checks whenever this is valid, meaning that its usuable by the mod.
         /// </summary>
@@ -42,6 +50,15 @@ namespace AncientScepter
         public bool ReservesASlotNoImplementation()
         {
             return !skillDefToReplace && !replacementSkillDef && exclusiveToBodyName.Length > 0;
+        }
+
+        private bool DefaultCanReplaceOnPickupImplementation()
+        {
+            return true;
+        }
+        private bool DefaultCanCurrentlyReplaceImplementation()
+        {
+            return true;
         }
     }
 
