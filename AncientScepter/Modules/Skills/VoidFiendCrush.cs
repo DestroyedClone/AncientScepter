@@ -10,21 +10,8 @@ using UnityEngine.Networking;
 
 namespace AncientScepter.Modules.Skills
 {
-    public class VoidFiendCrush : ClonedScepterSkill
+    public class VoidFiendCrush : IClonedSkill
     {
-        public override SkillDef skillDefToClone { get; protected set; }
-        public static SkillDef myCtxDef { get; private set; }
-        public override string oldDescToken { get; protected set; }
-        public override string newDescToken { get; protected set; }
-
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Suppresses nearby enemies or allies within 25m. Corrupted Supress has +2 charges.</color>";
-
-        public override string exclusiveToBodyName => "VoidSurvivorBody";
-
-        public override SkillSlot targetSlot => SkillSlot.Special;
-
-        public override int targetVariantIndex => 0;
-
         public static BodyIndex targetBodyIndex;
         public static VoidSurvivorSkillDef cleanSkillDef;
         public static SkillDef dirtySkillDef;

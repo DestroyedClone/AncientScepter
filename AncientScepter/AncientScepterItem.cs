@@ -13,25 +13,12 @@ using UnityEngine;
 
 namespace AncientScepter
 {
+    //TODO: NUKE THIS
+    //This will ONLY be kept around for the LEGACY METHODS
     /// <summary>
-    /// Base class used entirely in code to clone off other skills.
+    /// Legacy class in which legacy methods such as <see cref="RegisterScepterSkill(SkillDef, string, SkillDef)"/> can be used.
     /// </summary>
-    public abstract class ClonedScepterSkill
-    {
-        public abstract SkillDef skillDefToClone { get; protected set; }
-
-        /// <summary>
-        /// Skill cloning goes here.
-        /// </summary>
-        internal abstract void Setup();
-
-        internal virtual void LoadBehavior()
-        { }
-
-        internal virtual void UnloadBehavior()
-        { }
-    }
-
+    [Obsolete("Legacy class for the legacy API. Do not use. Please use AncientScepterInterface instead.")]
     public class AncientScepterItem
     {
         /// <summary>
@@ -670,7 +657,8 @@ namespace AncientScepter
         [Obsolete("Please use AncientScepterInterface.RegisterScepterSkill instead, which this is a wrapper for. targetSlot will be used to look up the replacementSkillDef, and not as exclusiveToSkillSlot.")]
         public bool RegisterScepterSkill(SkillDef replacingDef, string targetBodyName, SkillSlot targetSlot, int targetVariant)
         {
-            //TODO: Do lookup as the obsolete warning says.
+            //TODO: We need to look up replacementSkillDef by going through... targetBodyName, loading its skill locator, getting the family of the targetSlot and getting the skilldef from targetVariant
+            //Who the fuck thought this was a good idea?
 
             ScepterReplacement scepterReplacement = new ScepterReplacement
             {

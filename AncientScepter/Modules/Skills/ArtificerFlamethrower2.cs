@@ -10,18 +10,12 @@ using UnityEngine;
 
 namespace AncientScepter.Modules.Skills
 {
-    public class ArtificerFlamethrower2 : ClonedScepterSkill
+    public class ArtificerFlamethrower2 : IClonedSkill
     {
+        public SkillDef originalSkillDef { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string appendToken { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
         private GameObject projCloud;
-        public override SkillDef skillDefToClone { get; protected set; }
-
-        public override string oldDescToken { get; protected set; }
-        public override string newDescToken { get; protected set; }
-        public override string overrideStr => "\n<color=#d299ff>SCEPTER: Hits leave behind a lingering fire cloud.</color>";
-
-        public override string exclusiveToBodyName => "MageBody";
-        public override SkillSlot targetSlot => SkillSlot.Special;
-        public override int targetVariantIndex => 0;
 
         internal override void Setup()
         {

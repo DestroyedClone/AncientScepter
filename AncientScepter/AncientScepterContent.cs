@@ -4,7 +4,7 @@ using RoR2.ContentManagement;
 using RoR2.Skills;
 using System.Collections;
 
-namespace AncientScepter.Modules
+namespace AncientScepter
 {
     /// <summary>
     /// Based on <see cref="RoR2.ContentManagement.SimpleContentPackProvider"/>
@@ -50,6 +50,7 @@ namespace AncientScepter.Modules
         {
             public static ItemDef ancientScepter;
         }
+
         public static class Skills
         {
             public static SkillDef thing;
