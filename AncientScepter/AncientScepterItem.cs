@@ -625,6 +625,7 @@ namespace AncientScepter
             public int variantIndex;
             public SkillDef replDef;
             public SkillDef trgtDef;
+            public int registryEpoch;
         }
 
         private readonly List<ScepterReplacer> scepterReplacers = new List<ScepterReplacer>();
@@ -641,9 +642,11 @@ namespace AncientScepter
             {
                 AncientScepterMain._logger.LogMessage($"Replacing scepter skill for \"{targetBodyName}\" ({firstMatch.replDef.skillName}) with ({replacingDef.skillName})");
                 scepterReplacers.Remove(firstMatch);
+                firstMatch = null;
             }
+            firstMatch = scepterReplacers.FirstOrDefault( x => x.bodyName == targetBodyName && (x.trgtDef != null));
             AncientScepterMain._logger.LogMessage($"Adding scepter skill for \"{targetBodyName}\" ({replacingDef.skillName})");
-            scepterReplacers.Add(new ScepterReplacer { bodyName = targetBodyName, slotIndex = targetSlot, variantIndex = targetVariant, replDef = replacingDef });
+            scepterReplacers.Add(new ScepterReplacer { bodyName = targetBodyName, slotIndex = targetSlot, variantIndex = targetVariant, replDef = replacingDef,registryEpoch = (firstMatch != null) ? firstMatch.registryEpoch + 1 : 0 });
             return true;
         }
 
@@ -654,9 +657,11 @@ namespace AncientScepter
             {
                 AncientScepterMain._logger.LogMessage($"Replacing scepter skill for \"{targetBodyName}\" ({firstMatch.replDef.skillName}) with ({replacingDef.skillName})");
                 scepterReplacers.Remove(firstMatch);
+                firstMatch = null;
             }
+            firstMatch = scepterReplacers.FirstOrDefault( x => x.bodyName == targetBodyName && (x.trgtDef == null));
             AncientScepterMain._logger.LogMessage($"Adding scepter skill for \"{targetBodyName}\" ({replacingDef.skillName})");
-            scepterReplacers.Add(new ScepterReplacer { bodyName = targetBodyName, slotIndex = SkillSlot.None, variantIndex = -1, replDef = replacingDef,trgtDef = targetDef });
+            scepterReplacers.Add(new ScepterReplacer { bodyName = targetBodyName, slotIndex = SkillSlot.None, variantIndex = -1, replDef = replacingDef,trgtDef = targetDef,registryEpoch = (firstMatch != null) ? firstMatch.registryEpoch + 1 : 0 });
             return true;
         }
 
@@ -665,7 +670,7 @@ namespace AncientScepter
             heresyDefs.Add(SkillSlot.Secondary,CharacterBody.CommonAssets.lunarSecondaryReplacementSkillDef);
             heresyDefs.Add(SkillSlot.Utility,CharacterBody.CommonAssets.lunarUtilityReplacementSkillDef);
             heresyDefs.Add(SkillSlot.Special,CharacterBody.CommonAssets.lunarSpecialReplacementSkillDef);
-            foreach(ScepterReplacer repdef in scepterReplacers.Where(x => x.trgtDef == null)){
+            foreach(ScepterReplacer repdef in scepterReplacers.Where(x => x.trgtDef == null).Reverse()){
                 var prefab = BodyCatalog.FindBodyPrefab(repdef.bodyName);
                 var locator = prefab?.GetComponent<SkillLocator>();
                 if(locator && repdef.slotIndex != SkillSlot.None && repdef.variantIndex >= 0){
@@ -674,6 +679,12 @@ namespace AncientScepter
                     AncientScepterMain._logger.LogError($"Invalid Scepter Replacement for body:{repdef.bodyName},slot:{repdef.slotIndex},with skill:{repdef.replDef.skillNameToken}");
                     repdef.trgtDef = null;
                     continue;
+                  }
+                  ScepterReplacer firstMatch = scepterReplacers.FirstOrDefault( x => x.trgtDef == variants[repdef.variantIndex].skillDef && x.registryEpoch >= repdef.registryEpoch);
+                  if(firstMatch != null){
+                    AncientScepterMain._logger.LogMessage($"Replacing scepter skill for \"{repdef.bodyName}\" ({repdef.replDef.skillName}) with ({firstMatch.replDef.skillName})");
+                    repdef.trgtDef = null;
+                    continue; 
                   }
                   repdef.trgtDef = variants[repdef.variantIndex].skillDef;
                 }
