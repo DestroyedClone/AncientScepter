@@ -11,7 +11,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-namespace AncientScepterSkills
+namespace AncientScepter
 {
     //TODO: NUKE THIS
     //This will ONLY be kept around for the LEGACY METHODS

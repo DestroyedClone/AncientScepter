@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace AncientScepterSkills.Content
+namespace AncientScepter.Modules
 {
     internal class ItemDisplayConfigurer
     {

@@ -1,7 +1,7 @@
 ﻿using RoR2;
 using RoR2.Skills;
 
-namespace AncientScepterSkills.Content
+namespace AncientScepter.Modules
 {
     public struct ScepterReplacement
     {

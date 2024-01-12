@@ -4,7 +4,7 @@ using RoR2.ContentManagement;
 using RoR2.Skills;
 using System.Collections;
 
-namespace AncientScepterSkills
+namespace AncientScepter
 {
     /// <summary>
     /// Based on <see cref="RoR2.ContentManagement.SimpleContentPackProvider"/>

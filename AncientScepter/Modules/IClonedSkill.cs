@@ -1,6 +1,6 @@
 ﻿using RoR2.Skills;
 
-namespace AncientScepterSkills.Content
+namespace AncientScepter.Modules
 {
     /// <summary>
     /// Interface that implements some methods used for handling <see cref="SkillDef"/>(s) that are cloned off other <see cref="SkillDef"/>(s)

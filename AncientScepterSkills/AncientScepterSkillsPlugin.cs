@@ -29,7 +29,7 @@ namespace AncientScepterSkills
     {
         public const string ModVer = "1.0";
         public const string ModName = "AncientScepterSkills";
-        public const string ModGuid = "com.DestroyedClone.AncientScepter";
+        public const string ModGuid = "com.DestroyedClone.AncientScepterSkills";
 
         public static BaseUnityPlugin instance;
 

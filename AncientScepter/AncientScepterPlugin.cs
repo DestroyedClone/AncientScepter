@@ -1,4 +1,4 @@
-﻿using AncientScepterSkills.Content;
+﻿using AncientScepter.Modules;
 using BepInEx;
 using R2API;
 using RoR2;
@@ -15,7 +15,7 @@ using UnityEngine;
 
 [assembly: HG.Reflection.SearchableAttribute.OptIn]
 
-namespace AncientScepterSkills
+namespace AncientScepter
 {
     [BepInPlugin(ModGuid, ModName, ModVer)]
     [BepInDependency(R2API.R2API.PluginGUID, R2API.R2API.PluginVersion)]
@@ -39,9 +39,6 @@ namespace AncientScepterSkills
 
             ContentManager.collectContentPackProviders += (addContentPackProvider) => addContentPackProvider(new AncientScepterContent());
 
-            BetterUICompat.Init();
-            CustomDamageTypes.SetupDamageTypes();
-            SetupBuffs();
             Assets.PopulateAssets();
             Assets.SpriteAssets.InitializeAssets();
         }

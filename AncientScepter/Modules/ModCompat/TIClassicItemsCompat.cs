@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace AncientScepterSkills.Content.ModCompatibility
+namespace AncientScepter.Modules.ModCompatibility
 {
     public static class TICLassicItemsCompat
     {

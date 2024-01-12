@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AncientScepterSkills
+namespace AncientScepter
 {
     /// <summary>
     /// This class exposes methods and values for third party mods.

@@ -2,7 +2,7 @@
 using RoR2;
 using System.Runtime.CompilerServices;
 
-namespace AncientScepterSkills.Content
+namespace AncientScepter.Modules
 {
     internal class Configuration
     {
