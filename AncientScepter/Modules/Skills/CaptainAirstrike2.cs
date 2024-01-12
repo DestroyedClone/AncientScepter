@@ -56,7 +56,7 @@ namespace AncientScepter.Modules.Skills
 
             ContentAddition.AddSkillDef(myCallDef);
 
-            if (BetterUICompatibility.compatBetterUI)
+            if (BetterUICompat.compatBetterUI)
             {
                 doBetterUI();
             }

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using AncientScepter.Modules;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace AncientScepter
 {
@@ -10,6 +12,49 @@ namespace AncientScepter
     //NO THIS DOESN'T BREAK NAMING CONVENTIONS BECAUSE ACTUAL INTERFACES ARE "IWhatever"
     public static class AncientScepterInterface
     {
+        public static GameObject ItemModel
+        {
+            get
+            {
+                if (_cachedItemModel == null)
+                {
+                    _cachedItemModel = Assets.mainAssetBundle.LoadAsset<GameObject>($"mdl{AssetName}Pickup");
+                }
+                return _cachedItemModel;
+            }
+        }
+
+        public static GameObject ItemDisplay
+        {
+            get
+            {
+                if (_cachedDisplay == null)
+                {
+                    _cachedDisplay = Assets.mainAssetBundle.LoadAsset<GameObject>($"mdl{AssetName}Display");
+                }
+                return _cachedDisplay;
+            }
+        }
+        public static Sprite ItemIcon
+        {
+            get
+            {
+                if(_cachedItemIcon == null)
+                {
+                    _cachedItemIcon = Assets.mainAssetBundle.LoadAsset<Sprite>($"tex{AssetName}Icon");
+                }
+                return _cachedItemIcon;
+            }
+        } 
+        
+
+        private static GameObject _cachedItemModel;
+        private static GameObject _cachedDisplay;
+        private static Sprite _cachedItemIcon;
+
+        /// <summary>
+        /// List where all Ancient Scepter replacements will be held. This will be read whenever the item is obtained, and we want to see which skills we can replace, if any.
+        /// </summary>
         private static List<ScepterReplacement> scepterReplacements;
 
         /// <summary>

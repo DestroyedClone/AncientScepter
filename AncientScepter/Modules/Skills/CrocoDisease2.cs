@@ -57,7 +57,7 @@ namespace AncientScepter.Modules.Skills
             diseaseWardPrefab = dwPrefabPrefab.InstantiateClone("AncientScepterDiseaseWardAuraPrefab");
             Object.Destroy(dwPrefabPrefab);
 
-            if (BetterUICompatibility.compatBetterUI)
+            if (BetterUICompat.compatBetterUI)
             {
                 doBetterUI();
             }

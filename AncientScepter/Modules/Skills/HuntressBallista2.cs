@@ -52,7 +52,7 @@ namespace AncientScepter.Modules.Skills
 
             ContentAddition.AddSkillDef(myCtxDef);
 
-            if (BetterUICompatibility.compatBetterUI)
+            if (BetterUICompat.compatBetterUI)
             {
                 doBetterUI();
             }

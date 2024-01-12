@@ -52,7 +52,7 @@ namespace AncientScepter.Modules.Skills
 
             ContentAddition.AddSkillDef(myFireDef);
 
-            if (BetterUICompatibility.compatBetterUI)
+            if (BetterUICompat.compatBetterUI)
             {
                 doBetterUI();
             }

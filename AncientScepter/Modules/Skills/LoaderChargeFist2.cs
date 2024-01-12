@@ -39,7 +39,7 @@ namespace AncientScepter.Modules.Skills
 
             ContentAddition.AddSkillDef(skillDefToClone);
 
-            if (BetterUICompatibility.compatBetterUI)
+            if (BetterUICompat.compatBetterUI)
             {
                 doBetterUI();
             }

@@ -123,7 +123,7 @@ namespace AncientScepter.Modules.Skills
             ContentAddition.AddProjectile(irradiateProjectile);
             ContentAddition.AddProjectile(airstrikePrefab);
 
-            if (BetterUICompatibility.compatBetterUI)
+            if (BetterUICompat.compatBetterUI)
             {
                 doBetterUI();
             }

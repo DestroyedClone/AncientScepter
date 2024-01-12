@@ -62,7 +62,7 @@ namespace AncientScepter.Modules.Skills
 
             ContentAddition.AddProjectile(projReplacer);
 
-            if (BetterUICompatibility.compatBetterUI)
+            if (BetterUICompat.compatBetterUI)
             {
                 doBetterUI();
             }
