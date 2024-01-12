@@ -4,7 +4,7 @@ using RoR2.ContentManagement;
 using RoR2.Skills;
 using System.Collections;
 
-namespace AncientScepter
+namespace AncientScepterSkills
 {
     /// <summary>
     /// Based on <see cref="RoR2.ContentManagement.SimpleContentPackProvider"/>
@@ -51,16 +51,5 @@ namespace AncientScepter
             public static ItemDef ancientScepter;
         }
 
-        public static class Skills
-        {
-            public static SkillDef thing;
-            public static SkillDef EngiTurret2;
-            public static SkillDef EngiWalker2;
-        }
-
-        public static class Buffs
-        {
-            public static BuffDef perishSongDebuff;
-        }
     }
 }

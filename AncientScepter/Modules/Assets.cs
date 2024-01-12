@@ -2,7 +2,7 @@
 using System.Reflection;
 using UnityEngine;
 
-namespace AncientScepter.Modules
+namespace AncientScepterSkills.Content
 {
     public static class Assets
     {

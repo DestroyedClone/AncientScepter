@@ -1,6 +1,6 @@
-﻿using AncientScepter.Modules;
-using AncientScepter.Modules.Skills;
-using AncientScepter.Modules.SkillsMonster;
+﻿using AncientScepterSkills.Content;
+using AncientScepterSkills.Content.Skills;
+using AncientScepterSkills.Content.SkillsMonster;
 using BepInEx.Configuration;
 using R2API;
 using RoR2;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-namespace AncientScepter
+namespace AncientScepterSkills
 {
     //TODO: NUKE THIS
     //This will ONLY be kept around for the LEGACY METHODS
@@ -77,23 +77,6 @@ namespace AncientScepter
 
         private static void thing()
         {
-            skills.Add(new ArtificerFlamethrower2());
-            skills.Add(new ArtificerFlyUp2());
-            skills.Add(new Bandit2ResetRevolver2());
-            skills.Add(new Bandit2SkullRevolver2());
-            skills.Add(new CaptainAirstrike2());
-            skills.Add(new CaptainAirstrikeAlt2());
-            skills.Add(new CommandoBarrage2());
-            skills.Add(new CommandoGrenade2());
-            skills.Add(new CrocoDisease2());
-            skills.Add(new EngiTurret2());
-            skills.Add(new EngiWalker2());
-            skills.Add(new HuntressBallista2());
-            skills.Add(new HuntressRain2());
-            skills.Add(new LoaderChargeFist2());
-            skills.Add(new LoaderChargeZapFist2());
-            skills.Add(new MercEvis2());
-            skills.Add(new MercEvisProjectile2());
             skills.Add(new ToolbotDash2());
             skills.Add(new TreebotFlower2_2());
             skills.Add(new TreebotFireFruitSeed2());

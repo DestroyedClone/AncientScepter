@@ -1,7 +1,7 @@
 ﻿using RoR2.Skills;
 using UnityEngine;
 
-namespace AncientScepter.Modules
+namespace AncientScepterSkills.Content
 {
     internal class Utils
     {

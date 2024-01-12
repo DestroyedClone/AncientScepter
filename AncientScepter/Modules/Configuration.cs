@@ -2,7 +2,7 @@
 using RoR2;
 using System.Runtime.CompilerServices;
 
-namespace AncientScepter.Modules
+namespace AncientScepterSkills.Content
 {
     internal class Configuration
     {
@@ -17,24 +17,6 @@ namespace AncientScepter.Modules
         public static ConfigEntry<bool> miscAlternativeModel;
         public static ConfigEntry<bool> modCompatRemoveClassicItemsScepterFromPool;
         public static ConfigEntry<bool> miscUseItemTransformNotification;
-
-        // Character Specific configuration.
-        // Artificer
-        public static bool artiFlamePerformanceMode;
-
-        // Captain
-        public static bool captainNukeFriendlyFire;
-
-        // Commando
-        //public static bool enableCommandoAutoaim;
-
-        // Engi
-        public static bool engiTurretAdjustCooldown;
-
-        public static bool engiWalkerAdjustCooldown;
-        public static bool turretBlacklist;
-
-        //public static bool mithrixEnableScepter;
 
         internal void InitConfigFileValues(ConfigFile config)
         {
@@ -57,42 +39,13 @@ namespace AncientScepter.Modules
                 config.Bind("General Settings",
                             "Lunar Replacement Behavior",
                             LunarReplacementBehavior.DoNoUseMode,
-                            "Changes what happens when a character whose skill is affected by Ancient Scepter has both Ancient Scepter and the corresponding lunar skill replacements (Visions/Hooks/Strides/Essence) at the same time."); //defer until next stage
+                            "Changes what happens when a character whose skill is affected by Ancient Scepter has both Ancient Scepter and the corresponding lunar skill replacements (Visions/Hooks/Strides/Essence) at the same time.");
 
             generalEnableMonsterSkills =
                 config.Bind("General Settings",
                             "Enable skills for monsters",
                             true,
                             "If true, certain monsters get the effects of the Ancient Scepter.");
-
-            engiTurretAdjustCooldown =
-                config.Bind("Survivors - Engineer",
-                            "TR12-C Gauss Compact Faster Recharge",
-                            false,
-                            "If true, TR12-C Gauss Compact will recharge faster to match the additional stock.").Value;
-            engiWalkerAdjustCooldown =
-                config.Bind("Survivors - Engineer",
-                            "TR58-C Carbonizer Mini Faster Recharge",
-                            false,
-                            "If true, TR58-C Carbonizer Mini will recharge faster to match the additional stock.").Value;
-            artiFlamePerformanceMode =
-                config.Bind("Survivors - Artificer",
-                            "ArtiFlamePerformance",
-                            false,
-                            "If true, Dragon's Breath will use significantly lighter particle effects and no dynamic lighting.").Value;
-            captainNukeFriendlyFire =
-                config.Bind("Survivors - Captain",
-                            "Captain Nuke Friendly Fire",
-                            false,
-                            "If true, then Captain's Scepter Nuke will also inflict blight on allies.").Value;
-
-            /*mithrixEnableScepter =
-                config.Bind(configCategory,
-                            "Enable Mithrix Lines",
-                            true,
-                            "If true, Mithrix will have additional dialogue when acquiring the Ancient Scepter. Only applies on Commencement. Requires Enable skills for monsters to be enabled.").Value;*/
-            //enableBrotherEffects = config.Bind(configCategory, "Enable Mithrix Lines", true, "If true, Mithrix will have additional dialogue when acquiring the Ancient Scepter.").Value;
-            //enableCommandoAutoaim = config.Bind(configCategory, "Enable Commando Autoaim", true, "This may break compatibiltiy with skills.").Value;
 
             miscAlternativeModel =
                 config.Bind("Miscellaneous",
@@ -111,14 +64,6 @@ namespace AncientScepter.Modules
                             "CLASSICITEMS: Remove Classic Items Ancient Scepter From Droplist If Installed",
                             true,
                             "If true, then the Ancient Scepter from Classic Items will be removed from the drop pool to prevent complications.");
-
-            var engiSkill = skills.First(x => x is EngiTurret2);
-            engiSkill.myDef.baseRechargeInterval = EngiTurret2.oldDef.baseRechargeInterval * (engiTurretAdjustCooldown ? 2f / 3f : 1f);
-            GlobalUpdateSkillDef(engiSkill.myDef);
-
-            var engiSkill2 = skills.First(x => x is EngiWalker2);
-            engiSkill2.myDef.baseRechargeInterval = EngiWalker2.oldDef.baseRechargeInterval / (engiWalkerAdjustCooldown ? 2f : 1f);
-            GlobalUpdateSkillDef(engiSkill2.myDef);
         }
     }
 }
