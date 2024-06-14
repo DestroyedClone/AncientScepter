@@ -53,13 +53,14 @@ namespace AncientScepter
         internal override void LoadBehavior()
         {
             On.EntityStates.Loader.BaseSwingChargedFist.OnEnter += on_BaseSwingChargedFistEnter;
-            On.EntityStates.Loader.BaseSwingChargedFist.OnMeleeHitAuthority += BaseSwingChargedFist_OnMeleeHitAuthority;
+            EntityStates.Loader.BaseSwingChargedFist.onHitAuthorityGlobal += BaseSwingChargedFist_onHitAuthorityGlobal;
         }
+
 
         internal override void UnloadBehavior()
         {
             On.EntityStates.Loader.BaseSwingChargedFist.OnEnter -= on_BaseSwingChargedFistEnter;
-            On.EntityStates.Loader.BaseSwingChargedFist.OnMeleeHitAuthority -= BaseSwingChargedFist_OnMeleeHitAuthority;
+            EntityStates.Loader.BaseSwingChargedFist.onHitAuthorityGlobal -= BaseSwingChargedFist_onHitAuthorityGlobal;
         }
 
         private void on_BaseSwingChargedFistEnter(On.EntityStates.Loader.BaseSwingChargedFist.orig_OnEnter orig, BaseSwingChargedFist self)
@@ -76,7 +77,7 @@ namespace AncientScepter
             }
         }
 
-        private void BaseSwingChargedFist_OnMeleeHitAuthority(On.EntityStates.Loader.BaseSwingChargedFist.orig_OnMeleeHitAuthority orig, BaseSwingChargedFist self)
+        private void BaseSwingChargedFist_onHitAuthorityGlobal(BaseSwingChargedFist self)
         {
             if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef != myDef) return;
             var mTsf = self.outer.commonComponents.modelLocator?.modelTransform?.GetComponent<ChildLocator>()?.FindChild(self.swingEffectMuzzleString);
