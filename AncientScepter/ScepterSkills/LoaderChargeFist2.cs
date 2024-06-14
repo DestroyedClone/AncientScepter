@@ -52,10 +52,18 @@ namespace AncientScepter
         } 
         internal override void LoadBehavior()
         {
-            On.EntityStates.Loader.BaseSwingChargedFist.OnEnter += on_BaseSwingChargedFistEnter;
+            //On.EntityStates.Loader.BaseSwingChargedFist.OnEnter += on_BaseSwingChargedFistEnter;
             EntityStates.Loader.BaseSwingChargedFist.onHitAuthorityGlobal += BaseSwingChargedFist_onHitAuthorityGlobal;
+            On.EntityStates.Loader.BaseSwingChargedFist.AuthorityModifyOverlapAttack += BaseSwingChargedFist_AuthorityModifyOverlapAttack;
         }
 
+        private void BaseSwingChargedFist_AuthorityModifyOverlapAttack(On.EntityStates.Loader.BaseSwingChargedFist.orig_AuthorityModifyOverlapAttack orig, BaseSwingChargedFist self, OverlapAttack overlapAttack)
+        {
+            orig(self, overlapAttack);
+            if (!(self is SwingChargedFist)) return;
+            if (self.outer.commonComponents.characterBody.skillLocator.GetSkill(targetSlot)?.skillDef == myDef)
+                self.overlapAttack.damage *= 2f;
+        }
 
         internal override void UnloadBehavior()
         {
@@ -71,7 +79,7 @@ namespace AncientScepter
             {
                 self.minPunchForce *= 7f;
                 self.maxPunchForce *= 7f;
-                self.damageCoefficient *= 2f;
+                //self.damageCoefficient *= 2f;
                 self.minLungeSpeed *= 2f;
                 self.maxLungeSpeed *= 2f;
             }
