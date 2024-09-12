@@ -50,18 +50,7 @@ namespace AncientScepter
             projReplacer.transform.Find("Effect").localScale *= 3f;
 
             ContentAddition.AddProjectile(projReplacer);
-
-            if (ModCompat.compatBetterUI)
-            {
-                doBetterUI();
-            }
         }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
-        internal void doBetterUI()
-        {
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("ChargeZapFist"));
-        } 
         internal override void LoadBehavior()
         {
             IL.EntityStates.Loader.SwingZapFist.OnMeleeHitAuthority += IL_SwingZapFistMeleeHit;

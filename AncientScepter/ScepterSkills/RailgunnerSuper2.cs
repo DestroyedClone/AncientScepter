@@ -56,22 +56,7 @@ namespace AncientScepter
             myFireDef.icon = Assets.SpriteAssets.RailgunnerFireSupercharge2;
 
             ContentAddition.AddSkillDef(myFireDef);
-
-            if (ModCompat.compatBetterUI)
-            {
-                doBetterUI();
-            }
         }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
-        internal void doBetterUI()
-        {
-                //BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("RailgunnerBodyChargeSnipeSuper"));
-                //BetterUI.ProcCoefficientCatalog.AddSkill(myFireDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("RailgunnerBodyFireSnipeSuper"));
-
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, "Projectile", 3.5f);
-                BetterUI.ProcCoefficientCatalog.AddSkill(myFireDef.skillName, "Projectile", 3.5f);
-        } 
         internal override void LoadBehavior()
         {
             On.EntityStates.Railgunner.Weapon.BaseFireSnipe.ModifyBullet += BaseFireSnipe_ModifyBullet;

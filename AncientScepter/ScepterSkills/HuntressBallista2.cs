@@ -51,20 +51,7 @@ namespace AncientScepter
             myCtxDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texHuntressR2");
 
             ContentAddition.AddSkillDef(myCtxDef);
-
-
-            if (ModCompat.compatBetterUI)
-            {
-                doBetterUI();
-            }
         }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
-        internal void doBetterUI()
-        {
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("AimArrowSnipe"));
-                BetterUI.ProcCoefficientCatalog.AddSkill(myCtxDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("AimArrowSnipe"));
-        } 
         internal override void LoadBehavior()
         {
             On.EntityStates.Huntress.AimArrowSnipe.OnEnter += On_AimArrowSnipeEnter;

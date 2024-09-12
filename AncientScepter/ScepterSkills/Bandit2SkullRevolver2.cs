@@ -47,19 +47,7 @@ namespace AncientScepter
             myDef.icon = Assets.SpriteAssets.Bandit2SkullRevolver2;
 
             ContentAddition.AddSkillDef(myDef);
-
-            if (ModCompat.compatBetterUI)
-            {
-                doBetterUI();
-            }
         }
-
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
-        internal void doBetterUI()
-        {
-            BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("SkullRevolver"));
-        } 
 
         internal override void LoadBehavior()
         {

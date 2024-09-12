@@ -38,18 +38,7 @@ namespace AncientScepter
             myDef.icon = Assets.SpriteAssets.TreebotFlower2_2;
 
             ContentAddition.AddSkillDef(myDef);
-
-            if (ModCompat.compatBetterUI)
-            {
-                doBetterUI();
-            }
         }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
-        internal void doBetterUI()
-        {
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("TreebotBodyFireFlower2"));
-        } 
         internal override void LoadBehavior()
         {
             On.EntityStates.Treebot.TreebotFlower.TreebotFlower2Projectile.RootPulse += On_TreebotFlower2RootPulse;

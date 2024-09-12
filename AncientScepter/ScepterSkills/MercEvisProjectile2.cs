@@ -38,18 +38,7 @@ namespace AncientScepter
             myDef.baseRechargeInterval /= 4f;
 
             ContentAddition.AddSkillDef(myDef);
-
-            if (ModCompat.compatBetterUI)
-            {
-                doBetterUI();
-            }
         }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
-        internal void doBetterUI()
-        {
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("MercBodyEvisProjectile"));
-        } 
         internal override void LoadBehavior()
         {
             On.EntityStates.GenericProjectileBaseState.OnEnter += On_FireFMJEnter;

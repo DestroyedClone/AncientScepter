@@ -68,16 +68,6 @@ namespace AncientScepter
             Language.onCurrentLanguageChanged += Language_onCurrentLanguageChanged;
         }
 
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
-        public static void doBetterUI()
-        {
-            BetterUI.Buffs.RegisterBuffInfo(AncientScepterMain.perishSongDebuff,
-                "STANDALONEANCIENTSCEPTER_BUFF_PERISHSONG_NAME",
-                "STANDALONEANCIENTSCEPTER_BUFF_PERISHSONG_DESC");
-            LanguageAPI.Add("STANDALONEANCIENTSCEPTER_BUFF_PERISHSONG_NAME", "Perish Song");
-            LanguageAPI.Add("STANDALONEANCIENTSCEPTER_BUFF_PERISHSONG_DESC", "After 30 seconds, take 5000% damage from the Heretic that inflicted you.");
-        }
-
         public static void SetupBuffs()
         {
             perishSongDebuff = ScriptableObject.CreateInstance<BuffDef>();
@@ -91,10 +81,6 @@ namespace AncientScepter
             if (!ContentAddition.AddBuffDef(perishSongDebuff))
             {
                 _logger.LogWarning($"Buff '{nameof(perishSongDebuff)}' failed to be added.");
-            }
-            if (ModCompat.compatBetterUI)
-            {
-               doBetterUI();
             }
         }
 

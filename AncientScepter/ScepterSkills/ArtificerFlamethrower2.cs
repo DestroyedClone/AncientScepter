@@ -90,19 +90,7 @@ namespace AncientScepter
             }
 
             ContentAddition.AddProjectile(projCloud);
-
-            if (ModCompat.compatBetterUI)
-            {
-                doBetterUI();
-            }
         }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
-        internal void doBetterUI()
-        {
-            BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("MageBodyFlamethrower"));
-            BetterUI.ProcCoefficientCatalog.AddToSkill(myDef.skillName, "Fire Cloud", 0);
-        } 
         internal override void LoadBehavior()
         {
             IL.EntityStates.Mage.Weapon.Flamethrower.FireGauntlet += IL_FlamethrowerFireGauntlet;

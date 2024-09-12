@@ -55,19 +55,6 @@ namespace AncientScepter
             myCallDef.icon = Assets.mainAssetBundle.LoadAsset<Sprite>("texCapU1");
 
             ContentAddition.AddSkillDef(myCallDef);
-
-            if (ModCompat.compatBetterUI)
-            {
-                doBetterUI();
-            }
-        }
-
-        
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
-        internal void doBetterUI()
-        {
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CallAirstrike"));
-                BetterUI.ProcCoefficientCatalog.AddSkill(myCallDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CallAirstrike"));
         }
 
         internal override void LoadBehavior()

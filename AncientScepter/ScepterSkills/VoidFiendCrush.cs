@@ -63,19 +63,7 @@ namespace AncientScepter
             myCtxDef.icon = Assets.SpriteAssets.VoidFiendCorruptedSuppress2;
             ContentAddition.AddSkillDef(myCtxDef);
 
-            if (ModCompat.compatBetterUI)
-            {
-                doBetterUI();
-            }
-
             targetBodyIndex = BodyCatalog.FindBodyIndex(targetBody);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
-        internal void doBetterUI()
-        {
-            BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CrushCorruption"));
-            BetterUI.ProcCoefficientCatalog.AddSkill(myCtxDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CrushHealth"));
         }
 
         internal override void LoadBehavior()

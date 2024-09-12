@@ -56,18 +56,7 @@ namespace AncientScepter
             dw.interval = 1f;
             diseaseWardPrefab = dwPrefabPrefab.InstantiateClone("AncientScepterDiseaseWardAuraPrefab");
             UnityEngine.Object.Destroy(dwPrefabPrefab);
-
-            if (ModCompat.compatBetterUI)
-            {
-                doBetterUI();
-            }
         }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
-        internal void doBetterUI()
-        {
-                BetterUI.ProcCoefficientCatalog.AddSkill(myDef.skillName, BetterUI.ProcCoefficientCatalog.GetProcCoefficientInfo("CrocoDisease"));
-        } 
         internal override void LoadBehavior()
         {
             On.RoR2.Orbs.LightningOrb.OnArrival += On_LightningOrbArrival;
