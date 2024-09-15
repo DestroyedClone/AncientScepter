@@ -1,6 +1,6 @@
-
-
 ## Standalone Ancient Scepter
+# Seekers of the Storm
+- This mod does not currently have Skills for survivors from Seekers of the Storm!
 
 [![github issues/request link](https://raw.githubusercontent.com/DestroyedClone/PoseHelper/master/PoseHelper/github_link.webp)](https://github.com/DestroyedClone/AncientScepter/issues) [![discord invite](https://raw.githubusercontent.com/DestroyedClone/PoseHelper/master/PoseHelper/discord_link.webp)](https://discord.gg/DpHu3qXMHK)
 
@@ -47,7 +47,6 @@
 
 ## Implemented ModCompat
 This refers to compatibility that's included just with this mod, and will not be an exhaustive list of every mod that implements this.
-- BetterUI [⚡](https://thunderstore.io/package/XoXFaby/BetterUI/)
 
 ## To-Do/Issues
 * Mithrix Scepter

@@ -1,5 +1,8 @@
 
 ## Changelog
+`1.1.34
+- 🩹 Recompiled mod for SOTS
+
 `1.1.33`
 - 🩹 Hotfixed edge case when replacing scepter skills defined through indexes using the skilldef based overload.Not the best possible fix,but incoming rewrite will invalidate the issue.
 
