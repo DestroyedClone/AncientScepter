@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 1170271818
+CRC: 1678992536
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: a3c3610cc81959e3003c07136b58c2a9
+    Hash: 7ece554da702331c2f6ee4eba23c2dbb
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 0792913792f1c822bd8776f0053f7de8
+    Hash: 3043e506c67b384b6af3b12c399183f5
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -43,68 +43,73 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 213
   Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/AssetBundle/AncientScepter/Alt/Material/aghanimscepter_Emission.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/texCapU2.png
-- Assets/AssetBundle/AncientScepter/mdlAncientScepterNewCrystal.prefab
-- Assets/AssetBundle/AncientScepter/Textures/texAncientScepterEmission.png
-- Assets/AssetBundle/AncientScepter/Textures/aghanimscepter_Normal.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/texAcridR1.png
-- Assets/AssetBundle/AncientScepter/Textures/texAncientScepter.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/texHereticR2.png
-- Assets/AssetBundle/AncientScepter/Alt/Material/aghanimscepter_Diffuse.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/Old/old_texRailgunnerP1.png
-- Assets/AssetBundle/AncientScepter/VFX/matRound.mat
-- Assets/AssetBundle/AncientScepter/Textures/aghanimscepter_Diffuse.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/texLoaderU1.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/texRailgunnerR1.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/texHereticR1.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/texMultU1.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/texRailgunnerP2.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/texMercR1.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/texRexR2.png
-- Assets/AssetBundle/AncientScepter/Alt/texAghanimScepterIcon.png
-- Assets/AssetBundle/AncientScepter/Alt/Material/matAghanimScepter.mat
-- Assets/AssetBundle/AncientScepter/Icons/Skills/texArtiR2.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/texArtiR1.png
-- Assets/AssetBundle/AncientScepter/VFX/texAura.tif
 - Assets/AssetBundle/AncientScepter/Textures/Ancientscepter_Material_Roughness.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/Old/old_texRailgunnerR1.png
-- Assets/AssetBundle/AncientScepter/Icons/texAncientScepterIconOld.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/texBanditR2.png
-- Assets/AssetBundle/AncientScepter/Animations/ScepterIdle.anim
-- Assets/AssetBundle/AncientScepter/Animations/animScepter.controller
-- Assets/AssetBundle/AncientScepter/Icons/Skills/Old/old_texRailgunnerR2.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/texRexR1.png
-- Assets/AssetBundle/AncientScepter/VFX/matAura.mat
-- Assets/AssetBundle/AncientScepter/mdlAncientScepterPickup.prefab
-- Assets/AssetBundle/AncientScepter/Icons/Skills/texEngiR1.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/texMercR2.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/texHuntressR1.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/Old/old_texRexR1.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/Old/old_texHereticR2.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/texRailgunnerR2.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/Old/old_texCommandoR1.png
-- Assets/AssetBundle/AncientScepter/Alt/mdlAghanimScepterDisplay.prefab
-- Assets/AssetBundle/AncientScepter/Icons/Skills/texEngiR2.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/Old/old_texMercR1.png
-- Assets/AssetBundle/AncientScepter/Textures/Ancientscepter_Material_BaseColor.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/texLoaderU2.png
-- Assets/AssetBundle/AncientScepter/Alt/Material/aghanimscepter_Normal.png
-- Assets/AssetBundle/AncientScepter/VFX/texRound.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/Old/old_texRailgunnerP2.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/texVoidFiendR1C.png
-- Assets/AssetBundle/AncientScepter/Icons/texAncientScepterIcon.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/Old/old_texCapU2.png
-- Assets/AssetBundle/AncientScepter/Textures/Ancientscepter_Material_Normal.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/texCapU1.png
+- Assets/AssetBundle/AncientScepter/VFX/texAura.tif
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texCapU2.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texLoaderU1.png
 - Assets/AssetBundle/AncientScepter/mdlAncientScepterDisplay.prefab
-- Assets/AssetBundle/AncientScepter/Icons/Skills/texRailgunnerP1.png
+- Assets/AssetBundle/AncientScepter/Animations/animScepter.controller
+- Assets/AssetBundle/AncientScepter/Icons/Skills/Old/old_texCommandoR1.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texRexR1.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/Old/old_texRailgunnerR2.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texRailgunnerP2.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/Old/old_texRexR1.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texLoaderU2.png
+- Assets/AssetBundle/AncientScepter/mdlAncientScepterNewCrystal.prefab
+- Assets/AssetBundle/AncientScepter/Textures/Ancientscepter_Material_BaseColor.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/Old/old_texCapU2.png
+- Assets/AssetBundle/AncientScepter/Alt/Material/matAghanimScepter.mat
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texSeekerR1.png
 - Assets/AssetBundle/AncientScepter/Icons/Skills/texHuntressR2.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/texVoidFiendR1.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texAcridR1.png
+- Assets/AssetBundle/AncientScepter/mdlAncientScepterPickup.prefab
+- Assets/AssetBundle/AncientScepter/Alt/texAghanimScepterIcon.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texCommandoR1.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texDrifterR1.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texHereticR1.png
+- Assets/AssetBundle/AncientScepter/Textures/Ancientscepter_Material_Normal.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texMercR1.png
 - Assets/AssetBundle/AncientScepter/Icons/Skills/texBanditR1.png
 - Assets/AssetBundle/AncientScepter/Alt/mdlAghanimScepterPickup.prefab
-- Assets/AssetBundle/AncientScepter/Materials/matAncientScepter.mat
+- Assets/AssetBundle/AncientScepter/Icons/Skills/Old/old_texHereticR2.png
+- Assets/AssetBundle/AncientScepter/Textures/aghanimscepter_Diffuse.png
+- Assets/AssetBundle/AncientScepter/Alt/Material/aghanimscepter_Emission.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texCapU1.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texBanditR2.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texRailgunnerR1.png
+- Assets/AssetBundle/AncientScepter/VFX/matRound.mat
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texArtiR2.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texSeekerPassive.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texHereticR2.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texRailgunnerP1.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texRailgunnerR2.png
+- Assets/AssetBundle/AncientScepter/Icons/texAncientScepterIconOld.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texEngiR1.png
+- Assets/AssetBundle/AncientScepter/Animations/ScepterIdle.anim
+- Assets/AssetBundle/AncientScepter/Alt/mdlAghanimScepterDisplay.prefab
+- Assets/AssetBundle/AncientScepter/VFX/matAura.mat
+- Assets/AssetBundle/AncientScepter/Icons/Skills/Old/old_texRailgunnerR1.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texEngiR2.png
+- Assets/AssetBundle/AncientScepter/VFX/texRound.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/Old/old_texMercR1.png
+- Assets/AssetBundle/AncientScepter/Alt/Material/aghanimscepter_Normal.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/Old/old_texRailgunnerP2.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texVoidFiendR1C.png
+- Assets/AssetBundle/AncientScepter/Alt/Material/aghanimscepter_Diffuse.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texVoidFiendR1.png
 - Assets/AssetBundle/AncientScepter/Icons/Skills/texCommandoR2.png
-- Assets/AssetBundle/AncientScepter/Icons/Skills/texCommandoR1.png
+- Assets/AssetBundle/AncientScepter/Textures/aghanimscepter_Normal.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texMercR2.png
+- Assets/AssetBundle/AncientScepter/Icons/texAncientScepterIcon.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/Old/old_texRailgunnerP1.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texMultU1.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texHuntressR1.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texSeekerR2.png
+- Assets/AssetBundle/AncientScepter/Textures/texAncientScepterEmission.png
+- Assets/AssetBundle/AncientScepter/Textures/texAncientScepter.png
+- Assets/AssetBundle/AncientScepter/Materials/matAncientScepter.mat
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texRexR2.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texArtiR1.png
 Dependencies: []

@@ -108,6 +108,9 @@ namespace AncientScepter
             ItemAPI.Add(new CustomItem(ItemDef, CreateDisplayRules()));
         }
 
+        protected virtual void CreateCraftableDef()
+        { }
+
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         public static void TILER2_BlacklistItem(ItemDef itemDef)
         {
@@ -116,6 +119,7 @@ namespace AncientScepter
 
         public virtual void Hooks()
         {
+            
         }
 
         protected virtual void SetupMaterials(GameObject modelPrefab)

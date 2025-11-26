@@ -32,7 +32,7 @@ namespace AncientScepter
 
     public class AncientScepterMain : BaseUnityPlugin
     {
-        public const string ModVer = "1.1.34";
+        public const string ModVer = "1.1.35";
         public const string ModName = "StandaloneAncientScepter";
         public const string ModGuid = "com.DestroyedClone.AncientScepter";
 
@@ -150,7 +150,7 @@ namespace AncientScepter
             {
                 if (index != RoR2.DotController.DotIndex.None)
                 {
-                    RoR2.DotController.InflictDot(body.gameObject, body.gameObject, index, duration, 0.25f);
+                    RoR2.DotController.InflictDot(body.gameObject, body.gameObject, index, duration, 0.25f, uint.MaxValue);
                 }
                 else
                 {

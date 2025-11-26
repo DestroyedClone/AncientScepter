@@ -10,6 +10,8 @@ using static AncientScepter.MiscUtil;
 using static AncientScepter.SkillUtil;
 using AncientScepter.ScepterSkillsMonster;
 using System.Runtime.CompilerServices;
+using RoR2.Modding;
+using UnityEngine.AddressableAssets;
 
 namespace AncientScepter
 {
@@ -111,8 +113,8 @@ namespace AncientScepter
         public override string ItemPickupDesc => "Upgrades one of your skills.";
 
         public override string ItemFullDescription =>
-            $"Upgrade one of your <style=cIsUtility>skills</style>. <style=cStack>(Unique per character)</style>"
-                        + $" <style=cStack>{(rerollMode != RerollMode.Disabled ? "Extra/Unusable" : "Unusable (but NOT extra)")} pickups will reroll into {(rerollMode == RerollMode.Scrap ? "red scrap" : "other legendary items.")}</style>";
+            $"Upgrade one of your <style=cIsUtility>skills</style>. " + $"{(rerollMode != RerollMode.Disabled ? "<style=cStack>(Unique per survivor)</style>." : "Reduce skill cooldown by <style=cIsUtility>0%</style> <style=cStack>(+30% per stack. Unique per survivor)</style>.")}"
+                        + $"\n <style=cStack>{(rerollMode != RerollMode.Disabled ? "Extra/Unusable" : "Unusable")} pickups will reroll into {(rerollMode == RerollMode.Scrap ? "Item Scrap, Red" : "other Legendary items.")}</style>";
 
         public override string ItemLore => "Perfected energies. <He> holds it before us. The crystal of foreign elements is not attached physically, yet it does not falter from the staff's structure.\n\nOverwhelming strength. We watch as <His> might splits the ground asunder with a single strike.\n\nWondrous possibilities. <His> knowledge unlocks further pathways of development. We are enlightened by <Him>.\n\nExcellent results. From <His> hands, [Nanga] takes hold. It is as <He> said: The weak are culled.\n\nRisking everything. The crystal destabilizies. [Nanga] is gone, and <He> is forced to wield it once again.\n\nPower comes at a cost. <He> is willing to pay.";
 
@@ -162,6 +164,7 @@ namespace AncientScepter
             CreateItem();
             Hooks();
             Install();
+            CreateCraftableDef();
             //InstallLanguage();
             On.RoR2.UI.MainMenu.MainMenuController.Start += MainMenuController_Start;
         }
@@ -178,6 +181,8 @@ namespace AncientScepter
             {
                 ItemTag.Utility,
                 ItemTag.AIBlacklist,
+                ItemTag.CanBeTemporary,
+                ItemTag.AllowedForUseAsCraftingIngredient,
             };
             if (turretBlacklist)
             {
@@ -219,8 +224,8 @@ namespace AncientScepter
             rerollMode = 
                 config.Bind(configCategory, 
                             "Reroll on pickup mode", 
-                            RerollMode.Random, 
-                            "If \"Disabled\", additional stacks will not be rerolled" +
+                            RerollMode.Disabled, 
+                            "If \"Disabled\", additional stacks will not be rerolled. Gaining extra stacks reduces skill cooldown." +
                             "\nIf \"Random\", any stacks picked up past the first will reroll to other red items." +
                             "\nIf \"Scrap\", any stacks picked up past the first will reroll into red scrap.").Value;
             unusedMode =
@@ -276,6 +281,39 @@ namespace AncientScepter
                 "Transformation Notification",
                 true,
                 "If true, then when scepters are re-rolled, then it will be accompanied by a transformation notification like other items.").Value;
+        }
+
+        protected override void CreateCraftableDef()
+        {
+            CraftableDef fromBottleAndBandolier = ScriptableObject.CreateInstance<CraftableDef>();
+            fromBottleAndBandolier.pickup = ItemDef;
+            fromBottleAndBandolier.recipes = new Recipe[]
+            {
+                new Recipe()
+                {
+                    amountToDrop = 1,
+                    ingredients = new RecipeIngredient[]
+                    {
+                        new RecipeIngredient()
+                        {
+                            // bottled chaos
+                            pickup = Addressables.LoadAssetAsync<ItemDef>("b4d935cc376fab14a9e1b3e0aa772536").WaitForCompletion()
+                        },
+                        new RecipeIngredient()
+                        {
+                            // bandolier
+                            pickup = Addressables.LoadAssetAsync<ItemDef>("c2701e84e1d92a246a9adaffd41b56a5").WaitForCompletion()
+                        }
+                    }
+                }
+            };
+
+            // and then it has to get registered to a contentpack and stuff not set up here and ugh nvm another time
+
+            // other ideas:
+            // Sonorous Whispers + Crowbar (desirable red + white 'staff' = desirable red staff)
+            // Alien Head + ?? (skill-related red + ?? = scepter)
+            // Scepter + Item Scrap, White = 4x Focus Crystal (break the scepter)
         }
 
 
@@ -514,6 +552,11 @@ namespace AncientScepter
 
             skills.Add(new VoidFiendCrush());
 
+            skills.Add(new SeekerMeditate2());
+            skills.Add(new SeekerPalmBlast2());
+
+            skills.Add(new DrifterSalvage2());
+
             // Monster
             if (enableMonsterSkills)
             {
@@ -546,6 +589,7 @@ namespace AncientScepter
             On.RoR2.CharacterMaster.GetDeployableSameSlotLimit += On_CMGetDeployableSameSlotLimit;
             On.RoR2.GenericSkill.UnsetSkillOverride += On_GSUnsetSkillOverride;
             RoR2.Run.onRunStartGlobal += On_RunStartGlobal;
+            R2API.RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPI_GetStatCoefficients;
 
             foreach (var skill in skills)
             {
@@ -558,6 +602,65 @@ namespace AncientScepter
                 var body = cm.GetBody();
                 HandleScepterSkill(body);
             }
+        }
+
+        private void RecalculateStatsAPI_GetStatCoefficients(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
+        {
+            SkillSlot slot = SkillSlot.None;
+            if (sender.inventory != null && sender.inventory.GetItemCountEffective(ItemDef) > 0 && sender.skillLocator != null && TryGetScepterSlot(sender, out slot))
+            {
+                switch (slot)
+                {
+                    default:
+                        break;
+                    case SkillSlot.None:
+                        break;
+                    case SkillSlot.Primary:
+                        args.primarySkill.cooldownReductionMultAdd += (sender.inventory.GetItemCountEffective(ItemDef) - 1f) * 0.3f;
+                        break; 
+                    case SkillSlot.Secondary:
+                        args.secondarySkill.cooldownReductionMultAdd += (sender.inventory.GetItemCountEffective(ItemDef) - 1f) * 0.3f;
+                        break;
+                    case SkillSlot.Utility:
+                        args.utilitySkill.cooldownReductionMultAdd += (sender.inventory.GetItemCountEffective(ItemDef) - 1f) * 0.3f;
+                        break;
+                    case SkillSlot.Special:
+                        args.specialSkill.cooldownReductionMultAdd += (sender.inventory.GetItemCountEffective(ItemDef) - 1f) * 0.3f;
+                        break;
+                }
+            }
+        }
+
+        private bool TryGetScepterSlot(CharacterBody body, out SkillSlot result)
+        {
+            result = SkillSlot.None;
+
+            if (body.skillLocator == null || body.master == null || body.master.loadout == null)
+                return false;
+
+            string bodyName = BodyCatalog.GetBodyName(body.bodyIndex);
+
+            var repls = scepterReplacers.Where(x => x.bodyName == bodyName).ToList();
+            if (repls.Count == 0)
+                return false;
+
+            foreach (var replacement in repls)
+            {
+                if (!replacement.trgtDef)
+                    continue;
+
+                var skill = body.skillLocator.allSkills.FirstOrDefault(s => s && (s.skillDef == replacement.trgtDef || s.baseSkill == replacement.trgtDef));
+
+                if (!skill)
+                    continue;
+
+                var slot = replacement.slotIndex != SkillSlot.None ? replacement.slotIndex : body.skillLocator.FindSkillSlot(skill);
+
+                result = slot;
+                return true;
+            }
+
+            return false;
         }
 
         public void InstallLanguage()

@@ -108,6 +108,9 @@ namespace AncientScepter
             public static Sprite RailgunnerFireCryocharge2;
             public static Sprite VoidFiendSuppress2;
             public static Sprite VoidFiendCorruptedSuppress2;
+            public static Sprite SeekerMeditate2;
+            public static Sprite SeekerPalmBlast2;
+            public static Sprite DrifterSalvage2;
 
             public static void InitializeAssets()
             {
@@ -138,6 +141,9 @@ namespace AncientScepter
                 RailgunnerFireCryocharge2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texRailgunnerP2");
                 VoidFiendSuppress2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texVoidFiendR1");
                 VoidFiendCorruptedSuppress2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texVoidFiendR1C");
+                SeekerMeditate2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texSeekerR1");
+                SeekerPalmBlast2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texSeekerR2");
+                DrifterSalvage2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texDrifterR1");
             }
         }
     }

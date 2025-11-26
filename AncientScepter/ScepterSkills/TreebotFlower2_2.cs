@@ -80,8 +80,8 @@ namespace AncientScepter
                     RoR2Content.Buffs.Weak,
                     RoR2Content.Buffs.Pulverized
                 }); //todo: freezebuff
-                if (nbi == RoR2Content.Buffs.OnFire) DotController.InflictDot(cb.gameObject, self.owner, DotController.DotIndex.Burn, 1.5f, 1f);
-                else if (nbi == RoR2Content.Buffs.Bleeding) DotController.InflictDot(cb.gameObject, self.owner, DotController.DotIndex.Bleed, 1.5f, 1f);
+                if (nbi == RoR2Content.Buffs.OnFire) DotController.InflictDot(cb.gameObject, self.owner, DotController.DotIndex.Burn, 1.5f, 1f, uint.MaxValue);
+                else if (nbi == RoR2Content.Buffs.Bleeding) DotController.InflictDot(cb.gameObject, self.owner, DotController.DotIndex.Bleed, 1.5f, 1f, uint.MaxValue);
                 else cb.AddTimedBuff(nbi, 1.5f);
             }});
         }
