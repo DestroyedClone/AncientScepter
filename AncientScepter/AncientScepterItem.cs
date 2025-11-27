@@ -554,6 +554,7 @@ namespace AncientScepter
 
             skills.Add(new SeekerMeditate2());
             skills.Add(new SeekerPalmBlast2());
+            skills.Add(new ChefYesChef2());
 
             skills.Add(new DrifterSalvage2());
             skills.Add(new DrifterTinker2());

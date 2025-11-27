@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2813992587
+CRC: 1095080163
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: d4738d1b0128160057b2813173b7aed5
+    Hash: 401afea8008c0ef4610793c73f06d7a7
   TypeTreeHash:
     serializedVersion: 2
     Hash: 3043e506c67b384b6af3b12c399183f5
@@ -94,6 +94,7 @@ Assets:
 - Assets/AssetBundle/AncientScepter/Icons/Skills/texEngiR2.png
 - Assets/AssetBundle/AncientScepter/VFX/texRound.png
 - Assets/AssetBundle/AncientScepter/Icons/Skills/Old/old_texMercR1.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texChefR2.png
 - Assets/AssetBundle/AncientScepter/Alt/Material/aghanimscepter_Normal.png
 - Assets/AssetBundle/AncientScepter/Icons/Skills/Old/old_texRailgunnerP2.png
 - Assets/AssetBundle/AncientScepter/Icons/Skills/texVoidFiendR1C.png
@@ -109,6 +110,7 @@ Assets:
 - Assets/AssetBundle/AncientScepter/Icons/Skills/texSeekerR2.png
 - Assets/AssetBundle/AncientScepter/Icons/Skills/texDrifterR2.png
 - Assets/AssetBundle/AncientScepter/Textures/texAncientScepterEmission.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texChefR1.png
 - Assets/AssetBundle/AncientScepter/Textures/texAncientScepter.png
 - Assets/AssetBundle/AncientScepter/Materials/matAncientScepter.mat
 - Assets/AssetBundle/AncientScepter/Icons/Skills/texRexR2.png
