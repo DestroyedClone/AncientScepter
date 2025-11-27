@@ -111,6 +111,7 @@ namespace AncientScepter
             public static Sprite SeekerMeditate2;
             public static Sprite SeekerPalmBlast2;
             public static Sprite DrifterSalvage2;
+            public static Sprite DrifterTinker2;
 
             public static void InitializeAssets()
             {
@@ -144,6 +145,7 @@ namespace AncientScepter
                 SeekerMeditate2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texSeekerR1");
                 SeekerPalmBlast2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texSeekerR2");
                 DrifterSalvage2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texDrifterR1");
+                DrifterTinker2 = Assets.mainAssetBundle.LoadAsset<Sprite>("texDrifterR2");
             }
         }
     }

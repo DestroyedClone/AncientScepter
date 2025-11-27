@@ -333,6 +333,50 @@ namespace AncientScepter
             return newDef;
         }
 
+        public static DrifterTrackingSkillDef CloneDrifterTrackingSkillDef(DrifterTrackingSkillDef oldDef, Sprite overrideIcon)
+        {
+            var newDef = ScriptableObject.CreateInstance<DrifterTrackingSkillDef>();
+
+            newDef.skillName = oldDef.skillName;
+            newDef.skillNameToken = oldDef.skillNameToken;
+            newDef.skillDescriptionToken = oldDef.skillDescriptionToken;
+            newDef.icon = oldDef.icon;
+
+            newDef.activationStateMachineName = oldDef.activationStateMachineName;
+            newDef.activationState = oldDef.activationState;
+
+            newDef.interruptPriority = oldDef.interruptPriority;
+
+            newDef.baseRechargeInterval = oldDef.baseRechargeInterval;
+            newDef.baseMaxStock = oldDef.baseMaxStock;
+            newDef.rechargeStock = oldDef.rechargeStock;
+            newDef.requiredStock = oldDef.requiredStock;
+            newDef.stockToConsume = oldDef.stockToConsume;
+            newDef.beginSkillCooldownOnSkillEnd = oldDef.beginSkillCooldownOnSkillEnd;
+            newDef.fullRestockOnAssign = oldDef.fullRestockOnAssign;
+            newDef.dontAllowPastMaxStocks = oldDef.dontAllowPastMaxStocks;
+
+            newDef.resetCooldownTimerOnUse = oldDef.resetCooldownTimerOnUse;
+
+            newDef.isCombatSkill = oldDef.isCombatSkill;
+
+            newDef.cancelSprintingOnActivation = oldDef.cancelSprintingOnActivation;
+            newDef.canceledFromSprinting = oldDef.canceledFromSprinting;
+            newDef.forceSprintDuringState = oldDef.forceSprintDuringState;
+
+            newDef.mustKeyPress = oldDef.mustKeyPress;
+
+            newDef.keywordTokens = oldDef.keywordTokens;
+
+            newDef.minimumJunkCost = oldDef.minimumJunkCost;
+            newDef.bypassCooldown = oldDef.bypassCooldown;
+            newDef.iconOverride = overrideIcon;
+
+            newDef.useIndicator = oldDef.useIndicator;
+
+            return newDef;
+        }
+
         /// <summary>
         /// Clones an existing RailgunSkillDef into a new instance with the same values.
         /// </summary>

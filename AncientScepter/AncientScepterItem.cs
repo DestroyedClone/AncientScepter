@@ -556,6 +556,7 @@ namespace AncientScepter
             skills.Add(new SeekerPalmBlast2());
 
             skills.Add(new DrifterSalvage2());
+            skills.Add(new DrifterTinker2());
 
             // Monster
             if (enableMonsterSkills)

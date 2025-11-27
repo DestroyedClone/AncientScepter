@@ -43,6 +43,7 @@
 | ![enter image description here](https://raw.githubusercontent.com/swuff-star/AncientScepter/refs/heads/master/AncientScepter_Unity/Assets/AssetBundle/AncientScepter/Icons/Skills/texSeekerR1.png) | **<u>Seeker</u>: Meditate > Ascend**<br>Tranquility cap increased to 13.</br> |
 | ![enter image description here](https://raw.githubusercontent.com/swuff-star/AncientScepter/refs/heads/master/AncientScepter_Unity/Assets/AssetBundle/AncientScepter/Icons/Skills/texSeekerR2.png) | **Palm Blast > Tranquility Blast**<br>Tranquility cap increased to 13.</br> |
 | ![enter image description here](https://raw.githubusercontent.com/swuff-star/AncientScepter/refs/heads/master/AncientScepter_Unity/Assets/AssetBundle/AncientScepter/Icons/Skills/texDrifterR1.png) | **<u>Drifter</u>: Salvage > Recover**<br>Spawn 2 additional temporary items.</br> |
+| ![enter image description here](https://raw.githubusercontent.com/swuff-star/AncientScepter/refs/heads/master/AncientScepter_Unity/Assets/AssetBundle/AncientScepter/Icons/Skills/texDrifterR2.png) | **Tinker > Reconstruct**<br>Do 3 random debuffs to enemies. Break items into 3 temporary copies and 1 scrap. Reroll interactables 3 times.</br> |
 |  | <br></br> |
 
     - Alloy Vulture: Windblade > Repeated Windblade (50% chance to fire twice)
@@ -53,7 +54,7 @@ This refers to compatibility that's included just with this mod, and will not be
 - BetterUI [⚡](https://thunderstore.io/package/XoXFaby/BetterUI/)
 
 ## To-Do/Issues
-* Skills for CHEF, False Son, Operator, Drifter alt Special
+* Skills for CHEF, False Son, Operator
 * Mithrix Scepter
 * CaptainBustedAirstrike support:
 	* Currently it uses the reduced cooldown from the standard alt airstrike.

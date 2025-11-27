@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1678992536
+CRC: 2813992587
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 7ece554da702331c2f6ee4eba23c2dbb
+    Hash: d4738d1b0128160057b2813173b7aed5
   TypeTreeHash:
     serializedVersion: 2
     Hash: 3043e506c67b384b6af3b12c399183f5
@@ -107,6 +107,7 @@ Assets:
 - Assets/AssetBundle/AncientScepter/Icons/Skills/texMultU1.png
 - Assets/AssetBundle/AncientScepter/Icons/Skills/texHuntressR1.png
 - Assets/AssetBundle/AncientScepter/Icons/Skills/texSeekerR2.png
+- Assets/AssetBundle/AncientScepter/Icons/Skills/texDrifterR2.png
 - Assets/AssetBundle/AncientScepter/Textures/texAncientScepterEmission.png
 - Assets/AssetBundle/AncientScepter/Textures/texAncientScepter.png
 - Assets/AssetBundle/AncientScepter/Materials/matAncientScepter.mat
