@@ -40,6 +40,9 @@
 | ![enter image description here](https://raw.githubusercontent.com/DestroyedClone/AncientScepter/master/AncientScepter_Unity/Assets/AssetBundle/AncientScepter/Icons/Skills/texRailgunnerR1.png)![enter image description here](https://raw.githubusercontent.com/DestroyedClone/AncientScepter/master/AncientScepter_Unity/Assets/AssetBundle/AncientScepter/Icons/Skills/texRailgunnerP1.png) | **<u>Railgunner</u>: Supercharge (Special) > Hypercharge**<br>-20 armor on hit, +0.5 proc coefficient</br> |
 | ![enter image description here](https://raw.githubusercontent.com/DestroyedClone/AncientScepter/master/AncientScepter_Unity/Assets/AssetBundle/AncientScepter/Icons/Skills/texRailgunnerR2.png)![enter image description here](https://raw.githubusercontent.com/DestroyedClone/AncientScepter/master/AncientScepter_Unity/Assets/AssetBundle/AncientScepter/Icons/Skills/texRailgunnerP2.png) | **Cryocharge > Permafrosted Cryocharge**<br>Explodes on contact with a frost blast, dealing 200% damage to all enemies within 6m. Slows on hit by 80% for 20 seconds.</br> |
 | ![enter image description here](https://raw.githubusercontent.com/DestroyedClone/AncientScepter/master/AncientScepter_Unity/Assets/AssetBundle/AncientScepter/Icons/Skills/texVoidFiendR1.png)![enter image description here](https://raw.githubusercontent.com/DestroyedClone/AncientScepter/master/AncientScepter_Unity/Assets/AssetBundle/AncientScepter/Icons/Skills/texVoidFiendR1C.png) | **<u>Void Fiend</u>: Crush/Corrupted Crush -> Reclaimed Crush/Forfeited Crush**<br>Also affects nearby enemies or allies within 25m. Corrupted Supress has +2 charges.</br> |
+| ![enter image description here](https://raw.githubusercontent.com/swuff-star/AncientScepter/refs/heads/master/AncientScepter_Unity/Assets/AssetBundle/AncientScepter/Icons/Skills/texSeekerR1.png) | **<u>Seeker</u>: Meditate > Ascend**<br>Tranquility cap increased to 13.</br> |
+| ![enter image description here](https://raw.githubusercontent.com/swuff-star/AncientScepter/refs/heads/master/AncientScepter_Unity/Assets/AssetBundle/AncientScepter/Icons/Skills/texSeekerR2.png) | **Palm Blast > Tranquility Blast**<br>Tranquility cap increased to 13.</br> |
+| ![enter image description here](https://raw.githubusercontent.com/swuff-star/AncientScepter/refs/heads/master/AncientScepter_Unity/Assets/AssetBundle/AncientScepter/Icons/Skills/texDrifterR1.png) | **<u>Drifter</u>: Salvage > Recover**<br>Spawn 2 additional temporary items.</br> |
 |  | <br></br> |
 
     - Alloy Vulture: Windblade > Repeated Windblade (50% chance to fire twice)
@@ -50,6 +53,7 @@ This refers to compatibility that's included just with this mod, and will not be
 - BetterUI [⚡](https://thunderstore.io/package/XoXFaby/BetterUI/)
 
 ## To-Do/Issues
+* Skills for CHEF, False Son, Operator, Drifter alt Special
 * Mithrix Scepter
 * CaptainBustedAirstrike support:
 	* Currently it uses the reduced cooldown from the standard alt airstrike.
@@ -66,7 +70,7 @@ This refers to compatibility that's included just with this mod, and will not be
 * **DestroyedClone** [⚡](https://thunderstore.io/package/DestroyedClone/)[🐙](https://github.com/DestroyedClone) - Porter, Maintainer
 * **rob** - Fixed code
 * **bruh** and **redacted** - Made the Scepter model
-* **swuff** [🐙](https://github.com/swuff-star) - Updated Textures, Consultation
+* **swuff** [🐙](https://github.com/swuff-star) - Updated Textures, Consultation, Code
 * **QandQuestion**  - Lore
 * **Moffein** [⚡](https://thunderstore.io/package/Moffein/)[🐙](https://github.com/Moffein) - Consultation
 * **Mico27** [⚡](https://thunderstore.io/package/Mico27/)[🐙](https://github.com/Mico27/) - Orb creation help
