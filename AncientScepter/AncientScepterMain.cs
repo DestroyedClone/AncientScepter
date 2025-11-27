@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Security;
 using System.Security.Permissions;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Networking;
 
 [module: UnverifiableCode]
@@ -43,6 +44,7 @@ namespace AncientScepter
         protected readonly List<LanguageAPI.LanguageOverlay> languageOverlays = new List<LanguageAPI.LanguageOverlay>();
 
         public static BuffDef perishSongDebuff;
+        public static BuffDef chefSuperWeakDebuff;
 
         public void Awake()
         {
@@ -81,6 +83,19 @@ namespace AncientScepter
             if (!ContentAddition.AddBuffDef(perishSongDebuff))
             {
                 _logger.LogWarning($"Buff '{nameof(perishSongDebuff)}' failed to be added.");
+            }
+
+            chefSuperWeakDebuff = ScriptableObject.CreateInstance<BuffDef>();
+            chefSuperWeakDebuff.name = "ChefSuperWeakness";
+            chefSuperWeakDebuff.iconSprite = Addressables.LoadAssetAsync<Sprite>("095037011ecb52c47bf861cc9ebd53a0").WaitForCompletion();
+            chefSuperWeakDebuff.buffColor = Color.magenta;
+            chefSuperWeakDebuff.canStack = true;
+            chefSuperWeakDebuff.isHidden = false;
+            chefSuperWeakDebuff.isDebuff = true;
+            chefSuperWeakDebuff.isCooldown = false;
+            if (!ContentAddition.AddBuffDef(chefSuperWeakDebuff))
+            {
+                _logger.LogWarning($"Buff '{nameof(chefSuperWeakDebuff)}' failed to be added.");
             }
         }
 

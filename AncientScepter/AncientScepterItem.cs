@@ -182,7 +182,7 @@ namespace AncientScepter
                 ItemTag.Utility,
                 ItemTag.AIBlacklist,
                 ItemTag.CanBeTemporary,
-                ItemTag.AllowedForUseAsCraftingIngredient,
+                //ItemTag.AllowedForUseAsCraftingIngredient, // re-enable when it has recipes implemented proper
             };
             if (turretBlacklist)
             {
@@ -554,6 +554,7 @@ namespace AncientScepter
 
             skills.Add(new SeekerMeditate2());
             skills.Add(new SeekerPalmBlast2());
+            skills.Add(new ChefGlaze2());
             skills.Add(new ChefYesChef2());
 
             skills.Add(new DrifterSalvage2());
@@ -609,6 +610,7 @@ namespace AncientScepter
         private void RecalculateStatsAPI_GetStatCoefficients(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
         {
             SkillSlot slot = SkillSlot.None;
+            // scepter stacking
             if (sender.inventory != null && sender.inventory.GetItemCountEffective(ItemDef) > 0 && sender.skillLocator != null && TryGetScepterSlot(sender, out slot))
             {
                 switch (slot)
@@ -630,6 +632,14 @@ namespace AncientScepter
                         args.specialSkill.cooldownReductionMultAdd += (sender.inventory.GetItemCountEffective(ItemDef) - 1f) * 0.3f;
                         break;
                 }
+            }
+
+            // chef super weakness debuff
+            if (sender.HasBuff(AncientScepterMain.chefSuperWeakDebuff))
+            {
+                args.armorAdd -= 30f * sender.GetBuffCount(AncientScepterMain.chefSuperWeakDebuff);
+                args.damageTotalMult *= 0.6f;
+                args.moveSpeedTotalMult *= 0.6f;
             }
         }
 
