@@ -44,6 +44,8 @@ namespace AncientScepter
 
         public virtual bool TILER2_MimicBlacklisted { get; set; } = false;
 
+        public static ItemDef myDef { get; set; }
+
         /// <summary>
         /// This method structures your code execution of this class. An example implementation inside of it would be:
         /// <para>CreateConfig(config);</para>
@@ -82,6 +84,7 @@ namespace AncientScepter
                 ItemTags = new List<ItemTag>(ItemTags) { ItemTag.AIBlacklist }.ToArray();
             }
             ItemDef = ScriptableObject.CreateInstance<ItemDef>();
+            myDef = ItemDef;
             ItemDef.name = "ITEM_" + ItemLangTokenName;
             ItemDef.nameToken = "ITEM_" + ItemLangTokenName + "_NAME";
             ItemDef.pickupToken = "ITEM_" + ItemLangTokenName + "_PICKUP";
@@ -108,6 +111,9 @@ namespace AncientScepter
             ItemAPI.Add(new CustomItem(ItemDef, CreateDisplayRules()));
         }
 
+        protected virtual void CreateCraftableDef()
+        { }
+
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
         public static void TILER2_BlacklistItem(ItemDef itemDef)
         {
@@ -116,6 +122,7 @@ namespace AncientScepter
 
         public virtual void Hooks()
         {
+            
         }
 
         protected virtual void SetupMaterials(GameObject modelPrefab)

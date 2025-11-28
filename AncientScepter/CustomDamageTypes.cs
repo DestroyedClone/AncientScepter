@@ -9,6 +9,7 @@ namespace AncientScepter
         internal static DamageAPI.ModdedDamageType ScepterBandit2SkullDT;
         internal static DamageAPI.ModdedDamageType ScepterDestroy10ArmorDT;
         internal static DamageAPI.ModdedDamageType ScepterSlow80For30DT;
+        internal static DamageAPI.ModdedDamageType ScepterCHEFSuperWeak;
 
         internal static void SetupDamageTypes()
         {
@@ -17,6 +18,7 @@ namespace AncientScepter
             ScepterBandit2SkullDT = DamageAPI.ReserveDamageType();
             ScepterDestroy10ArmorDT = DamageAPI.ReserveDamageType();
             ScepterSlow80For30DT = DamageAPI.ReserveDamageType();
+            ScepterCHEFSuperWeak = DamageAPI.ReserveDamageType();
         }
     }
 }
