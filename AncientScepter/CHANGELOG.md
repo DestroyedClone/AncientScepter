@@ -1,6 +1,22 @@
 
 ## Changelog
-`1.1.34
+`1.1.38`
+- 🩹 fixed for HC
+- ❗ Known issue: False Son's DisableAllSkills debuff prevents scepter from activating for the rest of the stage/until a non-scepter source changes the skill in the relevant slot.
+
+`1.1.37`
+- 🛠️ Temporary Ancient Scepters should now properly reroll into a new temporary legendary item when more than one is acquired.
+- ❗ Known issue: If already carrying a Temporary Ancient Scepter, picking up a permanent Ancient Scepter will reroll neither on the first stack of each. It's intended that the temporary would reroll while the permanent is kept - sorry to anyone who misses out on a temporary legendary for the time being! Note that all other scenarios involving picking up/mixing permanent/temporary Scepters should be A-OK.
+
+`1.1.36`
+- ➕ New default stacking style (RoRR): Extra stacks will give -30% CDR to the affected skill. Old behaviors are still available through config!
+- ➕ New skills: Seeker, CHEF, Drifter.
+- 🛠️ Ancient Scepter is now capable of being a Temporary Item, like Retruns.
+
+`1.1.35`
+- 🩹 fixed for AC
+
+`1.1.34`
 - 🩹 Recompiled mod for SOTS
 
 `1.1.33`

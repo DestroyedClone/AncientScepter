@@ -1,8 +1,8 @@
 {
   "name": "StandaloneAncientScepter",
-  "version_number": "1.1.36",
+  "version_number": "1.1.38",
   "website_url": "https://github.com/DestroyedClone/AncientScepter",
-  "description": "1.1.36 - Fixed for AC, RoRR stacking & new skills for Seeker, CHEF and Drifter | A full port of ThinkInvisible's Ancient Scepter, complete with a custom model, item displays, and no extra dependencies.",
+  "description": "1.1.38 - Fixed for HC | A full port of ThinkInvisible's Ancient Scepter, complete with a custom model, item displays, and no extra dependencies.",
   "dependencies": [
     "bbepis-BepInExPack-5.4.2121",
     "RiskofThunder-R2API_ContentManagement-1.0.10",
@@ -12,6 +12,6 @@
     "RiskofThunder-R2API_Language-1.1.0",
     "RiskofThunder-R2API_Orb-1.0.1",
     "RiskofThunder-R2API_Prefab-1.1.1",
-	"RiskofThunder-R2API_RecalculateStats-1.6.5"
+    "RiskofThunder-R2API_RecalculateStats-1.6.5"
   ]
 }

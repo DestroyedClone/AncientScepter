@@ -140,21 +140,21 @@ namespace AncientScepter
         {
             if (!body || !body.inventory) { return 0; }
 
-            return body.inventory.GetItemCount(ItemDef);
+            return body.inventory.GetItemCountEffective(ItemDef);
         }
 
         public int GetCount(CharacterMaster master)
         {
             if (!master || !master.inventory) { return 0; }
 
-            return master.inventory.GetItemCount(ItemDef);
+            return master.inventory.GetItemCountEffective(ItemDef);
         }
 
         public int GetCountSpecific(CharacterBody body, ItemDef itemDef)
         {
             if (!body || !body.inventory) { return 0; }
 
-            return body.inventory.GetItemCount(itemDef);
+            return body.inventory.GetItemCountEffective(itemDef);
         }
 
         ///<summary>A server-only rng instance based on the current run's seed.</summary>

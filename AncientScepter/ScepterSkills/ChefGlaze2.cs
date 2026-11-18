@@ -68,7 +68,7 @@ namespace AncientScepter
         {
             orig(self, damageInfo, victim);
             // if bypassosp dmg type (yucky), attacker has a body, & body is a chef
-            if ((damageInfo.damageType & DamageType.BypassOneShotProtection) == DamageType.BypassOneShotProtection && damageInfo.attacker.TryGetComponent(out CharacterBody body) && BodyCatalog.FindBodyIndex("ChefBody") == BodyCatalog.FindBodyIndex(body))
+            if ((damageInfo.damageType & DamageType.BypassOneShotProtection) == DamageType.BypassOneShotProtection && damageInfo.attacker && damageInfo.attacker.TryGetComponent(out CharacterBody body) && BodyCatalog.FindBodyIndex("ChefBody") == BodyCatalog.FindBodyIndex(body))
             {
                 if (victim.TryGetComponent(out CharacterBody victimBody))
                 {

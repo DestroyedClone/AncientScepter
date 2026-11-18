@@ -120,7 +120,9 @@ namespace AncientScepter
             projectileImpactExplosion.childrenCount = 1;
             projectileImpactExplosion.childrenProjectilePrefab = irradiateProjectile;
             projectileImpactExplosion.lifetime = airstrikeDuration;
-            airstrikePrefab.GetComponent<ProjectileController>().ghostPrefab = airstrikeGhostPrefab;
+            var projCont = airstrikePrefab.GetComponent<ProjectileController>();
+            projCont.ghostPrefab = airstrikeGhostPrefab;
+            projCont.ghostPrefabAddress = null;
             airstrikePrefab.AddComponent<ScepterAirstrikeMarker>();
 
             ContentAddition.AddProjectile(irradiateProjectile);

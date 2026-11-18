@@ -65,11 +65,19 @@ namespace AncientScepter
         internal override void LoadBehavior()
         {
             On.EntityStates.Huntress.ArrowRain.DoFireArrowRain += On_ArrowRain_DoFireArrowRain;
+            On.EntityStates.Huntress.ArrowRain.OnEnter += On_ArrowRain_OnEnter;
         }
 
         internal override void UnloadBehavior()
         {
             On.EntityStates.Huntress.ArrowRain.DoFireArrowRain -= On_ArrowRain_DoFireArrowRain;
+            On.EntityStates.Huntress.ArrowRain.OnEnter -= On_ArrowRain_OnEnter;
+        }
+
+        private void On_ArrowRain_OnEnter(On.EntityStates.Huntress.ArrowRain.orig_OnEnter orig,ArrowRain self){
+            orig(self);
+            self._cachedAreaIndicatorScale *= 1.5f;
+            self.areaIndicatorInstance.transform.localScale = self._cachedAreaIndicatorScale;
         }
 
         private void On_ArrowRain_DoFireArrowRain(On.EntityStates.Huntress.ArrowRain.orig_DoFireArrowRain orig, ArrowRain self)

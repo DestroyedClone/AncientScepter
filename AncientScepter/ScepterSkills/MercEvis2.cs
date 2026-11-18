@@ -41,13 +41,13 @@ namespace AncientScepter
         }
         internal override void LoadBehavior()
         {
-            GlobalEventManager.onCharacterDeathGlobal += Evt_GEMOnCharacterDeathGlobal;
+            GlobalEventManager.onDeathProcServer += Evt_GEMOnCharacterDeathGlobal;
             On.EntityStates.Merc.Evis.FixedUpdate += On_EvisFixedUpdate;
         }
 
         internal override void UnloadBehavior()
         {
-            GlobalEventManager.onCharacterDeathGlobal -= Evt_GEMOnCharacterDeathGlobal;
+            GlobalEventManager.onDeathProcServer -= Evt_GEMOnCharacterDeathGlobal;
             On.EntityStates.Merc.Evis.FixedUpdate -= On_EvisFixedUpdate;
         }
 

@@ -1,6 +1,6 @@
+
+
 ## Standalone Ancient Scepter
-# Seekers of the Storm
-- This mod does not currently have Skills for survivors from Seekers of the Storm!
 
 [![github issues/request link](https://raw.githubusercontent.com/DestroyedClone/PoseHelper/master/PoseHelper/github_link.webp)](https://github.com/DestroyedClone/AncientScepter/issues) [![discord invite](https://raw.githubusercontent.com/DestroyedClone/PoseHelper/master/PoseHelper/discord_link.webp)](https://discord.gg/DpHu3qXMHK)
 
@@ -40,6 +40,12 @@
 | ![enter image description here](https://raw.githubusercontent.com/DestroyedClone/AncientScepter/master/AncientScepter_Unity/Assets/AssetBundle/AncientScepter/Icons/Skills/texRailgunnerR1.png)![enter image description here](https://raw.githubusercontent.com/DestroyedClone/AncientScepter/master/AncientScepter_Unity/Assets/AssetBundle/AncientScepter/Icons/Skills/texRailgunnerP1.png) | **<u>Railgunner</u>: Supercharge (Special) > Hypercharge**<br>-20 armor on hit, +0.5 proc coefficient</br> |
 | ![enter image description here](https://raw.githubusercontent.com/DestroyedClone/AncientScepter/master/AncientScepter_Unity/Assets/AssetBundle/AncientScepter/Icons/Skills/texRailgunnerR2.png)![enter image description here](https://raw.githubusercontent.com/DestroyedClone/AncientScepter/master/AncientScepter_Unity/Assets/AssetBundle/AncientScepter/Icons/Skills/texRailgunnerP2.png) | **Cryocharge > Permafrosted Cryocharge**<br>Explodes on contact with a frost blast, dealing 200% damage to all enemies within 6m. Slows on hit by 80% for 20 seconds.</br> |
 | ![enter image description here](https://raw.githubusercontent.com/DestroyedClone/AncientScepter/master/AncientScepter_Unity/Assets/AssetBundle/AncientScepter/Icons/Skills/texVoidFiendR1.png)![enter image description here](https://raw.githubusercontent.com/DestroyedClone/AncientScepter/master/AncientScepter_Unity/Assets/AssetBundle/AncientScepter/Icons/Skills/texVoidFiendR1C.png) | **<u>Void Fiend</u>: Crush/Corrupted Crush -> Reclaimed Crush/Forfeited Crush**<br>Also affects nearby enemies or allies within 25m. Corrupted Supress has +2 charges.</br> |
+| ![enter image description here](https://raw.githubusercontent.com/swuff-star/AncientScepter/refs/heads/master/AncientScepter_Unity/Assets/AssetBundle/AncientScepter/Icons/Skills/texSeekerR1.png) | **<u>Seeker</u>: Meditate > Ascend**<br>Tranquility cap increased to 13.</br> |
+| ![enter image description here](https://raw.githubusercontent.com/swuff-star/AncientScepter/refs/heads/master/AncientScepter_Unity/Assets/AssetBundle/AncientScepter/Icons/Skills/texSeekerR2.png) | **Palm Blast > Tranquility Blast**<br>Tranquility cap increased to 13.</br> |
+| ![enter image description here](https://raw.githubusercontent.com/swuff-star/AncientScepter/refs/heads/master/AncientScepter_Unity/Assets/AssetBundle/AncientScepter/Icons/Skills/texChefR1.png) | **<u>CHEF</u>: Glaze > Lacquer**<br>2x oil globs, 1.5x debuff duration + armor debuff from oil glob debuff stacks.</br> |
+| ![enter image description here](https://raw.githubusercontent.com/swuff-star/AncientScepter/refs/heads/master/AncientScepter_Unity/Assets/AssetBundle/AncientScepter/Icons/Skills/texChefR2.png) | **Yes, CHEF! > Heard, CHEF!**<br>Boosts the next 2 skill uses. 2x damage and radius of initial burst.</br> |
+| ![enter image description here](https://raw.githubusercontent.com/swuff-star/AncientScepter/refs/heads/master/AncientScepter_Unity/Assets/AssetBundle/AncientScepter/Icons/Skills/texDrifterR1.png) | **<u>Drifter</u>: Salvage > Recover**<br>Spawn 2 additional temporary items.</br> |
+| ![enter image description here](https://raw.githubusercontent.com/swuff-star/AncientScepter/refs/heads/master/AncientScepter_Unity/Assets/AssetBundle/AncientScepter/Icons/Skills/texDrifterR2.png) | **Tinker > Reconstruct**<br>Do 3 random debuffs to enemies. Break items into 3 temporary copies and 1 scrap. Reroll interactables 3 times.</br> |
 |  | <br></br> |
 
     - Alloy Vulture: Windblade > Repeated Windblade (50% chance to fire twice)
@@ -47,8 +53,10 @@
 
 ## Implemented ModCompat
 This refers to compatibility that's included just with this mod, and will not be an exhaustive list of every mod that implements this.
+- BetterUI [⚡](https://thunderstore.io/package/XoXFaby/BetterUI/)
 
 ## To-Do/Issues
+* Scepter skills for False Son, Operator
 * Mithrix Scepter
 * CaptainBustedAirstrike support:
 	* Currently it uses the reduced cooldown from the standard alt airstrike.
@@ -65,7 +73,7 @@ This refers to compatibility that's included just with this mod, and will not be
 * **DestroyedClone** [⚡](https://thunderstore.io/package/DestroyedClone/)[🐙](https://github.com/DestroyedClone) - Porter, Maintainer
 * **rob** - Fixed code
 * **bruh** and **redacted** - Made the Scepter model
-* **swuff** [🐙](https://github.com/swuff-star) - Updated Textures, Consultation
+* **swuff★** [⚡](https://thunderstore.io/package/swuff-star/)[🐙](https://github.com/swuff-star) - Code/Maintenance
 * **QandQuestion**  - Lore
 * **Moffein** [⚡](https://thunderstore.io/package/Moffein/)[🐙](https://github.com/Moffein) - Consultation
 * **Mico27** [⚡](https://thunderstore.io/package/Mico27/)[🐙](https://github.com/Mico27/) - Orb creation help

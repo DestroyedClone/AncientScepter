@@ -55,10 +55,10 @@ namespace AncientScepter
         internal override void LoadBehavior()
         {
             On.RoR2.HealthPickup.OnTriggerStay += HealthPickup_OnTriggerStay;
-            GlobalEventManager.onCharacterDeathGlobal += GlobalEventManager_onCharacterDeathGlobal;
+            GlobalEventManager.onDeathProcServer += GlobalEventManager_onDeathProcServer;
         }
 
-        private void GlobalEventManager_onCharacterDeathGlobal(DamageReport damageReport)
+        private void GlobalEventManager_onDeathProcServer(DamageReport damageReport)
         {
             if (!NetworkServer.active) return;
             if (!damageReport.victimBody) return;
@@ -130,7 +130,7 @@ namespace AncientScepter
         internal override void UnloadBehavior()
         {
             On.RoR2.HealthPickup.OnTriggerStay -= HealthPickup_OnTriggerStay;
-            GlobalEventManager.onCharacterDeathGlobal -= GlobalEventManager_onCharacterDeathGlobal;
+            GlobalEventManager.onDeathProcServer -= GlobalEventManager_onDeathProcServer;
         }
     }
 }

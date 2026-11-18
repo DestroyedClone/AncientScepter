@@ -182,6 +182,8 @@ namespace AncientScepter
                 ItemTag.Utility,
                 ItemTag.AIBlacklist,
                 ItemTag.CanBeTemporary,
+                ItemTag.CanBeRental,
+                ItemTag.CannotDisable
                 //ItemTag.AllowedForUseAsCraftingIngredient, // re-enable when it has recipes implemented proper
             };
             if (turretBlacklist)
@@ -814,7 +816,7 @@ namespace AncientScepter
             handlingInventory = true;
             if (!HandleScepterSkill(body) && RerollUnused())
             {
-                if (GetCount(body) > 0)
+                if (GetCount(body) > 0 && (!body.master.originalBodyPrefab || body.master.bodyPrefab == body.master.originalBodyPrefab))
                 {
                     Reroll(body, GetCount(body));
                 }
@@ -843,35 +845,43 @@ namespace AncientScepter
 
         private void Reroll(CharacterBody self, int count)
         {
-            if (count <= 0) return;
+            if (count <= 0 || rerollMode == RerollMode.Disabled) return;
+            var transform = new Inventory.ItemTransformation{
+                maxToTransform = count,
+                minToTransform = count,
+                originalItemIndex = ItemDef.itemIndex,
+                forbidPermanentItems = self.inventory.GetItemCountRented(ItemDef) > 0 || self.inventory.GetItemCountTemp(ItemDef) > 0,
+                transformationType = enableSOTVTransforms ? (ItemTransformationTypeIndex)(0) : (ItemTransformationTypeIndex)(-1),
+                newItemIndex = RoR2Content.Items.ScrapRed.itemIndex
+            };
             switch (rerollMode)
             {
-                case RerollMode.Disabled:
-                    break;
                 case RerollMode.Random:
-                    var list = Run.instance.availableTier3DropList.Except(new[] { PickupCatalog.FindPickupIndex(ItemDef.itemIndex) }).ToList(); //todo optimize
-                    var notifylist = new List<ItemIndex>();
+                    var list = Enumerable.Except(Run.instance.availableTier3DropList.Select(x => x.itemIndex).Except(new[] { ItemDef.itemIndex }),ItemCatalog.GetItemsWithTag(ItemTag.AIBlacklist)).ToList(); //TODO: optimize
+                    var rentalList = Enumerable.Intersect(list,ItemCatalog.GetItemsWithTag(ItemTag.CanBeRental)).ToList();
+                    var tempList = Enumerable.Intersect(list,ItemCatalog.GetItemsWithTag(ItemTag.CanBeTemporary)).ToList();
+                    //Edge Cases
+                    if(!tempList.Any()){
+                        tempList.Add(RoR2Content.Items.ScrapRed.itemIndex);
+                    }
+                    if(!rentalList.Any()){
+                        rentalList.Add(RoR2Content.Items.ScrapRed.itemIndex);
+                    }
+                    if(!list.Any()){
+                        list.Add(RoR2Content.Items.ScrapRed.itemIndex);
+                    }
+                    transform.maxToTransform = 1;
+                    transform.minToTransform = 1;
                     for (var i = 0; i < count; i++)
                     {
-                        self.inventory.RemoveItem(ItemDef, 1);
-                        var newItem = PickupCatalog.GetPickupDef(list[UnityEngine.Random.Range(0, list.Count)]).itemIndex;
-                        self.inventory.GiveItem(newItem);
-                        notifylist.Add(newItem);
-                    }
-                    if (enableSOTVTransforms){
-                        foreach(var newItem in notifylist.Distinct()){
-                            CharacterMasterNotificationQueue.SendTransformNotification(self.master, ItemDef.itemIndex, newItem, CharacterMasterNotificationQueue.TransformationType.Default);
-                        }
+                        transform.CanTake(self.inventory, out var takeResult);
+                        var stacks = takeResult.takenItem.stackValues;
+                        transform.newItemIndex = rng.NextElementUniform((stacks.rentalStacks > 0) ? rentalList : (stacks.temporaryStacksValue > 0 ? tempList : list));
+                        transform.TryTransform(self.inventory,out _);
                     }
                     break;
                 case RerollMode.Scrap:
-                    for (var i = 0; i < count; i++)
-                    {
-                        self.inventory.RemoveItem(ItemDef, 1);
-                        self.inventory.GiveItem(RoR2Content.Items.ScrapRed);
-                    }
-                    if (enableSOTVTransforms)
-                        CharacterMasterNotificationQueue.SendTransformNotification(self.master, ItemDef.itemIndex, RoR2Content.Items.ScrapRed.itemIndex, CharacterMasterNotificationQueue.TransformationType.Default);
+                    transform.TryTransform(self.inventory, out _);
                     break;
             }
         }
@@ -886,7 +896,7 @@ namespace AncientScepter
            }
            else{
                foreach(var skill in self.skillLocator.allSkills){
-               if(repl.Any(r => r.replDef == slot.skillDef && (force || (slot.baseSkill != r.trgtDef && !slot.skillOverrides.Any(s => r.trgtDef == s.skillDef))))){
+               if(repl.Any(r => r.replDef == skill.skillDef && (force || (skill.baseSkill != r.trgtDef && !skill.skillOverrides.Any(s => r.trgtDef == s.skillDef))))){
                     skill.UnsetSkillOverride(self,skill.skillDef,GenericSkill.SkillOverridePriority.Upgrade);
                   }
                }
@@ -900,13 +910,13 @@ namespace AncientScepter
                 switch (skillSlot)
                 {
                     case SkillSlot.Primary:
-                        return self.inventory.GetItemCount(RoR2Content.Items.LunarPrimaryReplacement) > 0;
+                        return self.inventory.GetItemCountEffective(RoR2Content.Items.LunarPrimaryReplacement) > 0;
                     case SkillSlot.Secondary:
-                        return self.inventory.GetItemCount(RoR2Content.Items.LunarSecondaryReplacement) > 0;
+                        return self.inventory.GetItemCountEffective(RoR2Content.Items.LunarSecondaryReplacement) > 0;
                     case SkillSlot.Utility:
-                        return self.inventory.GetItemCount(RoR2Content.Items.LunarUtilityReplacement) > 0;
+                        return self.inventory.GetItemCountEffective(RoR2Content.Items.LunarUtilityReplacement) > 0;
                     case SkillSlot.Special:
-                        return self.inventory.GetItemCount(RoR2Content.Items.LunarSpecialReplacement) > 0;
+                        return self.inventory.GetItemCountEffective(RoR2Content.Items.LunarSpecialReplacement) > 0;
                 }
                 return false;
             }
